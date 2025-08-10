@@ -12,7 +12,6 @@ export function Footer() {
   return (
     <footer className="bg-gradient-to-b from-white to-blue-50 w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16 grid gap-8 sm:gap-10 md:gap-12 lg:gap-14 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] items-end">
-        {/* Logo & Newsletter */}
         <div className="space-y-3 md:space-y-5 max-w-xs">
           <img
             src={artfeatLogo}
@@ -37,8 +36,7 @@ export function Footer() {
           </div>
         </div>
 
-        {/* About */}
-        <div className="space-y-3 md:space-y-5 ml-2 md:ml-0">
+        <div className="space-y-3 md:space-y-5 ml-2 sm:ml-20 lg:ml-0">
           <h3 className="font-semibold text-base md:text-lg">About</h3>
           <ul className="space-y-1.5 md:space-y-2 text-sm md:text-base">
             <li>
@@ -71,8 +69,7 @@ export function Footer() {
           </ul>
         </div>
 
-        {/* More Info */}
-        <div className="space-y-3 md:space-y-5 ml-2 md:ml-0">
+        <div className="space-y-3 md:space-y-5 ml-2 sm:ml-2 lg:ml-0">
           <h3 className="font-semibold text-base md:text-lg">More Info</h3>
           <ul className="space-y-1.5 md:space-y-2 text-sm md:text-base">
             <li>
@@ -105,8 +102,7 @@ export function Footer() {
           </ul>
         </div>
 
-        {/* Follow Us */}
-        <div className="space-y-3 md:space-y-5 ml-2 md:ml-0">
+        <div className="space-y-3 md:space-y-5 ml-2 sm:ml-20 lg:ml-0">
           <h3 className="font-semibold text-base md:text-lg">Follow Us</h3>
           <div className="flex gap-3 md:gap-4 mb-2 md:mb-3">
             <a
