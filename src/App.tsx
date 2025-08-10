@@ -1,10 +1,18 @@
+import Navbar from "@/components/layouts/Navbar";
+import { Footer } from "@/components/layouts/Footer";
 
-const App = () => {
-  return (
-    <div>
-      <h1 className="text-center">test</h1>
-    </div>
-  )
+interface AppProps {
+  children?: React.ReactNode;
 }
 
-export default App
+const App = ({ children }: AppProps) => {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-1">{children}</main>
+      <Footer />
+    </div>
+  );
+};
+
+export default App;
