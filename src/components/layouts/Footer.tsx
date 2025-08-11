@@ -19,17 +19,17 @@ export function Footer() {
             className="w-24 md:w-28 lg:w-32 mb-2"
             loading="lazy"
           />
-          <p className="font-semibold text-base md:text-lg px-1">
+          <p className="font-semibold text-lg sm:text-base md:text-lg px-1">
             Get the latest updates
           </p>
           <div className="flex px-1">
             <Input
               placeholder="Enter your email"
-              className="rounded-r-none text-sm md:text-base h-9 md:h-11 flex-1"
+              className="rounded-r-none text-base sm:text-sm md:text-base h-11 md:h-11 flex-1"
             />
             <Button
               size="default"
-              className="rounded-l-none bg-sky-500 hover:bg-sky-500/90 text-sm md:text-base h-9 md:h-11 px-3 md:px-5"
+              className="rounded-l-none bg-sky-500 hover:bg-sky-500/90 text-lg sm:text-sm md:text-base h-11 md:h-11 px-5 md:px-5"
             >
               Go
             </Button>
@@ -37,8 +37,10 @@ export function Footer() {
         </div>
 
         <div className="space-y-3 md:space-y-5 ml-2 sm:ml-20 lg:ml-0">
-          <h3 className="font-semibold text-base md:text-lg">About</h3>
-          <ul className="space-y-1.5 md:space-y-2 text-sm md:text-base">
+          <h3 className="font-semibold text-lg sm:text-base md:text-lg">
+            About
+          </h3>
+          <ul className="space-y-1.5 md:space-y-2 text-base sm:text-sm md:text-base">
             <li>
               <a
                 href="#"
@@ -70,8 +72,10 @@ export function Footer() {
         </div>
 
         <div className="space-y-3 md:space-y-5 ml-2 sm:ml-2 lg:ml-0">
-          <h3 className="font-semibold text-base md:text-lg">More Info</h3>
-          <ul className="space-y-1.5 md:space-y-2 text-sm md:text-base">
+          <h3 className="font-semibold text-lg sm:text-base md:text-lg">
+            More Info
+          </h3>
+          <ul className="space-y-1.5 md:space-y-2 text-base sm:text-sm md:text-base">
             <li>
               <a
                 href="#"
@@ -103,7 +107,9 @@ export function Footer() {
         </div>
 
         <div className="space-y-3 md:space-y-5 ml-2 sm:ml-20 lg:ml-0">
-          <h3 className="font-semibold text-base md:text-lg">Follow Us</h3>
+          <h3 className="font-semibold text-lg sm:text-base md:text-lg">
+            Follow Us
+          </h3>
           <div className="flex gap-3 md:gap-4 mb-2 md:mb-3">
             <a
               href="#"
@@ -140,7 +146,7 @@ export function Footer() {
           </div>
           <Button
             size="default"
-            className="bg-sky-500 hover:bg-sky-500/90 rounded-xl text-sm md:text-base h-9 md:h-10 px-5 md:px-6"
+            className="bg-sky-500 hover:bg-sky-500/90 rounded-xl text-lg sm:text-sm md:text-base h-10 md:h-10 px-6 md:px-6"
           >
             Support Artist
           </Button>
@@ -150,7 +156,7 @@ export function Footer() {
       <Separator className="bg-gray-300" />
 
       <div className="bg-sky-500 text-white">
-        <div className="container mx-auto px-4 py-3 md:py-4 text-center text-xs md:text-sm lg:text-base">
+        <div className="container mx-auto px-4 py-3 md:py-4 text-center text-lg sm:text-xs md:text-sm lg:text-base">
           ©2025 ArtFeat, All rights reserved
         </div>
       </div>
