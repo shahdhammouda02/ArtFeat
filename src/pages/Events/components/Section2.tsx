@@ -186,27 +186,27 @@ export default function Section2() {
           ))}
         </div>
 
-        {/* Load more & View less */}
-        <div className="mt-8 text-center flex justify-center gap-4">
+        {/* Load More */}
+        <div className="mt-12 text-center flex flex-wrap justify-center gap-4">
           {visible > 6 && (
             <Button
               variant="outline"
-              className="h-9 px-4 text-sm inline-flex items-center gap-2 justify-center"
+              className="h-12 px-8 text-base inline-flex items-center gap-2 justify-center border-sky-500 text-sky-600 hover:bg-sky-50 hover:text-sky-700"
               onClick={() => setVisible(6)}
             >
               View Less
-              <ChevronUp size={16} />
+              <ChevronUp size={20} />
             </Button>
           )}
 
           {visible < filtered.length && (
             <Button
               variant="outline"
-              className="h-9 px-4 text-sm inline-flex items-center gap-2 justify-center"
+              className="h-12 px-8 text-base inline-flex items-center gap-2 justify-center border-sky-500 text-sky-600 hover:bg-sky-50 hover:text-sky-700"
               onClick={() => setVisible((v) => v + 6)}
             >
               Load More Events
-              <ChevronDown size={16} />
+              <ChevronDown size={20} />
             </Button>
           )}
         </div>
