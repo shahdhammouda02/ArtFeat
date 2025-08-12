@@ -1,17 +1,16 @@
 import Navbar from "@/components/layouts/Navbar";
 import { Footer } from "@/components/layouts/Footer";
 import { SubNav } from "@/components/layouts/SubNav";
+import { Outlet } from "react-router-dom";
 
-interface AppProps {
-  children?: React.ReactNode;
-}
-
-const App = ({ children }: AppProps) => {
+const App = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <SubNav />
-      <main className="flex-1 p-4">{children}</main>
+      <main className="flex-1 p-4">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );
