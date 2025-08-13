@@ -6,7 +6,7 @@ import {
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import { Heart, ShoppingCart, Globe, Menu, X } from "lucide-react";
+import { Heart, ShoppingCart, Globe, Bell, Menu, X } from "lucide-react";
 import artfeatLogo from "@/assets/images/artfeat_logo.jpg";
 
 const navItems = [
@@ -66,7 +66,12 @@ const Navbar = () => {
         </div>
 
         <div className="hidden lg:flex items-center space-x-3">
-          <Button variant="outline" size="default" className="font-semibold" aria-label="Login">
+          <Button
+            variant="outline"
+            size="default"
+            className="font-semibold"
+            aria-label="Login"
+          >
             Login
           </Button>
           <Button
@@ -77,7 +82,10 @@ const Navbar = () => {
             Sign Up
           </Button>
 
-          <div className="h-7 border-r border-gray-300 mx-2" aria-hidden="true" />
+          <div
+            className="h-7 border-r border-gray-300 mx-2"
+            aria-hidden="true"
+          />
 
           <button
             aria-label="Favorites"
@@ -99,6 +107,13 @@ const Navbar = () => {
             type="button"
           >
             <Globe size={22} />
+          </button>
+          <button
+            aria-label="Notifications"
+            className="text-gray-700 hover:text-yellow-500"
+            type="button"
+          >
+            <Bell size={22} />
           </button>
         </div>
 
@@ -124,6 +139,13 @@ const Navbar = () => {
           >
             <Globe size={22} />
           </button>
+          <button
+            aria-label="Language"
+            className="text-gray-700 hover:text-yellow-500"
+            type="button"
+          >
+            <Bell size={22} />
+          </button>
         </div>
 
         <button
@@ -148,7 +170,11 @@ const Navbar = () => {
           <NavigationMenu>
             <NavigationMenuList className="flex flex-col items-center space-y-3 p-4">
               {navItems.map((item) => (
-                <NavigationMenuItem key={item} className="text-center" role="menuitem">
+                <NavigationMenuItem
+                  key={item}
+                  className="text-center"
+                  role="menuitem"
+                >
                   <NavigationMenuLink
                     href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
                     className="inline-block text-gray-800 font-semibold text-base transition-transform duration-150 ease-out hover:text-sky-400 hover:-translate-y-1.5 active:text-sky-400 active:-translate-y-1.5"
@@ -200,6 +226,13 @@ const Navbar = () => {
                 type="button"
               >
                 <Globe size={20} />
+              </button>
+              <button
+                aria-label="Language"
+                className="text-gray-700 hover:text-yellow-500 transition-transform duration-300 ease-in-out hover:-translate-y-1.5"
+                type="button"
+              >
+                <Bell size={20} />
               </button>
             </div>
           </div>
