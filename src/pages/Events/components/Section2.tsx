@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import ceramicImg from "@/assets/images/CeramicWonders.jpeg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,11 +18,14 @@ import {
 } from "@/components/ui/card";
 import { Calendar, ChevronDown, ChevronUp, Filter, Search } from "lucide-react";
 import { ALL_EVENTS, TYPES } from "@/data/eventsData";
+import { useNavigate } from "react-router-dom";
+import type { EventItem } from "@/types/eventTypes";
 
 export default function Section2() {
   const [type, setType] = useState<string>("All Types");
   const [searchTerm, setSearchTerm] = useState("");
   const [visible, setVisible] = useState(6);
+  const navigate = useNavigate();
 
   const filtered = useMemo(() => {
     return ALL_EVENTS.filter((e) => {
@@ -39,6 +41,11 @@ export default function Section2() {
 
   const toShow = filtered.slice(0, visible);
 
+  const handleShowMore = (event: EventItem) => {
+    if (event.status === "Ended" || event.status === "Upcoming") {
+      navigate(`/events/${event.id}`);
+    }
+  };
   return (
     <section className="py-12 sm:py-16 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -128,7 +135,7 @@ export default function Section2() {
             >
               <div className="relative group">
                 <img
-                  src={ceramicImg}
+                  src={e.image}
                   alt={e.title}
                   className="w-full aspect-[16/8] sm:aspect-[4/2.5] object-cover transition-all duration-500 group-hover:scale-105"
                   loading="lazy"
@@ -178,8 +185,9 @@ export default function Section2() {
                 <Button
                   variant="default"
                   className="block w-full bg-sky-500 hover:bg-sky-600 transition-colors duration-200 shadow-sm group-hover:shadow-md group-hover:bg-sky-600"
+                  onClick={() => handleShowMore(e)}
                 >
-                  Show More
+                  {e.status === "Ended" ? "View Event Recap" : "Register Now"}
                 </Button>
               </CardFooter>
             </Card>

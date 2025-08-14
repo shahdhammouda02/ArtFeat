@@ -1,4 +1,11 @@
 import type { EventItem } from "../types/eventTypes";
+import ceramic from '@/assets/images/CeramicWonders.jpeg'
+import pic1 from '@/assets/images/2017 sergi.jpg'
+import pic2 from '@/assets/images/Outdoor Paint Party Ideas.jpg'
+import pic3 from '@/assets/images/download (8).jpg'
+import pic4 from '@/assets/images/download (9).jpg'
+import pic5 from '@/assets/images/Artist Feature Blog - Eleisha Pirouet - Fremantle Artist — Open Hands Creative.jpg'
+import pic6 from '@/assets/images/ESCAPE TO ARIZONA.jpg'
 
 export const ALL_EVENTS: EventItem[] = [
   {
@@ -9,105 +16,117 @@ export const ALL_EVENTS: EventItem[] = [
     tags: ["Paintings", "Abstract Art"],
     excerpt:
       "A mesmerizing exhibition featuring dynamic and vibrant abstract artworks from emerging talents.",
+    image: ceramic
   },
   {
     id: 2,
     title: "Ceramic Wonders",
-    date: "November 15, 2024",
+    date: "October 15, 2025",
     status: "Upcoming",
     tags: ["Sculpture", "Crafts"],
     excerpt:
       "Discover the beauty of handcrafted ceramics, from traditional to contemporary.",
+    image: pic1
   },
   {
     id: 3,
     title: "Botanical Illustration",
-    date: "September 30, 2024",
+    date: "September 30, 2025",
     status: "Upcoming",
     tags: ["Illustration", "Nature Art"],
     excerpt:
       "An immersive journey into the intricate world of botanical art, celebrating nature’s forms.",
+    image: pic2
   },
   {
     id: 4,
     title: "Urban Canvas Festival",
-    date: "December 10, 2024",
+    date: "December 10, 2025",
     status: "Upcoming",
     tags: ["Paintings", "Abstract Art"],
     excerpt:
       "Experience a vibrant urban art festival with live painting and interactive installations.",
+    image: pic3
   },
   {
     id: 5,
     title: "Sculpture in Motion",
     date: "January 20, 2025",
-    status: "Upcoming",
+    status: "Ended",
     tags: ["Sculpture", "Crafts"],
     excerpt:
       "A captivating exhibition showcasing kinetic sculptures that blend art and engineering.",
+    image: pic4
   },
   {
     id: 6,
     title: "Nature’s Lens",
-    date: "August 01, 2024",
+    date: "August 25, 2025",
     status: "Upcoming",
     tags: ["Illustration", "Nature Art"],
     excerpt:
       "A breathtaking photography exhibition celebrating the raw beauty of natural landscapes.",
+    image: pic5
   },
   {
     id: 7,
     title: "Glass Artistry",
-    date: "March 10, 2025",
+    date: "November 10, 2025",
     status: "Upcoming",
     tags: ["Crafts", "Sculpture"],
     excerpt:
       "Explore the dazzling world of glass sculptures, from delicate ornaments to massive installations.",
+    image: pic2
   },
   {
     id: 8,
     title: "Ink & Paper",
     date: "April 15, 2025",
-    status: "Upcoming",
+    status: "Ended",
     tags: ["Illustration", "Abstract Art"],
     excerpt:
       "An exhibition celebrating the timeless elegance of black ink on paper.",
+    image: ceramic
   },
   {
     id: 9,
     title: "Desert Colors",
-    date: "May 05, 2025",
+    date: "September 05, 2025",
     status: "Upcoming",
     tags: ["Paintings", "Nature Art"],
     excerpt:
       "Experience a vibrant palette of desert-inspired landscapes and scenes.",
+    image: pic4
   },
   {
     id: 10,
     title: "Street Vision",
-    date: "June 22, 2025",
+    date: "November 22, 2025",
     status: "Upcoming",
     tags: ["Photography", "Abstract Art"],
     excerpt:
       "Capturing the pulse of city life through candid and artistic photography.",
+    image: pic6
   },
   {
     id: 11,
     title: "Ocean Whispers",
     date: "July 30, 2025",
-    status: "Upcoming",
+    status: "Ended",
     tags: ["Nature Art", "Illustration"],
     excerpt:
       "Dive into a marine-inspired collection that captures the serenity of the sea.",
+    image: pic3
   },
   {
     id: 12,
     title: "Metropolis Dreams",
-    date: "August 12, 2025",
+    date: "August 20, 2025",
     status: "Upcoming",
     tags: ["Abstract Art", "Paintings"],
     excerpt:
       "An urban-inspired series blending architecture, geometry, and bold colors.",
+    image: pic1
   },
   {
     id: 13,
@@ -117,6 +136,7 @@ export const ALL_EVENTS: EventItem[] = [
     tags: ["Crafts", "Sculpture"],
     excerpt:
       "Organic and raw clay creations shaped by the hands of local artisans.",
+    image: pic5
   },
   {
     id: 14,
@@ -126,6 +146,7 @@ export const ALL_EVENTS: EventItem[] = [
     tags: ["Nature Art", "Photography"],
     excerpt:
       "Photography and art that capture the grandeur of mountain landscapes.",
+    image: ceramic
   },
   {
     id: 15,
@@ -135,6 +156,7 @@ export const ALL_EVENTS: EventItem[] = [
     tags: ["Illustration", "Crafts"],
     excerpt:
       "Intricate paper art creations that tell visual stories in three dimensions.",
+    image: pic2
   },
   {
     id: 16,
@@ -142,7 +164,9 @@ export const ALL_EVENTS: EventItem[] = [
     date: "December 09, 2025",
     status: "Upcoming",
     tags: ["Abstract Art", "Paintings"],
-    excerpt: "A celestial-themed art show that merges science and imagination.",
+    excerpt:
+      "A celestial-themed art show that merges science and imagination.",
+    image: pic5
   },
   {
     id: 17,
@@ -152,6 +176,7 @@ export const ALL_EVENTS: EventItem[] = [
     tags: ["Photography", "Crafts"],
     excerpt:
       "Classic photographs framed in ornate golden designs for timeless elegance.",
+    image: pic4
   },
   {
     id: 18,
@@ -161,7 +186,8 @@ export const ALL_EVENTS: EventItem[] = [
     tags: ["Abstract Art", "Paintings"],
     excerpt:
       "An outdoor night art festival filled with light-based installations and performances.",
-  },
+    image: pic6
+  }
 ];
 
 export const TYPES = [
@@ -172,5 +198,5 @@ export const TYPES = [
   "Crafts",
   "Illustration",
   "Nature Art",
-  "Photography",
+  "Photography"
 ];

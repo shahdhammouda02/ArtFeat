@@ -5,4 +5,5 @@ export interface EventItem {
   status: "Upcoming" | "Ended";
   tags: string[];
   excerpt: string;
+  image: string;
 }
