@@ -31,7 +31,7 @@ export default function UpcomingPage() {
         </Button>
 
         {/* Event Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
           <div className="aspect-[4/3] w-full bg-gray-100 rounded-lg overflow-hidden">
             <img
               src={event.image}

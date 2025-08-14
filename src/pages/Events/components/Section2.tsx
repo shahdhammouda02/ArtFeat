@@ -187,7 +187,7 @@ export default function Section2() {
                   className="block w-full bg-sky-500 hover:bg-sky-600 transition-colors duration-200 shadow-sm group-hover:shadow-md group-hover:bg-sky-600"
                   onClick={() => handleShowMore(e)}
                 >
-                  {e.status === "Ended" ? "View Event Recap" : "Register Now"}
+                  {e.status === "Ended" ? "Show More" : "Show More"}
                 </Button>
               </CardFooter>
             </Card>
