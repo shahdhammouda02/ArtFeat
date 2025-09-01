@@ -23,17 +23,19 @@ export default function EventItem() {
         <Button
           variant="ghost"
           onClick={() => navigate(-1)}
-          className="mb-6 flex items-center gap-2"
+          className="mb-6 flex items-center gap-1 p-0 text-gray-700 hover:text-sky-600 transition-colors duration-200 hover:bg-transparent"
         >
-          <ChevronLeft size={18} />
-          Back to Events
+          <ChevronLeft size={20} className="flex-shrink-0" />
+          <span className="leading-none">Back to Events</span>
         </Button>
 
         {/* Event Header */}
         <div className="mb-10">
-          <Badge variant="destructive" className="mb-4">
-            Event Ended
-          </Badge>
+          <div className="ml-1">
+            <Badge variant="destructive" className="mb-4">
+              Event Ended
+            </Badge>
+          </div>
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
             {event.title}
           </h1>
