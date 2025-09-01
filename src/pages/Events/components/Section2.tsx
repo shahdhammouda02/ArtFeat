@@ -22,13 +22,13 @@ import { useNavigate } from "react-router-dom";
 import type { EventItem } from "@/types/eventTypes";
 
 const TAG_COLORS: Record<string, string> = {
-"Paintings": "bg-pink-200 text-pink-800",
+  Paintings: "bg-pink-200 text-pink-800",
   "Abstract Art": "bg-purple-200 text-purple-800",
-  "Sculpture": "bg-yellow-200 text-yellow-800",
-  "Crafts": "bg-orange-200 text-orange-800",
-  "Illustration": "bg-blue-200 text-blue-800",
+  Sculpture: "bg-yellow-200 text-yellow-800",
+  Crafts: "bg-orange-200 text-orange-800",
+  Illustration: "bg-blue-200 text-blue-800",
   "Nature Art": "bg-emerald-200 text-emerald-800",
-  "Photography": "bg-orange-200 text-orange-800",
+  Photography: "bg-orange-200 text-orange-800",
 };
 
 export default function Section2() {
@@ -57,7 +57,7 @@ export default function Section2() {
     }
   };
   return (
-    <section className="py-12 sm:py-16 bg-gray-50">
+    <section id="art-events" className="py-12 sm:py-16 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-10">
           <h2 className="text-3xl sm:text-4xl font-bold">Art Events</h2>
@@ -108,13 +108,13 @@ export default function Section2() {
               <Input
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search"
+                placeholder="Search by Event Name, Category, or Tag"
                 className="pl-8 xs:pl-9 h-9 text-xs xs:text-sm w-full"
               />
             </div>
           </div>
 
-          <div className="flex gap-2 justify-center sm:justify-end">
+          <div className="flex flex-col sm:flex-row gap-2 justify-center sm:justify-end">
             <Button
               variant="default"
               onClick={() => setVisible(6)}
