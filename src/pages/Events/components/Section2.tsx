@@ -21,6 +21,16 @@ import { ALL_EVENTS, TYPES } from "@/data/eventsData";
 import { useNavigate } from "react-router-dom";
 import type { EventItem } from "@/types/eventTypes";
 
+const TAG_COLORS: Record<string, string> = {
+"Paintings": "bg-pink-200 text-pink-800",
+  "Abstract Art": "bg-purple-200 text-purple-800",
+  "Sculpture": "bg-yellow-200 text-yellow-800",
+  "Crafts": "bg-orange-200 text-orange-800",
+  "Illustration": "bg-blue-200 text-blue-800",
+  "Nature Art": "bg-emerald-200 text-emerald-800",
+  "Photography": "bg-orange-200 text-orange-800",
+};
+
 export default function Section2() {
   const [type, setType] = useState<string>("All Types");
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,7 +57,7 @@ export default function Section2() {
     }
   };
   return (
-    <section className="py-12 sm:py-16 bg-white">
+    <section className="py-12 sm:py-16 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-10">
           <h2 className="text-3xl sm:text-4xl font-bold">Art Events</h2>
@@ -169,8 +179,9 @@ export default function Section2() {
                   {e.tags.map((t, i) => (
                     <Badge
                       key={i}
-                      variant="secondary"
-                      className="transition-colors duration-200 group-hover:bg-gray-100 group-hover:border-gray-200"
+                      className={` ${
+                        TAG_COLORS[t] || "bg-gray-200 text-gray-700"
+                      }`}
                     >
                       {t}
                     </Badge>
