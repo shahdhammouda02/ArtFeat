@@ -137,7 +137,13 @@ export default function Section2() {
         </div>
 
         {/* Cards */}
-        <div className="grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div className={`
+          ${toShow.length === 1 ?
+            'flex justify-center' :
+            'grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+          }
+          ${toShow.length === 2 ? 'lg:justify-items-center lg:grid-cols-2' : ''}
+        `}>
           {toShow.length === 0 ? (
             <p className="text-center col-span-full text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-400 via-gray-500 to-gray-600 drop-shadow-sm">
               No results found.
@@ -146,7 +152,9 @@ export default function Section2() {
             toShow.map((e) => (
               <Card
                 key={e.id}
-                className="overflow-hidden transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1 hover:border-sky-100"
+                className={`overflow-hidden transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1 hover:border-sky-100 ${
+                  toShow.length === 1 ? 'w-full max-w-sm' : ''
+                }`}
               >
                 <div className="relative group">
                   <img

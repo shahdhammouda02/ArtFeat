@@ -9,7 +9,7 @@ export const routes: RouteObject[] = [
     element: <App />,
     children: [
       { path: "events", element: <Events /> },
-      { path: "/events/:id", element: <EventRouter />},
+      { path: "events/:id", element: <EventRouter />},
       
     ],
   },

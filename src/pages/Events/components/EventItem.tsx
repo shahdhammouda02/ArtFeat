@@ -1,4 +1,5 @@
 import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { useEffect } from "react";
 import { Calendar, Clock, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +9,11 @@ export default function EventItem() {
   const { id } = useParams();
   const navigate = useNavigate();
   const event = ALL_EVENTS.find((e) => e.id === Number(id));
+
+  // Scroll to top when component mounts or id changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   if (!event || event.status !== "Ended") {
     return <Navigate to="/events" replace />;
@@ -23,7 +29,7 @@ export default function EventItem() {
         <Button
           variant="ghost"
           onClick={() => navigate(-1)}
-          className="mb-6 flex items-center gap-1 p-0 text-gray-700 hover:text-sky-600 transition-colors duration-200 hover:bg-transparent"
+          className="mb-8 flex items-center gap-1 p-0 text-gray-700 hover:text-sky-600 transition-colors duration-200 hover:bg-transparent"
         >
           <ChevronLeft size={20} className="flex-shrink-0" />
           <span className="leading-none">Back to Events</span>
@@ -63,10 +69,10 @@ export default function EventItem() {
         </div>
 
         {/* Event Content */}
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="grid gap-8 lg:grid-cols-3 lg:items-start">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            <div>
+          <div className="lg:col-span-2 space-y-8 min-h-screen">
+            <div id="about-event">
               <h2 className="text-xl sm:text-2xl font-semibold mb-3">
                 About the Event
               </h2>
@@ -77,17 +83,28 @@ export default function EventItem() {
 
             {/* Tags */}
             <div>
-              <h3 className="text-lg font-medium mb-2">Event Tags</h3>
               <div className="flex flex-wrap gap-2">
-                {event.tags.map((tag, index) => (
-                  <Badge
-                    key={index}
-                    variant="outline"
-                    className="text-xs sm:text-sm"
-                  >
-                    {tag}
-                  </Badge>
-                ))}
+                {event.tags.map((tag, index) => {
+                  const tagColors: Record<string, string> = {
+                    "Paintings": "bg-pink-200 text-pink-800 border-pink-300",
+                    "Abstract Art": "bg-purple-200 text-purple-800 border-purple-300",
+                    "Sculpture": "bg-yellow-200 text-yellow-800 border-yellow-300",
+                    "Crafts": "bg-orange-200 text-orange-800 border-orange-300",
+                    "Illustration": "bg-blue-200 text-blue-800 border-blue-300",
+                    "Nature Art": "bg-emerald-200 text-emerald-800 border-emerald-300",
+                    "Photography": "bg-indigo-200 text-indigo-800 border-indigo-300",
+                  };
+
+                  return (
+                    <Badge
+                      key={index}
+                      variant="outline"
+                      className={`text-xs sm:text-sm ${tagColors[tag] || "bg-gray-200 text-gray-700 border-gray-300"}`}
+                    >
+                      {tag}
+                    </Badge>
+                  );
+                })}
               </div>
             </div>
 
@@ -124,8 +141,8 @@ export default function EventItem() {
           </div>
 
           {/* Sidebar */}
-          <div>
-            <div className="sticky top-4 space-y-6">
+          <div className="lg:mt-0 lg:self-start">
+            <div className="lg:sticky lg:top-4 space-y-6">
               {/* Event Status Card */}
               <div className="bg-gray-50 p-4 rounded-lg border">
                 <h3 className="font-medium mb-2">Event Status</h3>
@@ -156,15 +173,27 @@ export default function EventItem() {
                           <span>{relatedEvent.date}</span>
                         </div>
                         <div className="mt-2 flex flex-wrap gap-1">
-                          {relatedEvent.tags.slice(0, 2).map((tag, i) => (
-                            <Badge
-                              key={i}
-                              variant="secondary"
-                              className="text-[10px] sm:text-xs"
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
+                          {relatedEvent.tags.slice(0, 2).map((tag, i) => {
+                            const tagColors: Record<string, string> = {
+                              "Paintings": "bg-pink-200 text-pink-800 border-pink-300",
+                              "Abstract Art": "bg-purple-200 text-purple-800 border-purple-300",
+                              "Sculpture": "bg-yellow-200 text-yellow-800 border-yellow-300",
+                              "Crafts": "bg-orange-200 text-orange-800 border-orange-300",
+                              "Illustration": "bg-blue-200 text-blue-800 border-blue-300",
+                              "Nature Art": "bg-emerald-200 text-emerald-800 border-emerald-300",
+                              "Photography": "bg-indigo-200 text-indigo-800 border-indigo-300",
+                            };
+
+                            return (
+                              <Badge
+                                key={i}
+                                variant="outline"
+                                className={`text-[10px] sm:text-xs ${tagColors[tag] || "bg-gray-200 text-gray-700 border-gray-300"}`}
+                              >
+                                {tag}
+                              </Badge>
+                            );
+                          })}
                         </div>
                       </div>
                     ))}

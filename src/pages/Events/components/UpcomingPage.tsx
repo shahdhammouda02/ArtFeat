@@ -1,4 +1,5 @@
 import { useParams, useNavigate, Navigate, Link } from "react-router-dom";
+import { useEffect } from "react";
 import { Calendar, Clock, ChevronLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +10,11 @@ export default function UpcomingPage() {
   const navigate = useNavigate();
 
   const event = ALL_EVENTS.find((e) => e.id === Number(id));
+
+  // Scroll to top when component mounts or id changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   if (!event || event.status !== "Upcoming") {
     return <Navigate to="/events" replace />;
@@ -24,10 +30,10 @@ export default function UpcomingPage() {
         <Button
           variant="ghost"
           onClick={() => navigate(-1)}
-          className="mb-6 flex items-center gap-2"
+          className="mb-8 flex items-center gap-1 p-0 text-gray-700 hover:text-sky-600 transition-colors duration-200 hover:bg-transparent"
         >
-          <ChevronLeft className="h-4 w-4" />
-          Back to Events
+          <ChevronLeft size={20} className="flex-shrink-0" />
+          <span className="leading-none">Back to Events</span>
         </Button>
 
         {/* Event Header */}
@@ -58,17 +64,33 @@ export default function UpcomingPage() {
               </div>
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
-              {event.tags.map((tag, index) => (
-                <Badge key={index} variant="outline" className="px-3 py-1">
-                  {tag}
-                </Badge>
-              ))}
+              {event.tags.map((tag, index) => {
+                const tagColors: Record<string, string> = {
+                  "Paintings": "bg-pink-200 text-pink-800 border-pink-300",
+                  "Abstract Art": "bg-purple-200 text-purple-800 border-purple-300",
+                  "Sculpture": "bg-yellow-200 text-yellow-800 border-yellow-300",
+                  "Crafts": "bg-orange-200 text-orange-800 border-orange-300",
+                  "Illustration": "bg-blue-200 text-blue-800 border-blue-300",
+                  "Nature Art": "bg-emerald-200 text-emerald-800 border-emerald-300",
+                  "Photography": "bg-indigo-200 text-indigo-800 border-indigo-300",
+                };
+
+                return (
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className={`px-3 py-1 ${tagColors[tag] || "bg-gray-200 text-gray-700 border-gray-300"}`}
+                  >
+                    {tag}
+                  </Badge>
+                );
+              })}
             </div>
           </div>
         </div>
 
         {/* About + Event Details */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24 lg:items-start">
           {/* About Section */}
           <div className="lg:col-span-2 flex flex-col gap-4 h-full">
             <div className="bg-white p-6 rounded-lg border h-full flex flex-col">
@@ -96,10 +118,10 @@ export default function UpcomingPage() {
           </div>
 
           {/* Event Details */}
-          <div className="flex flex-col gap-6 h-full">
-            <div className="bg-gray-50 p-6 rounded-lg border space-y-4 h-full flex flex-col">
+          <div className="flex flex-col gap-6 lg:self-start">
+            <div className="bg-gray-50 p-6 rounded-lg border space-y-4 lg:sticky lg:top-4">
               <h3 className="font-medium text-lg">Event Details</h3>
-              <div className="space-y-2 flex-grow">
+              <div className="space-y-2">
                 <div>
                   <p className="text-sm text-gray-500">Date</p>
                   <p className="font-medium">{event.date}</p>
@@ -108,14 +130,7 @@ export default function UpcomingPage() {
                   <p className="text-sm text-gray-500">Time</p>
                   <p className="font-medium">9:00 AM - 6:00 PM</p>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-500">Tickets</p>
-                  <p className="font-medium">Free Admission</p>
-                </div>
               </div>
-              <Button className="w-full mt-auto bg-sky-400 text-white hover:bg-sky-500">
-                Register Now
-              </Button>
             </div>
           </div>
         </div>
@@ -149,15 +164,27 @@ export default function UpcomingPage() {
                       <span>{relatedEvent.date}</span>
                     </div>
                     <div className="flex gap-2 flex-wrap">
-                      {relatedEvent.tags.slice(0, 2).map((tag, index) => (
-                        <Badge
-                          key={index}
-                          variant="outline"
-                          className="px-2 py-0.5 text-xs"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
+                      {relatedEvent.tags.slice(0, 2).map((tag, index) => {
+                        const tagColors: Record<string, string> = {
+                          "Paintings": "bg-pink-200 text-pink-800 border-pink-300",
+                          "Abstract Art": "bg-purple-200 text-purple-800 border-purple-300",
+                          "Sculpture": "bg-yellow-200 text-yellow-800 border-yellow-300",
+                          "Crafts": "bg-orange-200 text-orange-800 border-orange-300",
+                          "Illustration": "bg-blue-200 text-blue-800 border-blue-300",
+                          "Nature Art": "bg-emerald-200 text-emerald-800 border-emerald-300",
+                          "Photography": "bg-indigo-200 text-indigo-800 border-indigo-300",
+                        };
+
+                        return (
+                          <Badge
+                            key={index}
+                            variant="outline"
+                            className={`px-2 py-0.5 text-xs ${tagColors[tag] || "bg-gray-200 text-gray-700 border-gray-300"}`}
+                          >
+                            {tag}
+                          </Badge>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
