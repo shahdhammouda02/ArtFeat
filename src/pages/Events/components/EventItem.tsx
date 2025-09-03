@@ -69,7 +69,7 @@ export default function EventItem() {
         </div>
 
         {/* Event Content */}
-        <div className="grid gap-8 lg:grid-cols-3 lg:items-start">
+        <div className="grid gap-8 lg:grid-cols-3 lg:items-end">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8 min-h-screen">
             <div id="about-event">
@@ -140,68 +140,69 @@ export default function EventItem() {
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="lg:mt-0 lg:self-start">
-            <div className="lg:sticky lg:top-4 space-y-6">
-              {/* Event Status Card */}
-              <div className="bg-gray-50 p-4 rounded-lg border">
-                <h3 className="font-medium mb-2">Event Status</h3>
-                <p className="text-gray-600 text-sm sm:text-base">
-                  This event has already taken place.
-                </p>
-                <Button variant="outline" className="w-full mt-4" disabled>
-                  Event Ended
-                </Button>
+         {/* Sidebar */}
+<div className="lg:mt-[200px] lg:self-start">
+  <div className="lg:sticky lg:top-0 space-y-3">
+    {/* Event Status Card */}
+    <div className="bg-gray-50 p-3 rounded-lg border">
+      <h3 className="font-medium mb-2">Event Status</h3>
+      <p className="text-gray-600 text-sm sm:text-base">
+        This event has already taken place.
+      </p>
+      <Button variant="outline" className="w-full mt-2" disabled>
+        Event Ended
+      </Button>
+    </div>
+
+    {/* Related Events */}
+    {similarEvents.length > 0 && (
+      <div className="bg-gray-50 p-3 rounded-lg border">
+        <h3 className="font-medium mb-2">Similar Upcoming Events</h3>
+        <div className="space-y-3">
+          {similarEvents.map((relatedEvent) => (
+            <div
+              key={relatedEvent.id}
+              className="p-3 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors border"
+              onClick={() => navigate(`/events/${relatedEvent.id}`)}
+            >
+              <h4 className="font-medium text-sm sm:text-base">
+                {relatedEvent.title}
+              </h4>
+              <div className="flex items-center gap-2 mt-1 text-xs sm:text-sm text-gray-600">
+                <Calendar size={14} />
+                <span>{relatedEvent.date}</span>
               </div>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {relatedEvent.tags.slice(0, 2).map((tag, i) => {
+                  const tagColors: Record<string, string> = {
+                    "Paintings": "bg-pink-200 text-pink-800 border-pink-300",
+                    "Abstract Art": "bg-purple-200 text-purple-800 border-purple-300",
+                    "Sculpture": "bg-yellow-200 text-yellow-800 border-yellow-300",
+                    "Crafts": "bg-orange-200 text-orange-800 border-orange-300",
+                    "Illustration": "bg-blue-200 text-blue-800 border-blue-300",
+                    "Nature Art": "bg-emerald-200 text-emerald-800 border-emerald-300",
+                    "Photography": "bg-indigo-200 text-indigo-800 border-indigo-300",
+                  };
 
-              {/* Related Events */}
-              {similarEvents.length > 0 && (
-                <div className="bg-gray-50 p-4 rounded-lg border">
-                  <h3 className="font-medium mb-4">Similar Upcoming Events</h3>
-                  <div className="space-y-3">
-                    {similarEvents.map((relatedEvent) => (
-                      <div
-                        key={relatedEvent.id}
-                        className="p-3 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors border"
-                        onClick={() => navigate(`/events/${relatedEvent.id}`)}
-                      >
-                        <h4 className="font-medium text-sm sm:text-base">
-                          {relatedEvent.title}
-                        </h4>
-                        <div className="flex items-center gap-2 mt-1 text-xs sm:text-sm text-gray-600">
-                          <Calendar size={14} />
-                          <span>{relatedEvent.date}</span>
-                        </div>
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          {relatedEvent.tags.slice(0, 2).map((tag, i) => {
-                            const tagColors: Record<string, string> = {
-                              "Paintings": "bg-pink-200 text-pink-800 border-pink-300",
-                              "Abstract Art": "bg-purple-200 text-purple-800 border-purple-300",
-                              "Sculpture": "bg-yellow-200 text-yellow-800 border-yellow-300",
-                              "Crafts": "bg-orange-200 text-orange-800 border-orange-300",
-                              "Illustration": "bg-blue-200 text-blue-800 border-blue-300",
-                              "Nature Art": "bg-emerald-200 text-emerald-800 border-emerald-300",
-                              "Photography": "bg-indigo-200 text-indigo-800 border-indigo-300",
-                            };
-
-                            return (
-                              <Badge
-                                key={i}
-                                variant="outline"
-                                className={`text-[10px] sm:text-xs ${tagColors[tag] || "bg-gray-200 text-gray-700 border-gray-300"}`}
-                              >
-                                {tag}
-                              </Badge>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                  return (
+                    <Badge
+                      key={i}
+                      variant="outline"
+                      className={`text-[10px] sm:text-xs ${tagColors[tag] || "bg-gray-200 text-gray-700 border-gray-300"}`}
+                    >
+                      {tag}
+                    </Badge>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
         </div>
       </div>
     </section>
