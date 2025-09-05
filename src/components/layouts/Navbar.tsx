@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart, Globe, Bell, Menu, X } from "lucide-react";
 import artfeatLogo from "@/assets/images/artfeat_logo.jpg";
+import { Link } from "react-router-dom";
 
 const navItems = [
   "Gallery",
@@ -50,14 +51,13 @@ const Navbar = () => {
             <NavigationMenuList className="flex gap-4 items-center">
               {navItems.map((item) => (
                 <NavigationMenuItem key={item}>
-                  <NavigationMenuLink
-                    href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                  <NavigationMenuLink asChild>
+                    <Link
+                    to={`/${item.replace(/\s+/g, "-").toLowerCase()}`}
                     className="inline-block text-base font-semibold text-gray-800 hover:text-sky-500 transition-transform duration-300 ease-in-out hover:-translate-y-1.5"
-                    role="link"
-                    tabIndex={0}
-                    aria-label={`Go to ${item}`}
                   >
                     {item}
+                    </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
