@@ -1,6 +1,6 @@
 import type { Auction } from './../types/auctions';
 import image1 from "../assets/images/2017 sergi.jpg";
-import image2 from "../assets/images/ceramicWonders.jpeg";
+import image2 from "../assets/images/CeramicWonders.jpeg"
 import image3 from "../assets/images/Outdoor Paint Party Ideas.jpg";
 import image4 from "../assets/images/download (8).jpg";
 
