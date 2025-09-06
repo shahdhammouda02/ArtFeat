@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { auctions } from "@/data/auctionsData";
 import type { Auction } from "@/types/auctions";
-// export { bidHistory } from "@/data/bidHistory";
 import { Clock } from "lucide-react";
 import {
   Card,
