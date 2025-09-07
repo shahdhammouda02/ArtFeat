@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart, Globe, Bell, Menu, X } from "lucide-react";
-import artfeatLogo from "@/assets/images/artfeat_logo.jpg";
+import logo from '@/assets/images/logo.jpeg'
 import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
@@ -38,22 +38,22 @@ const Navbar = () => {
       aria-label="Primary Navigation"
     >
       <div className="container mx-auto flex items-center justify-between h-20 px-4">
-        <a
-          href="/"
+        <Link
+          to="/"
           className="flex items-center space-x-2 select-none"
           aria-label="Go to homepage"
         >
           <img
-            src={artfeatLogo}
+            src={logo}
             alt="ArtFeat Logo"
-            className="h-11 w-auto"
+            className="h-20 w-auto mix-blend-multiply bg-transparent"
             loading="lazy"
-            width={45}
-            height={45}
+            width={300}
+            height={200}
             decoding="async"
             fetchPriority="low"
           />
-        </a>
+        </Link>
 
         <div className="hidden lg:flex">
           <NavigationMenu>

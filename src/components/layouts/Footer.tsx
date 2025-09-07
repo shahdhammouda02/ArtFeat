@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Facebook, Instagram, Twitch, Twitter } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import artfeatLogo from "@/assets/images/artfeat_logo.jpg";
+import logo from '@/assets/images/logo.jpeg'
 
 export function Footer() {
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -14,15 +14,15 @@ export function Footer() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16 grid gap-8 sm:gap-10 md:gap-12 lg:gap-14 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] items-end">
         <div className="space-y-3 md:space-y-5 max-w-xs">
           <img
-            src={artfeatLogo}
+            src={logo}
             alt="ArtFeat Logo"
-            className="w-24 md:w-28 lg:w-32 mb-2"
+            className="w-32 md:w-28 lg:w-32 mb-2 mix-blend-multiply bg-transparent"
             loading="lazy"
           />
-          <p className="font-semibold text-lg sm:text-base md:text-lg px-1">
+          <p className="font-semibold text-lg sm:text-base md:text-lg px-1 ml-3 sm:ml-0 lg:ml-2">
             Get the latest updates
           </p>
-          <div className="flex px-1">
+          <div className="flex px-1 ml-3 sm:ml-0 lg:ml-2">
             <Input
               placeholder="Enter your email"
               className="rounded-r-none text-base sm:text-sm md:text-base h-11 md:h-11 flex-1"
@@ -36,7 +36,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="space-y-3 md:space-y-5 ml-2 sm:ml-20 lg:ml-0">
+        <div className="space-y-3 md:space-y-5 ml-5 sm:ml-20 lg:ml-0">
           <h3 className="font-semibold text-lg sm:text-base md:text-lg">
             About
           </h3>
@@ -71,7 +71,7 @@ export function Footer() {
           </ul>
         </div>
 
-        <div className="space-y-3 md:space-y-5 ml-2 sm:ml-2 lg:ml-0">
+        <div className="space-y-3 md:space-y-5 ml-5 sm:ml-2 lg:ml-0">
           <h3 className="font-semibold text-lg sm:text-base md:text-lg">
             More Info
           </h3>
@@ -106,7 +106,7 @@ export function Footer() {
           </ul>
         </div>
 
-        <div className="space-y-3 md:space-y-5 ml-2 sm:ml-20 lg:ml-0">
+        <div className="space-y-3 md:space-y-5 ml-5 sm:ml-20 lg:ml-0">
           <h3 className="font-semibold text-lg sm:text-base md:text-lg">
             Follow Us
           </h3>
