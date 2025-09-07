@@ -1,7 +1,14 @@
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { auctions } from "@/data/auctionsData";
 import type { Auction } from "@/types/auctions";
-import { Clock } from "lucide-react";
+import { Check, Clock, MapPin } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -10,10 +17,11 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import BidHistoryTable from "./BidHistoryTable ";
 
 const Section2 = () => {
   return (
-    <section className="py-16">
+    <section id="live-auctions" className="py-16">
       <div className="max-w-7xl mx-auto px-4">
         {/* Title */}
         <h2 className="text-center text-2xl md:text-3xl font-bold mb-12">
@@ -63,18 +71,74 @@ const Section2 = () => {
                 </p>
 
                 <p className="font-bold text-lg">{item.bid}</p>
-                <p className="text-xs text-sky-600 cursor-pointer">
-                  {item.bidsCount} Bids Placed • View History
-                </p>
+                
+                {/* Dialog Trigger for Bid History */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <p className="text-xs text-sky-600 cursor-pointer hover:underline">
+                      {item.bidsCount} Bids Placed View History
+                    </p>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[625px] max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Bid History for {item.title}</DialogTitle>
+                    </DialogHeader>
+                    <div className="mt-4">
+                      <BidHistoryTable />
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
 
               <CardFooter className="flex flex-col gap-2 transition-colors duration-300 group-hover:bg-sky-50/30">
-                <Button
-                  variant="outline"
-                  className="w-full text-sm font-medium"
-                >
-                  Check shipping availability
-                </Button>
+                {/* Dialog Trigger for Shipping Availability */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full text-sm font-medium"
+                    >
+                      Check shipping availability
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-sm">
+                    <DialogHeader className="border-b border-gray-200 pb-3 -mx-6 px-6">
+                      <DialogTitle className="font-bold text-lg">Check Shipping Availability</DialogTitle>
+                    </DialogHeader>
+                    <div className="mt-4 space-y-3">
+                      <p className="text-sm text-gray-600 pb-3">
+                        Shipping is available to the following regions and countries:
+                      </p>
+                      <ul className="text-sm space-y-2 px-3">
+                        <li className="flex items-center text-sky-600 cursor-pointer">
+                          <Check size={16} className="mr-2 text-sky-600" />
+                          United States (All 50 states)
+                        </li>
+                        <li className="flex items-center text-sky-600 cursor-pointer">
+                          <Check size={16} className="mr-2 text-sky-600" />
+                          Canada (All provinces and territories)
+                        </li>
+                        <li className="flex items-center text-sky-600 cursor-pointer">
+                          <Check size={20} className="mr-2 text-sky-600" />
+                          United Kingdom (England, Scotland, Wales, Northern Ireland)
+                        </li>
+                        <li className="flex items-center text-sky-600 cursor-pointer">
+                          <Check size={16} className="mr-2 text-sky-600" />
+                          Australia (All states and territories)
+                        </li>
+                        <li className="flex items-center text-blue-600 cursor-pointer">
+                          <Check size={16} className="mr-2 text-sky-600" />
+                          Germany
+                        </li>
+                        <li className="flex items-center text-gray-600">
+                          <MapPin size={16} className="mr-2 text-gray-500" />
+                          France
+                        </li>
+                      </ul>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                
                 <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold shadow-sm hover:shadow-md">
                   Place Bid
                 </Button>
