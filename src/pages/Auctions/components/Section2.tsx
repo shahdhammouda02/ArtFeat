@@ -75,7 +75,7 @@ const Section2 = () => {
                 {/* Dialog Trigger for Bid History */}
                 <Dialog>
                   <DialogTrigger asChild>
-                    <p className="text-xs text-sky-600 cursor-pointer hover:underline">
+                    <p className="text-xs text-sky-600 cursor-pointer">
                       {item.bidsCount} Bids Placed View History
                     </p>
                   </DialogTrigger>
@@ -92,52 +92,63 @@ const Section2 = () => {
 
               <CardFooter className="flex flex-col gap-2 transition-colors duration-300 group-hover:bg-sky-50/30">
                 {/* Dialog Trigger for Shipping Availability */}
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-full text-sm font-medium"
-                    >
-                      Check shipping availability
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-sm">
-                    <DialogHeader className="border-b border-gray-200 pb-3 -mx-6 px-6">
-                      <DialogTitle className="font-bold text-lg">Check Shipping Availability</DialogTitle>
-                    </DialogHeader>
-                    <div className="mt-4 space-y-3">
-                      <p className="text-sm text-gray-600 pb-3">
-                        Shipping is available to the following regions and countries:
-                      </p>
-                      <ul className="text-sm space-y-2 px-3">
-                        <li className="flex items-center text-sky-600 cursor-pointer">
-                          <Check size={16} className="mr-2 text-sky-600" />
-                          United States (All 50 states)
-                        </li>
-                        <li className="flex items-center text-sky-600 cursor-pointer">
-                          <Check size={16} className="mr-2 text-sky-600" />
-                          Canada (All provinces and territories)
-                        </li>
-                        <li className="flex items-center text-sky-600 cursor-pointer">
-                          <Check size={20} className="mr-2 text-sky-600" />
-                          United Kingdom (England, Scotland, Wales, Northern Ireland)
-                        </li>
-                        <li className="flex items-center text-sky-600 cursor-pointer">
-                          <Check size={16} className="mr-2 text-sky-600" />
-                          Australia (All states and territories)
-                        </li>
-                        <li className="flex items-center text-blue-600 cursor-pointer">
-                          <Check size={16} className="mr-2 text-sky-600" />
-                          Germany
-                        </li>
-                        <li className="flex items-center text-gray-600">
-                          <MapPin size={16} className="mr-2 text-gray-500" />
-                          France
-                        </li>
-                      </ul>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                 {item.type === "Physical" ? (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full text-sm font-medium"
+                      >
+                        Check shipping availability
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-sm">
+                      <DialogHeader className="border-b border-gray-200 pb-3 -mx-6 px-6">
+                        <DialogTitle className="font-bold text-lg">Check Shipping Availability</DialogTitle>
+                      </DialogHeader>
+                      <div className="mt-4 space-y-3">
+                        <p className="text-sm text-gray-600 pb-3">
+                          Shipping is available to the following regions and countries:
+                        </p>
+                        <ul className="text-sm space-y-2 px-3">
+                          <li className="flex items-center text-sky-600 cursor-pointer">
+                            <Check size={16} className="mr-2 text-sky-600" />
+                            United States (All 50 states)
+                          </li>
+                          <li className="flex items-center text-sky-600 cursor-pointer">
+                            <Check size={16} className="mr-2 text-sky-600" />
+                            Canada (All provinces and territories)
+                          </li>
+                          <li className="flex items-center text-sky-600 cursor-pointer">
+                            <Check size={20} className="mr-2 text-sky-600" />
+                            United Kingdom (England, Scotland, Wales, Northern Ireland)
+                          </li>
+                          <li className="flex items-center text-sky-600 cursor-pointer">
+                            <Check size={16} className="mr-2 text-sky-600" />
+                            Australia (All states and territories)
+                          </li>
+                          <li className="flex items-center text-blue-600 cursor-pointer">
+                            <Check size={16} className="mr-2 text-sky-600" />
+                            Germany
+                          </li>
+                          <li className="flex items-center text-gray-600">
+                            <MapPin size={16} className="mr-2 text-gray-500" />
+                            France
+                          </li>
+                        </ul>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="w-full text-sm font-medium opacity-50 cursor-not-allowed"
+                    disabled
+                  >
+                    Shipping not available
+                  </Button>
+                )}
+                
                 
                 <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold shadow-sm hover:shadow-md">
                   Place Bid
