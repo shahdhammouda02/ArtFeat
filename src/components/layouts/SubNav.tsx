@@ -4,14 +4,12 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
-
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const categories = [
   "photography",
@@ -22,6 +20,16 @@ const categories = [
 ];
 
 export function SubNav() {
+  const location = useLocation();
+
+  // Get the current category from the URL path
+  const currentPath = location.pathname.substring(1).replace(/-/g, " ");
+  
+  // Check if current path matches any category
+  const isActiveCategory = (category: string) => {
+    return currentPath === category.toLowerCase().replace(/\s+/g, " ");
+  };
+
   return (
     <div className="w-full border-t border-gray-200 bg-gray-100 py-6 overflow-hidden">
       <div className="container mx-auto px-4 max-w-full">
@@ -33,7 +41,11 @@ export function SubNav() {
                   <NavigationMenuLink asChild>
                     <Link
                       to={`/${item.replace(/\s+/g, "-").toLowerCase()}`}
-                      className="text-gray-700 hover:text-sky-500 px-4 py-3 rounded-md transition-colors text-md font-semibold whitespace-nowrap"
+                      className={`px-4 py-3 rounded-md transition-colors text-md font-semibold whitespace-nowrap ${
+                        isActiveCategory(item) 
+                          ? "text-sky-500" 
+                          : "text-gray-700 hover:text-sky-500"
+                      }`}
                     >
                       {item}
                     </Link>
@@ -52,7 +64,11 @@ export function SubNav() {
                 <CarouselItem key={item} className="min-w-[9rem] flex-shrink-0">
                   <Link
                     to={`/${item.replace(/\s+/g, "-").toLowerCase()}`}
-                    className="block text-center text-gray-700 hover:text-sky-500 rounded-md transition-colors text-lg font-semibold whitespace-nowrap"
+                    className={`block text-center rounded-md transition-colors text-lg font-semibold whitespace-nowrap px-3 py-2 ${
+                      isActiveCategory(item)
+                        ? "text-sky-500"
+                        : "text-gray-700 hover:text-sky-500"
+                    }`}
                   >
                     {item}
                   </Link>

@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart, Globe, Bell, Menu, X } from "lucide-react";
 import artfeatLogo from "@/assets/images/artfeat_logo.jpg";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
   "Gallery",
@@ -21,6 +21,15 @@ const navItems = [
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // Get the current page from the URL path
+  const currentPath = location.pathname.substring(1).replace(/-/g, " ");
+  
+  // Check if current path matches any nav item
+  const isActiveNavItem = (item: string) => {
+    return currentPath === item.toLowerCase().replace(/\s+/g, " ");
+  };
 
   return (
     <nav
@@ -53,10 +62,14 @@ const Navbar = () => {
                 <NavigationMenuItem key={item}>
                   <NavigationMenuLink asChild>
                     <Link
-                    to={`/${item.replace(/\s+/g, "-").toLowerCase()}`}
-                    className="inline-block text-base font-semibold text-gray-800 hover:text-sky-500 transition-transform duration-300 ease-in-out hover:-translate-y-1.5"
-                  >
-                    {item}
+                      to={`/${item.replace(/\s+/g, "-").toLowerCase()}`}
+                      className={`inline-block text-base font-semibold transition-transform duration-300 ease-in-out hover:-translate-y-1.5 ${
+                        isActiveNavItem(item) 
+                          ? "text-sky-500" 
+                          : "text-gray-800 hover:text-sky-500"
+                      }`}
+                    >
+                      {item}
                     </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
@@ -175,12 +188,18 @@ const Navbar = () => {
                   className="text-center"
                   role="menuitem"
                 >
-                  <NavigationMenuLink
-                    href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="inline-block text-gray-800 font-semibold text-base transition-transform duration-150 ease-out hover:text-sky-400 hover:-translate-y-1.5 active:text-sky-400 active:-translate-y-1.5"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {item}
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to={`/${item.replace(/\s+/g, "-").toLowerCase()}`}
+                      className={`inline-block font-semibold text-base transition-transform duration-150 ease-out hover:-translate-y-1.5 ${
+                        isActiveNavItem(item)
+                          ? "text-sky-500"
+                          : "text-gray-800 hover:text-sky-400"
+                      }`}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {item}
+                    </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
