@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -17,18 +18,16 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import BidHistoryTable from "./BidHistoryTable ";
+import BidHistoryTable from "./BidHistoryTable";
 
 const Section2 = () => {
   return (
     <section id="live-auctions" className="py-16">
       <div className="max-w-7xl mx-auto px-4">
-        {/* Title */}
         <h2 className="text-center text-2xl md:text-3xl font-bold mb-12">
           Explore Live Auctions
         </h2>
 
-        {/* Auction Cards */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {auctions.map((item: Auction) => (
             <Card
@@ -36,7 +35,6 @@ const Section2 = () => {
               id={`auction-${item.id}`}
               className="overflow-hidden transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1 hover:border-sky-100 bg-gray-50"
             >
-              {/* Image */}
               <div className="relative group">
                 <img
                   src={item.image}
@@ -49,7 +47,6 @@ const Section2 = () => {
                 </span>
               </div>
 
-              {/* Content */}
               <CardHeader className="transition-colors duration-300 group-hover:bg-sky-50/40">
                 <CardTitle className="font-semibold text-gray-800 group-hover:text-sky-600 transition-colors duration-200">
                   {item.title}
@@ -71,8 +68,6 @@ const Section2 = () => {
                 </p>
 
                 <p className="font-bold text-lg">{item.bid}</p>
-                
-                {/* Dialog Trigger for Bid History */}
                 <Dialog>
                   <DialogTrigger asChild>
                     <p className="text-xs text-sky-600 cursor-pointer">
@@ -91,7 +86,6 @@ const Section2 = () => {
               </CardContent>
 
               <CardFooter className="flex flex-col gap-2 transition-colors duration-300 group-hover:bg-sky-50/30">
-                {/* Dialog Trigger for Shipping Availability */}
                  {item.type === "Physical" ? (
                   <Dialog>
                     <DialogTrigger asChild>
@@ -148,11 +142,19 @@ const Section2 = () => {
                     Shipping not available
                   </Button>
                 )}
-                
-                
-                <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold shadow-sm hover:shadow-md">
+
+
+                {/* <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold shadow-sm hover:shadow-md">
                   Place Bid
-                </Button>
+                </Button> */}
+<Link
+  to={`/auctions/${item.id}`}
+  className="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold shadow-sm hover:shadow-md text-center py-2 rounded-md"
+>
+  Place Bid
+</Link>
+
+
               </CardFooter>
             </Card>
           ))}

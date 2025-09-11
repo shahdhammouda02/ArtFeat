@@ -17,10 +17,8 @@ const HeroSection = () => {
       className="relative flex items-center justify-center h-[80vh] bg-center bg-cover"
       style={{ backgroundImage: `url(${auctions})` }}
     >
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black/40" />
 
-      {/* Content */}
       <div className="relative z-10 text-center text-white max-w-4xl px-4">
         <h1 className="text-3xl md:text-5xl font-bold mb-4">
           Discover Masterpieces, Bid for Legacy.
