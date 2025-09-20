@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart, Globe, Bell, Menu, X } from "lucide-react";
-import logo from '@/assets/images/logo.jpeg'
+import logo from "@/assets/images/logo.jpeg";
 import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
@@ -19,14 +19,61 @@ const navItems = [
   "Who we are",
 ];
 
+// تعريف نوع الإشعار
+interface Notification {
+  id: number;
+  message: string;
+  type: string;
+  timestamp: Date;
+}
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const location = useLocation();
 
-  // Get the current page from the URL path
+  useEffect(() => {
+    const count = parseInt(localStorage.getItem("notificationCount") || "0");
+    const storedNotifications = JSON.parse(
+      localStorage.getItem("notifications") || "[]"
+    );
+
+    setNotificationCount(count);
+    setNotifications(storedNotifications);
+
+    const handleNotificationUpdate = () => {
+      const updatedCount = parseInt(
+        localStorage.getItem("notificationCount") || "0"
+      );
+      const updatedNotifications = JSON.parse(
+        localStorage.getItem("notifications") || "[]"
+      );
+
+      setNotificationCount(updatedCount);
+      setNotifications(updatedNotifications);
+    };
+
+    window.addEventListener("notificationUpdate", handleNotificationUpdate);
+
+    return () => {
+      window.removeEventListener(
+        "notificationUpdate",
+        handleNotificationUpdate
+      );
+    };
+  }, []);
+  const clearNotifications = () => {
+    localStorage.setItem("notifications", JSON.stringify([]));
+    localStorage.setItem("notificationCount", "0");
+    setNotifications([]);
+    setNotificationCount(0);
+    setNotificationOpen(false);
+  };
+
   const currentPath = location.pathname.substring(1).replace(/-/g, " ");
-  
-  // Check if current path matches any nav item
+
   const isActiveNavItem = (item: string) => {
     return currentPath === item.toLowerCase().replace(/\s+/g, " ");
   };
@@ -64,8 +111,8 @@ const Navbar = () => {
                     <Link
                       to={`/${item.replace(/\s+/g, "-").toLowerCase()}`}
                       className={`inline-block text-base font-semibold transition-transform duration-300 ease-in-out hover:-translate-y-1.5 ${
-                        isActiveNavItem(item) 
-                          ? "text-sky-500" 
+                        isActiveNavItem(item)
+                          ? "text-sky-500"
                           : "text-gray-800 hover:text-sky-500"
                       }`}
                     >
@@ -121,13 +168,61 @@ const Navbar = () => {
           >
             <Globe size={22} />
           </button>
-          <button
-            aria-label="Notifications"
-            className="text-gray-700 hover:text-yellow-500"
-            type="button"
-          >
-            <Bell size={22} />
-          </button>
+
+          {/* Notification Bell with Dropdown */}
+          <div className="relative">
+            <button
+              aria-label="Notifications"
+              className="text-gray-700 hover:text-yellow-500 relative"
+              type="button"
+              onClick={() => setNotificationOpen(!notificationOpen)}
+            >
+              <Bell size={22} />
+              {notificationCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {notificationCount}
+                </span>
+              )}
+            </button>
+
+            {notificationOpen && (
+              <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                <div className="p-3 border-b border-gray-200 flex justify-between items-center">
+                  <h3 className="font-semibold text-gray-800">Notifications</h3>
+                  {notifications.length > 0 && (
+                    <button
+                      onClick={clearNotifications}
+                      className="text-xs text-sky-600 hover:text-sky-800"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+
+                <div className="max-h-96 overflow-y-auto">
+                  {notifications.length > 0 ? (
+                    notifications.map((notification) => (
+                      <div
+                        key={notification.id}
+                        className="p-3 border-b border-gray-100 hover:bg-gray-50"
+                      >
+                        <p className="text-sm text-gray-700">
+                          {notification.message}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {new Date(notification.timestamp).toLocaleString()}
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-4 text-center text-gray-500">
+                      No notifications yet
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="hidden sm:flex lg:hidden items-center space-x-4">
@@ -152,13 +247,60 @@ const Navbar = () => {
           >
             <Globe size={22} />
           </button>
-          <button
-            aria-label="Language"
-            className="text-gray-700 hover:text-yellow-500"
-            type="button"
-          >
-            <Bell size={22} />
-          </button>
+
+          {/* Notification Bell for Mobile (with dropdown) */}
+          <div className="relative">
+            <button
+              aria-label="Notifications"
+              className="text-gray-700 hover:text-yellow-500 relative"
+              type="button"
+              onClick={() => setNotificationOpen(!notificationOpen)}
+            >
+              <Bell size={22} />
+              {notificationCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {notificationCount}
+                </span>
+              )}
+            </button>
+
+            {notificationOpen && (
+              <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                <div className="p-3 border-b border-gray-200 flex justify-between items-center">
+                  <h3 className="font-semibold text-gray-800">Notifications</h3>
+                  {notifications.length > 0 && (
+                    <button
+                      onClick={clearNotifications}
+                      className="text-xs text-sky-600 hover:text-sky-800"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+                <div className="max-h-80 overflow-y-auto">
+                  {notifications.length > 0 ? (
+                    notifications.map((notification) => (
+                      <div
+                        key={notification.id}
+                        className="p-3 border-b border-gray-100 hover:bg-gray-50"
+                      >
+                        <p className="text-sm text-gray-700">
+                          {notification.message}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {new Date(notification.timestamp).toLocaleString()}
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-4 text-center text-gray-500">
+                      No notifications yet
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <button
@@ -246,13 +388,64 @@ const Navbar = () => {
               >
                 <Globe size={20} />
               </button>
-              <button
-                aria-label="Language"
-                className="text-gray-700 hover:text-yellow-500 transition-transform duration-300 ease-in-out hover:-translate-y-1.5"
-                type="button"
-              >
-                <Bell size={20} />
-              </button>
+
+              {/* Notification Bell for Mobile (with dropdown) */}
+              <div className="relative">
+                <button
+                  aria-label="Notifications"
+                  className="text-gray-700 hover:text-yellow-500 relative"
+                  type="button"
+                  onClick={() => setNotificationOpen(!notificationOpen)}
+                >
+                  <Bell size={22} />
+                  {notificationCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {notificationCount}
+                    </span>
+                  )}
+                </button>
+
+                {notificationOpen && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                    <div className="p-3 border-b border-gray-200 flex justify-between items-center">
+                      <h3 className="font-semibold text-gray-800">
+                        Notifications
+                      </h3>
+                      {notifications.length > 0 && (
+                        <button
+                          onClick={clearNotifications}
+                          className="text-xs text-sky-600 hover:text-sky-800"
+                        >
+                          Clear All
+                        </button>
+                      )}
+                    </div>
+                    <div className="max-h-80 overflow-y-auto">
+                      {notifications.length > 0 ? (
+                        notifications.map((notification) => (
+                          <div
+                            key={notification.id}
+                            className="p-3 border-b border-gray-100 hover:bg-gray-50"
+                          >
+                            <p className="text-sm text-gray-700">
+                              {notification.message}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {new Date(
+                                notification.timestamp
+                              ).toLocaleString()}
+                            </p>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="p-4 text-center text-gray-500">
+                          No notifications yet
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

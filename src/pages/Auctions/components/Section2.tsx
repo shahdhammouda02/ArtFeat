@@ -86,7 +86,7 @@ const Section2 = () => {
               </CardContent>
 
               <CardFooter className="flex flex-col gap-2 transition-colors duration-300 group-hover:bg-sky-50/30">
-                 {item.type === "Physical" ? (
+                {item.type === "Physical" ? (
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button
@@ -98,11 +98,14 @@ const Section2 = () => {
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-sm">
                       <DialogHeader className="border-b border-gray-200 pb-3 -mx-6 px-6">
-                        <DialogTitle className="font-bold text-lg">Check Shipping Availability</DialogTitle>
+                        <DialogTitle className="font-bold text-lg">
+                          Check Shipping Availability
+                        </DialogTitle>
                       </DialogHeader>
                       <div className="mt-4 space-y-3">
                         <p className="text-sm text-gray-600 pb-3">
-                          Shipping is available to the following regions and countries:
+                          Shipping is available to the following regions and
+                          countries:
                         </p>
                         <ul className="text-sm space-y-2 px-3">
                           <li className="flex items-center text-sky-600 cursor-pointer">
@@ -115,7 +118,8 @@ const Section2 = () => {
                           </li>
                           <li className="flex items-center text-sky-600 cursor-pointer">
                             <Check size={20} className="mr-2 text-sky-600" />
-                            United Kingdom (England, Scotland, Wales, Northern Ireland)
+                            United Kingdom (England, Scotland, Wales, Northern
+                            Ireland)
                           </li>
                           <li className="flex items-center text-sky-600 cursor-pointer">
                             <Check size={16} className="mr-2 text-sky-600" />
@@ -143,18 +147,15 @@ const Section2 = () => {
                   </Button>
                 )}
 
-
                 {/* <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold shadow-sm hover:shadow-md">
                   Place Bid
                 </Button> */}
-<Link
-  to={`/auctions/${item.id}`}
-  className="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold shadow-sm hover:shadow-md text-center py-2 rounded-md"
->
-  Place Bid
-</Link>
-
-
+                <Link
+                  to={`/auctions/${item.id}`}
+                  className="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold shadow-sm hover:shadow-md text-center py-2 rounded-md"
+                >
+                  Place Bid
+                </Link>
               </CardFooter>
             </Card>
           ))}
