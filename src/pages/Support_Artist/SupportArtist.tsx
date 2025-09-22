@@ -1,8 +1,9 @@
+import Hero from "./components/Hero"
 
 const SupportArtist = () => {
   return (
     <div>
-      <h1>Support Artist Page</h1>
+      <Hero />
     </div>
   )
 }
