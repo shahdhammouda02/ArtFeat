@@ -83,6 +83,11 @@ const SuccessStories = () => {
         </div>
         <div className="flex justify-center mt-10">
           <Button
+            onClick={() => {
+              document
+                .getElementById("donation-form")
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
             className="bg-sky-500 hover:bg-sky-600 text-white
                          px-3 sm:px-7 md:px-12 lg:px-10 
                          py-7 sm:py-4 md:py-5 lg:py-6 
@@ -109,6 +114,11 @@ const SuccessStories = () => {
 
         <div className="flex justify-center">
           <Button
+            onClick={() => {
+              document
+                .getElementById("donation-form")
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
             className="bg-white hover:bg-gray-50 text-sky-500 
                          px-4 sm:px-10 md:px-12 lg:px-10 
                          py-7 sm:py-4 md:py-5 lg:py-6 

@@ -12,10 +12,10 @@ const DonationForm = () => {
   const predefinedAmounts = ["25", "50", "100", "250", "500"];
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section id="donation-form" className="py-16 bg-gray-50">
       <div className="px-4 md:px-16 max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <div className="w-16 h-16 bg-sky-500 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 bg-sky-500 hover:bg-sky-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <Heart className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl md:text-5xl font-bold text-black mb-4">
@@ -28,19 +28,25 @@ const DonationForm = () => {
 
         <Card className="shadow-lg">
           <CardHeader className="text-center pb-6">
-            <CardTitle className="text-xl text-gray-800">Donation Details</CardTitle>
+            <CardTitle className="text-xl text-gray-800">
+              Donation Details
+            </CardTitle>
           </CardHeader>
-          
+
           <CardContent className="space-y-8">
             {/* Donation Type */}
             <div className="space-y-4">
-              <label className="text-base font-medium text-gray-700">Donation Type</label>
+              <label className="text-base font-medium text-gray-700">
+                Donation Type
+              </label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className={`flex items-center space-x-3 p-4 border-2 rounded-lg hover:bg-sky-50 transition-colors cursor-pointer ${
-                  donationType === "one-time"
-                    ? "border-sky-500 bg-sky-50"
-                    : "border-gray-300"
-                }`}>
+                <div
+                  className={`flex items-center space-x-3 p-4 border-2 rounded-lg hover:bg-sky-50 transition-colors cursor-pointer ${
+                    donationType === "one-time"
+                      ? "border-sky-500 bg-sky-50"
+                      : "border-gray-300"
+                  }`}
+                >
                   <input
                     type="radio"
                     value="one-time"
@@ -51,15 +57,22 @@ const DonationForm = () => {
                     className="w-4 h-4 text-sky-500 border-gray-300 focus:ring-sky-600"
                   />
                   <div>
-                    <label htmlFor="one-time" className="font-medium cursor-pointer">One-time</label>
+                    <label
+                      htmlFor="one-time"
+                      className="font-medium cursor-pointer"
+                    >
+                      One-time
+                    </label>
                     <p className="text-sm text-gray-500">Single donation</p>
                   </div>
                 </div>
-                <div className={`flex items-center space-x-3 p-4 border-2 rounded-lg hover:bg-sky-50 transition-colors cursor-pointer ${
-                  donationType === "monthly"
-                    ? "border-sky-500 bg-sky-50"
-                    : "border-gray-300"
-                }`}>
+                <div
+                  className={`flex items-center space-x-3 p-4 border-2 rounded-lg hover:bg-sky-50 transition-colors cursor-pointer ${
+                    donationType === "monthly"
+                      ? "border-sky-500 bg-sky-50"
+                      : "border-gray-300"
+                  }`}
+                >
                   <input
                     type="radio"
                     value="monthly"
@@ -70,7 +83,12 @@ const DonationForm = () => {
                     className="w-4 h-4 text-sky-500 border-gray-300 focus:ring-sky-600"
                   />
                   <div>
-                    <label htmlFor="monthly" className="font-medium cursor-pointer">Monthly</label>
+                    <label
+                      htmlFor="monthly"
+                      className="font-medium cursor-pointer"
+                    >
+                      Monthly
+                    </label>
                     <p className="text-sm text-gray-500">Recurring donation</p>
                   </div>
                 </div>
@@ -79,15 +97,17 @@ const DonationForm = () => {
 
             {/* Donation Amount */}
             <div className="space-y-4">
-              <label className="text-base font-medium text-black">Donation Amount</label>
+              <label className="text-base font-medium text-black">
+                Donation Amount
+              </label>
               <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
                 {predefinedAmounts.map((amount) => (
                   <Button
                     key={amount}
                     variant={selectedAmount === amount ? "default" : "outline"}
                     className={`h-12 ${
-                      selectedAmount === amount 
-                        ? "bg-sky-500 hover:bg-sky-600 text-white" 
+                      selectedAmount === amount
+                        ? "bg-sky-500 hover:bg-sky-600 text-white"
                         : "border-gray-300 hover:border-sky-500 hover:text-sky-500"
                     }`}
                     onClick={() => {
@@ -99,7 +119,7 @@ const DonationForm = () => {
                   </Button>
                 ))}
               </div>
-              
+
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
@@ -114,9 +134,11 @@ const DonationForm = () => {
                   }}
                   className="w-4 h-4 text-sky-500 border-gray-300 rounded focus:ring-sky-600"
                 />
-                <label htmlFor="custom-amount" className="text-sm">Custom amount</label>
+                <label htmlFor="custom-amount" className="text-sm">
+                  Custom amount
+                </label>
               </div>
-              
+
               {(customAmount !== "" || selectedAmount === "") && (
                 <Input
                   type="number"
@@ -133,28 +155,43 @@ const DonationForm = () => {
 
             {/* Your Information */}
             <div className="space-y-4">
-              <label className="text-base font-medium text-gray-700">Your Information</label>
+              <label className="text-base font-medium text-gray-700">
+                Your Information
+              </label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label htmlFor="fullName" className="text-sm flex items-center gap-2">
+                  <label
+                    htmlFor="fullName"
+                    className="text-sm flex items-center gap-2"
+                  >
                     <User className="w-4 h-4" />
                     Full Name
                   </label>
                   <Input id="fullName" placeholder="Enter your full name" />
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm flex items-center gap-2">
+                  <label
+                    htmlFor="email"
+                    className="text-sm flex items-center gap-2"
+                  >
                     <Mail className="w-4 h-4" />
                     Email Address
                   </label>
-                  <Input id="email" type="email" placeholder="Enter your email" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                  />
                 </div>
               </div>
             </div>
 
             {/* Message */}
             <div className="space-y-4">
-              <label htmlFor="message" className="text-base font-medium text-gray-700 flex items-center gap-2">
+              <label
+                htmlFor="message"
+                className="text-base font-medium text-gray-700 flex items-center gap-2"
+              >
                 <MessageSquare className="w-4 h-4" />
                 Message (optional)
               </label>
@@ -168,7 +205,9 @@ const DonationForm = () => {
             {/* Total Amount */}
             <div className="bg-gray-50 p-6 rounded-lg">
               <div className="flex justify-between items-center">
-                <span className="text-lg font-medium text-gray-700">Donation Amount:</span>
+                <span className="text-lg font-medium text-gray-700">
+                  Donation Amount:
+                </span>
                 <span className="text-2xl font-bold text-black">
                   ${customAmount || selectedAmount || "0"}
                 </span>
@@ -176,7 +215,7 @@ const DonationForm = () => {
             </div>
 
             {/* Donate Button */}
-            <Button 
+            <Button
               className="w-full bg-sky-500 hover:bg-sky-600 text-white py-4 text-lg font-medium rounded-lg"
               size="lg"
             >
@@ -184,7 +223,8 @@ const DonationForm = () => {
             </Button>
 
             <p className="text-center text-sm text-gray-500">
-              Secure payment processing. Your card information is encrypted and safe.
+              Secure payment processing. Your card information is encrypted and
+              safe.
             </p>
           </CardContent>
         </Card>
