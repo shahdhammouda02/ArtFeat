@@ -59,7 +59,7 @@ const Hero = () => {
                 {slide.text}
               </h1>
               <Button
-                className="bg-sky-700/80 hover:bg-sky-800/80 text-white 
+                className="bg-sky-500/80 hover:bg-sky-600/80 text-white 
                 px-6 sm:px-12 md:px-16 lg:px-20 
                 py-3 sm:py-4 md:py-5 lg:py-6 
                 text-sm sm:text-base md:text-lg lg:text-lg 

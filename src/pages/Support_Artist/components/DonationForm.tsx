@@ -15,7 +15,7 @@ const DonationForm = () => {
     <section className="py-16 bg-gray-50">
       <div className="px-4 md:px-16 max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <div className="w-16 h-16 bg-sky-700 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 bg-sky-500 rounded-full flex items-center justify-center mx-auto mb-6">
             <Heart className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl md:text-5xl font-bold text-black mb-4">
@@ -38,7 +38,7 @@ const DonationForm = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className={`flex items-center space-x-3 p-4 border-2 rounded-lg hover:bg-sky-50 transition-colors cursor-pointer ${
                   donationType === "one-time"
-                    ? "border-sky-700 bg-sky-50"
+                    ? "border-sky-500 bg-sky-50"
                     : "border-gray-300"
                 }`}>
                   <input
@@ -48,7 +48,7 @@ const DonationForm = () => {
                     name="donationType"
                     checked={donationType === "one-time"}
                     onChange={(e) => setDonationType(e.target.value)}
-                    className="w-4 h-4 text-sky-700 border-gray-300 focus:ring-sky-700"
+                    className="w-4 h-4 text-sky-500 border-gray-300 focus:ring-sky-600"
                   />
                   <div>
                     <label htmlFor="one-time" className="font-medium cursor-pointer">One-time</label>
@@ -57,7 +57,7 @@ const DonationForm = () => {
                 </div>
                 <div className={`flex items-center space-x-3 p-4 border-2 rounded-lg hover:bg-sky-50 transition-colors cursor-pointer ${
                   donationType === "monthly"
-                    ? "border-sky-700 bg-sky-50"
+                    ? "border-sky-500 bg-sky-50"
                     : "border-gray-300"
                 }`}>
                   <input
@@ -67,7 +67,7 @@ const DonationForm = () => {
                     name="donationType"
                     checked={donationType === "monthly"}
                     onChange={(e) => setDonationType(e.target.value)}
-                    className="w-4 h-4 text-sky-700 border-gray-300 focus:ring-sky-700"
+                    className="w-4 h-4 text-sky-500 border-gray-300 focus:ring-sky-600"
                   />
                   <div>
                     <label htmlFor="monthly" className="font-medium cursor-pointer">Monthly</label>
@@ -87,8 +87,8 @@ const DonationForm = () => {
                     variant={selectedAmount === amount ? "default" : "outline"}
                     className={`h-12 ${
                       selectedAmount === amount 
-                        ? "bg-sky-700 hover:bg-sky-800 text-white" 
-                        : "border-gray-300 hover:border-sky-700 hover:text-sky-700"
+                        ? "bg-sky-500 hover:bg-sky-600 text-white" 
+                        : "border-gray-300 hover:border-sky-500 hover:text-sky-500"
                     }`}
                     onClick={() => {
                       setSelectedAmount(amount);
@@ -112,7 +112,7 @@ const DonationForm = () => {
                       setCustomAmount("");
                     }
                   }}
-                  className="w-4 h-4 text-sky-700 border-gray-300 rounded focus:ring-sky-700"
+                  className="w-4 h-4 text-sky-500 border-gray-300 rounded focus:ring-sky-600"
                 />
                 <label htmlFor="custom-amount" className="text-sm">Custom amount</label>
               </div>
@@ -177,7 +177,7 @@ const DonationForm = () => {
 
             {/* Donate Button */}
             <Button 
-              className="w-full bg-sky-700 hover:bg-sky-800 text-white py-4 text-lg font-medium rounded-lg"
+              className="w-full bg-sky-500 hover:bg-sky-600 text-white py-4 text-lg font-medium rounded-lg"
               size="lg"
             >
               Donate ${customAmount || selectedAmount || "0"}

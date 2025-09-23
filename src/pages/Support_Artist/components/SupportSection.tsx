@@ -8,7 +8,7 @@ const SupportSection = () => {
       <div className="px-4 md:px-16 max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold text-sky-700 mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold text-sky-500 mb-6">
             Support the Artists, Shape the Future
           </h2>
           <p className="text-gray-600 max-w-4xl mx-auto text-base md:text-lg leading-relaxed">
@@ -22,25 +22,25 @@ const SupportSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="text-center bg-sky-50/30 py-8 px-6 rounded-2xl">
             <div className="w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Users className="w-8 h-8 text-sky-700" />
+              <Users className="w-8 h-8 text-sky-500" />
             </div>
-            <div className="text-3xl md:text-4xl font-bold text-sky-700 mb-2">120+</div>
+            <div className="text-3xl md:text-4xl font-bold text-sky-500 mb-2">120+</div>
             <div className="text-gray-600 font-medium">Supported Artists</div>
           </div>
 
           <div className="text-center bg-sky-50/30 py-8 px-6 rounded-2xl">
             <div className="w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <DollarSign className="w-8 h-8 text-sky-700" />
+              <DollarSign className="w-8 h-8 text-sky-500" />
             </div>
-            <div className="text-3xl md:text-4xl font-bold text-sky-700 mb-2">500K+</div>
+            <div className="text-3xl md:text-4xl font-bold text-sky-500 mb-2">500K+</div>
             <div className="text-gray-600 font-medium">Total Donations</div>
           </div>
 
           <div className="text-center bg-sky-50/30 py-8 px-6 rounded-2xl">
             <div className="w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Heart className="w-8 h-8 text-sky-700" />
+              <Heart className="w-8 h-8 text-sky-500" />
             </div>
-            <div className="text-3xl md:text-4xl font-bold text-sky-700 mb-2">85</div>
+            <div className="text-3xl md:text-4xl font-bold text-sky-500 mb-2">85</div>
             <div className="text-gray-600 font-medium">Art works</div>
           </div>
         </div>
@@ -48,7 +48,7 @@ const SupportSection = () => {
         {/* Our Goal Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
           <div>
-            <h3 className="text-2xl md:text-3xl font-bold text-sky-700 mb-6">
+            <h3 className="text-2xl md:text-3xl font-bold text-sky-500 mb-6">
               Our Goal: Empower Creativity
             </h3>
             <p className="text-gray-600 mb-6 leading-relaxed">
@@ -56,7 +56,7 @@ const SupportSection = () => {
               Every donation directly contributes to purchasing materials, supporting exhibitions, and providing 
               opportunities for artists to showcase their work and reach new audiences.
             </p>
-            <Button className="bg-sky-700 hover:bg-sky-800 text-white px-8 py-3 rounded-lg font-medium">
+            <Button className="bg-sky-500 hover:bg-sky-600 text-white px-8 py-3 rounded-lg font-medium">
               Donate Now
             </Button>
           </div>
@@ -79,7 +79,7 @@ const SupportSection = () => {
             />
           </div>
           <div>
-            <h3 className="text-2xl md:text-3xl font-bold text-sky-700 mb-6">
+            <h3 className="text-2xl md:text-3xl font-bold text-sky-500 mb-6">
               See Your Support in Action
             </h3>
             <p className="text-gray-600 mb-6 leading-relaxed">
@@ -89,7 +89,7 @@ const SupportSection = () => {
               contribution opens doors for artists, enabling them to thrive and share 
               their gifts with the world.
             </p>
-            <Button className="bg-sky-700 hover:bg-sky-800 text-white px-8 py-3 rounded-lg font-medium">
+            <Button className="bg-sky-500 hover:bg-sky-600 text-white px-8 py-3 rounded-lg font-medium">
               Donate Now
             </Button>
           </div>
@@ -98,7 +98,7 @@ const SupportSection = () => {
         {/* Every Donation Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h3 className="text-2xl md:text-3xl font-bold text-sky-700 mb-6">
+            <h3 className="text-2xl md:text-3xl font-bold text-sky-500 mb-6">
               Every Donation Shapes the Future
             </h3>
             <p className="text-gray-600 mb-6 leading-relaxed">
@@ -107,7 +107,7 @@ const SupportSection = () => {
               provides ongoing mentorship, and creates lasting opportunities that will 
               benefit artists and communities for generations to come.
             </p>
-            <Button className="bg-sky-700 hover:bg-sky-800 text-white px-8 py-3 rounded-lg font-medium">
+            <Button className="bg-sky-500 hover:bg-sky-600 text-white px-8 py-3 rounded-lg font-medium">
               Donate Now
             </Button>
           </div>

@@ -39,7 +39,7 @@ const SuccessStories = () => {
   return (
     <section className="py-16">
       <div className="px-4 md:px-16">
-        <h2 className="text-3xl md:text-5xl font-bold text-center mb-6 text-sky-700">
+        <h2 className="text-3xl md:text-5xl font-bold text-center mb-6 text-sky-500">
           Discover Inspiring Success Stories
         </h2>
 
@@ -73,7 +73,7 @@ const SuccessStories = () => {
                 </p>
               </CardContent>
 
-              <CardFooter className="bg-gray-100 border-l-4 border-sky-700 px-4 py-3 mb-3 mt-3">
+              <CardFooter className="bg-gray-100 border-l-4 border-sky-500 px-4 py-3 mb-3 mt-3">
                 <p className="text-gray-700 italic text-sm">
                   {artist.inspiration}
                 </p>
@@ -83,7 +83,7 @@ const SuccessStories = () => {
         </div>
         <div className="flex justify-center mt-10">
           <Button
-            className="bg-sky-700 hover:bg-sky-700/90 text-white
+            className="bg-sky-500 hover:bg-sky-600 text-white
                          px-3 sm:px-7 md:px-12 lg:px-10 
                          py-7 sm:py-4 md:py-5 lg:py-6 
                          text-sm sm:text-base md:text-lg lg:text-lg 
@@ -95,7 +95,7 @@ const SuccessStories = () => {
         </div>
       </div>
 
-      <div className="mt-20 w-full bg-gradient-to-r from-sky-700 to-sky-600 text-white py-16 px-6 text-center">
+      <div className="mt-20 w-full bg-gradient-to-r from-sky-500 to-sky-600 text-white py-16 px-6 text-center">
         <Award className="w-14 h-14 mx-auto mb-6 text-white" />
 
         <h3 className="text-4xl md:text-5xl font-bold mb-4">
@@ -109,7 +109,7 @@ const SuccessStories = () => {
 
         <div className="flex justify-center">
           <Button
-            className="bg-white hover:bg-gray-50 text-sky-700 
+            className="bg-white hover:bg-gray-50 text-sky-500 
                          px-4 sm:px-10 md:px-12 lg:px-10 
                          py-7 sm:py-4 md:py-5 lg:py-6 
                          text-sm sm:text-base md:text-lg lg:text-lg 
