@@ -46,6 +46,7 @@ const DonationForm = () => {
                       ? "border-sky-500 bg-sky-50"
                       : "border-gray-300"
                   }`}
+                  onClick={() => setDonationType("one-time")}
                 >
                   <input
                     type="radio"
@@ -54,7 +55,7 @@ const DonationForm = () => {
                     name="donationType"
                     checked={donationType === "one-time"}
                     onChange={(e) => setDonationType(e.target.value)}
-                    className="w-4 h-4 text-sky-500 border-gray-300 focus:ring-sky-600"
+                    className="w-4 h-4 text-sky-500 border-gray-300 focus:ring-sky-600 pointer-events-none"
                   />
                   <div>
                     <label
@@ -72,6 +73,7 @@ const DonationForm = () => {
                       ? "border-sky-500 bg-sky-50"
                       : "border-gray-300"
                   }`}
+                  onClick={() => setDonationType("monthly")}
                 >
                   <input
                     type="radio"
@@ -80,7 +82,7 @@ const DonationForm = () => {
                     name="donationType"
                     checked={donationType === "monthly"}
                     onChange={(e) => setDonationType(e.target.value)}
-                    className="w-4 h-4 text-sky-500 border-gray-300 focus:ring-sky-600"
+                    className="w-4 h-4 text-sky-500 border-gray-300 focus:ring-sky-600 pointer-events-none"
                   />
                   <div>
                     <label
