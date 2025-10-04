@@ -171,8 +171,11 @@ export default function AuctionBidView({ id }: { id: number }) {
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="w-full h-full min-h-[600px] lg:min-h-[700px] object-cover rounded-xl transition-all duration-500 group-hover:scale-[1.02]"
+                      className="w-full h-full min-h-[600px] lg:min-h-[700px] object-cover rounded-xl transition-all duration-500 group-hover:scale-[1.02] select-none pointer-events-none"
                       loading="lazy"
+                      onContextMenu={(e) => e.preventDefault()}
+                      onDragStart={(e) => e.preventDefault()}
+                      style={{ userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none' }}
                     />
                   </CarouselItem>
                 </CarouselContent>

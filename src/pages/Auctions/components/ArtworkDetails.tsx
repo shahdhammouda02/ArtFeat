@@ -35,8 +35,11 @@ export default function ArtworkDetails({ id }: { id: number }) {
           <img
             src={found.image}
             alt={found.title}
-            className="w-full h-64 sm:h-80 lg:h-96 object-cover"
+            className="w-full h-64 sm:h-80 lg:h-96 object-cover select-none pointer-events-none"
             loading="lazy"
+            onContextMenu={(e) => e.preventDefault()}
+            onDragStart={(e) => e.preventDefault()}
+            style={{ userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none' }}
           />
         </div>
 

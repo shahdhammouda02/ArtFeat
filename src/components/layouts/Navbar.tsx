@@ -84,7 +84,7 @@ const Navbar = () => {
       role="navigation"
       aria-label="Primary Navigation"
     >
-      <div className="container mx-auto flex items-center justify-between h-20 px-4">
+      <div className="container mx-auto flex items-center justify-between h-24 px-4">
         <Link
           to="/"
           className="flex items-center space-x-2 select-none"
@@ -93,7 +93,7 @@ const Navbar = () => {
           <img
             src={logo}
             alt="ArtFeat Logo"
-            className="h-20 w-auto mix-blend-multiply bg-transparent"
+            className="h-24 w-auto mix-blend-multiply bg-transparent"
             loading="lazy"
             width={300}
             height={200}

@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { auctions } from "@/data/auctionsData";
 import type { Auction } from "@/types/auctions";
-import { Check, Clock, MapPin } from "lucide-react";
+import { Check } from "lucide-react";
+import CountdownTimer from "@/components/ui/countdown-timer";
 import {
   Card,
   CardHeader,
@@ -39,8 +40,11 @@ const Section2 = () => {
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-48 object-cover transition-all duration-500 group-hover:scale-105"
+                  className="w-full h-48 object-cover transition-all duration-500 group-hover:scale-105 select-none pointer-events-none"
                   loading="lazy"
+                  onContextMenu={(e) => e.preventDefault()}
+                  onDragStart={(e) => e.preventDefault()}
+                  style={{ userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none' }}
                 />
                 <span className="absolute top-3 left-3 bg-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
                   {item.type}
@@ -59,19 +63,17 @@ const Section2 = () => {
               </CardHeader>
 
               <CardContent className="space-y-2">
-                <p className="flex items-center gap-1 text-xs text-sky-600 font-medium">
-                  <Clock
-                    size={14}
-                    className="text-gray-500 group-hover:text-sky-500 transition-colors duration-200"
-                  />
-                  Auction ends in: <span>{item.time}</span>
-                </p>
+                <CountdownTimer endTime={item.endTime} />
 
-                <p className="font-bold text-lg">{item.bid}</p>
+                <div className="space-y-1">
+                  <p className="text-xs text-gray-600 font-medium">Current Bid</p>
+                  <p className="font-bold text-lg">{item.bid}</p>
+                </div>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <p className="text-xs text-sky-600 cursor-pointer">
-                      {item.bidsCount} Bids Placed View History
+                    <p className="text-sm font-semibold cursor-pointer">
+                      <span className="text-gray-900">{item.bidsCount} Bids Placed</span>{" "}
+                      <span className="text-sky-600">View History</span>
                     </p>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[625px] max-h-[80vh] overflow-y-auto">
@@ -125,12 +127,12 @@ const Section2 = () => {
                             <Check size={16} className="mr-2 text-sky-600" />
                             Australia (All states and territories)
                           </li>
-                          <li className="flex items-center text-blue-600 cursor-pointer">
+                          <li className="flex items-center text-sky-600 cursor-pointer">
                             <Check size={16} className="mr-2 text-sky-600" />
                             Germany
                           </li>
-                          <li className="flex items-center text-gray-600">
-                            <MapPin size={16} className="mr-2 text-gray-500" />
+                          <li className="flex items-center text-sky-600 cursor-pointer">
+                            <Check size={16} className="mr-2 text-sky-600" />
                             France
                           </li>
                         </ul>

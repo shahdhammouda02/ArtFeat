@@ -4,13 +4,19 @@ import image2 from "../assets/images/CeramicWonders.jpeg"
 import image3 from "../assets/images/Outdoor Paint Party Ideas.jpg";
 import image4 from "../assets/images/download (8).jpg";
 
+// Helper function to create end times relative to current time
+const createEndTime = (hours: number, minutes: number, seconds: number): Date => {
+  const now = new Date();
+  return new Date(now.getTime() + (hours * 60 * 60 * 1000) + (minutes * 60 * 1000) + (seconds * 1000));
+};
+
 export const auctions: Auction[] = [
   {
     id: 1,
     type: "Digital",
     title: "Aurora Borealis Flow",
     author: "Elana Kenule",
-    time: "00h 04m 59s",
+    endTime: createEndTime(0, 4, 59), // Ends in 4 minutes 59 seconds
     bid: "$6,000",
     bidsCount: 15,
     image: image1,
@@ -20,7 +26,7 @@ export const auctions: Auction[] = [
     type: "Digital",
     title: "Urban Geometry",
     author: "Marcus Thorne",
-    time: "00h 29m 59s",
+    endTime: createEndTime(0, 29, 59), // Ends in 29 minutes 59 seconds
     bid: "$3,200",
     bidsCount: 15,
     image: image2,
@@ -30,7 +36,7 @@ export const auctions: Auction[] = [
     type: "Physical",
     title: "Crimson Desert",
     author: "Lehna Petrov",
-    time: "12h 09m 59s",
+    endTime: createEndTime(12, 9, 59), // Ends in 12 hours 9 minutes 59 seconds
     bid: "$1,800",
     bidsCount: 15,
     image: image3,
@@ -40,7 +46,7 @@ export const auctions: Auction[] = [
     type: "Physical",
     title: "Spring Bloom",
     author: "Sophia Cher",
-    time: "00h 44m 59s",
+    endTime: createEndTime(0, 44, 59), // Ends in 44 minutes 59 seconds
     bid: "$4,500",
     bidsCount: 15,
     image: image4,

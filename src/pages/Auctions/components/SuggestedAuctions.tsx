@@ -61,8 +61,11 @@ export default function SuggestedAuctions({ currentId }: Props) {
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full aspect-[16/8] sm:aspect-[4/2.5] object-cover transition-all duration-500 group-hover:scale-105"
+                    className="w-full aspect-[16/8] sm:aspect-[4/2.5] object-cover transition-all duration-500 group-hover:scale-105 select-none pointer-events-none"
                     loading="lazy"
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
+                    style={{ userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none' }}
                   />
                   <span className="absolute top-3 right-3 text-white text-xs font-semibold px-2 py-1 rounded-xl bg-sky-500 transition-colors duration-300 group-hover:bg-opacity-90">
                     Live Auction
