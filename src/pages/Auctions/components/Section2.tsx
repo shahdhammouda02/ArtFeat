@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import {
@@ -11,6 +12,7 @@ import { auctions } from "@/data/auctionsData";
 import type { Auction } from "@/types/auctions";
 import { Check } from "lucide-react";
 import CountdownTimer from "@/components/ui/countdown-timer";
+import { ScreenshotProtection } from "@/utils/screenshotProtection";
 import {
   Card,
   CardHeader,
@@ -22,6 +24,14 @@ import {
 import BidHistoryTable from "./BidHistoryTable";
 
 const Section2 = () => {
+  // Initialize screenshot protection
+  useEffect(() => {
+    const protection = ScreenshotProtection.getInstance();
+
+    return () => {
+      protection.destroy();
+    };
+  }, []);
   return (
     <section id="live-auctions" className="py-16">
       <div className="max-w-7xl mx-auto px-4">
@@ -40,11 +50,8 @@ const Section2 = () => {
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-48 object-cover transition-all duration-500 group-hover:scale-105 select-none pointer-events-none"
+                  className="w-full h-48 object-cover transition-all duration-500 group-hover:scale-105"
                   loading="lazy"
-                  onContextMenu={(e) => e.preventDefault()}
-                  onDragStart={(e) => e.preventDefault()}
-                  style={{ userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none' }}
                 />
                 <span className="absolute top-3 left-3 bg-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
                   {item.type}

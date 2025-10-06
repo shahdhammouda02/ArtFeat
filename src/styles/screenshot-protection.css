@@ -1,0 +1,229 @@
+/* Screenshot Protection Styles */
+
+/* Watermark styles */
+.watermark-center {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  z-index: 1000;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.watermark-corner {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  z-index: 1000;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Protected image styles */
+.screenshot-protection img {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+/* Prevent text selection on protected elements */
+.screenshot-protection {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+
+
+/* Protection overlay styles */
+.screenshot-overlay {
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Blur animation for protected images */
+.protected-blur {
+  filter: blur(15px) contrast(0.2) brightness(0.3) grayscale(1);
+  transform: scale(0.9);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+/* Normal state for images */
+.protected-normal {
+  filter: none;
+  transform: scale(1);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+/* Warning toast styles */
+.protection-warning {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 87, 51, 0.95);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  z-index: 10000;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 300px;
+  text-align: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Zoom modal animations */
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* Disable image dragging globally */
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+/* Disable context menu on images */
+img::-webkit-context-menu {
+  display: none !important;
+}
+
+/* Force disable context menu */
+img, .screenshot-protection, .screenshot-protection * {
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -khtml-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Disable right-click context menu globally for images */
+img {
+  pointer-events: none !important;
+}
+
+/* Re-enable pointer events for buttons */
+button {
+  pointer-events: auto !important;
+}
+
+/* Disable selection on protected content */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* High contrast mode protection */
+@media (prefers-contrast: high) {
+  .watermark-center,
+  .watermark-corner {
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 1), -2px -2px 4px rgba(255, 255, 255, 1);
+    font-weight: bold;
+  }
+}
+
+/* Print protection */
+@media print {
+  .screenshot-protection img {
+    filter: blur(20px) !important;
+    opacity: 0.1 !important;
+  }
+
+  .watermark-center {
+    font-size: 5rem !important;
+    color: red !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+  }
+
+  .watermark-corner {
+    font-size: 2rem !important;
+    color: red !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+  }
+
+  .watermark-center::after {
+    content: "© ArtFeat - Unauthorized reproduction prohibited";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 36px;
+    font-weight: 900;
+    color: red;
+    z-index: 9999;
+    background: white;
+    padding: 20px;
+    border: 3px solid red;
+  }
+}

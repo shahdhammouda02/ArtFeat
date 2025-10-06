@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ScreenshotProtection } from "@/utils/screenshotProtection";
 import { auctions } from "@/data/auctionsData";
 import {
   Carousel,
@@ -11,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Heart, Share2, Bookmark, Send } from "lucide-react";
 import type { Auction } from "@/types/auctions";
+import "@/utils/screenshotProtection";
 
 type AuctionExtra = Auction & {
   startingPrice?: number | string;
@@ -55,6 +57,17 @@ export default function AuctionBidView({ id }: { id: number }) {
     target: new Date(),
   });
 
+
+
+  // Initialize screenshot protection
+  useEffect(() => {
+    const protection = ScreenshotProtection.getInstance();
+
+    return () => {
+      protection.destroy();
+    };
+  }, []);
+
   // Update countdown every second
   useEffect(() => {
     if (!found) return;
@@ -74,6 +87,11 @@ export default function AuctionBidView({ id }: { id: number }) {
     return <div className="max-w-6xl mx-auto px-4 py-16">Not Found</div>;
 
   const item: AuctionExtra = found;
+
+  // Create images array (for future support of multiple images)
+  const images = [item.image]; // Currently only one image per auction
+  const hasMultipleImages = images.length > 1; // Hide navigation arrows when only one image
+
   const startingPriceNum = parseMoney(item.startingPrice ?? item.bid);
   const currentBidNum = parseMoney(item.bid) || startingPriceNum;
   const minInc = item.minIncrement ?? 100;
@@ -84,29 +102,24 @@ export default function AuctionBidView({ id }: { id: number }) {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    const n = Number(fd.get("bid"));
+    const bidValue = fd.get("bid") as string;
+    const n = Number(bidValue);
 
-    if (Number.isNaN(n)) {
-      // خطأ في الرقم
-      const errorNotification = {
-        id: Date.now(),
-        message: `Invalid bid entered for "${item.title}".`,
-        type: "error",
-        timestamp: new Date(),
-      };
-      const existingNotifications = JSON.parse(
-        localStorage.getItem("notifications") || "[]"
-      );
-      localStorage.setItem(
-        "notifications",
-        JSON.stringify([errorNotification, ...existingNotifications])
-      );
-      const currentCount = parseInt(
-        localStorage.getItem("notificationCount") || "0"
-      );
-      localStorage.setItem("notificationCount", (currentCount + 1).toString());
-      window.dispatchEvent(new Event("notificationUpdate"));
+    // Check if the field is empty or invalid
+    if (!bidValue || bidValue.trim() === "" || Number.isNaN(n) || n <= 0) {
+      // Show error message in the form instead of notification
+      const bidInput = e.currentTarget.querySelector('input[name="bid"]') as HTMLInputElement;
+      if (bidInput) {
+        bidInput.setCustomValidity("Please enter a valid bid amount");
+        bidInput.reportValidity();
+      }
       return;
+    }
+
+    // Clear any previous validation errors
+    const bidInput = e.currentTarget.querySelector('input[name="bid"]') as HTMLInputElement;
+    if (bidInput) {
+      bidInput.setCustomValidity("");
     }
 
     if (n < minAllowed) {
@@ -158,6 +171,10 @@ export default function AuctionBidView({ id }: { id: number }) {
     e.currentTarget.reset();
   };
 
+
+
+
+
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
@@ -167,31 +184,102 @@ export default function AuctionBidView({ id }: { id: number }) {
             <div className="relative group flex-1">
               <Carousel className="h-full">
                 <CarouselContent className="h-full">
-                  <CarouselItem className="h-full">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full min-h-[600px] lg:min-h-[700px] object-cover rounded-xl transition-all duration-500 group-hover:scale-[1.02] select-none pointer-events-none"
+                  {images.map((imageUrl, index) => (
+                    <CarouselItem key={index} className="h-full">
+                      <div
+                        className="relative h-full screenshot-protection hover:shadow-2xl transition-all duration-300 group"
+                        onContextMenu={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          return false;
+                        }}
+                      >
+                      <img
+                        src={imageUrl}
+                        alt={`${item.title} - Image ${index + 1}`}
+                        className="w-full h-full min-h-[600px] lg:min-h-[700px] object-cover rounded-xl transition-all duration-500 group-hover:scale-[1.02] select-none no-select"
                       loading="lazy"
-                      onContextMenu={(e) => e.preventDefault()}
-                      onDragStart={(e) => e.preventDefault()}
-                      style={{ userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none' }}
+                      onContextMenu={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                      }}
+                      onDragStart={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                      }}
+                      onMouseDown={(e) => {
+                        if (e.button === 2) { // Right click
+                          e.preventDefault();
+                          e.stopPropagation();
+                          return false;
+                        }
+                      }}
+                      style={{
+                        userSelect: 'none',
+                        WebkitUserSelect: 'none',
+                        MozUserSelect: 'none'
+                      } as React.CSSProperties}
                     />
-                  </CarouselItem>
+
+                    {/* Additional watermark in corner */}
+                    <div className="absolute top-4 left-4 text-white/70 text-lg font-bold select-none pointer-events-none watermark-corner"
+                         style={{
+                           textShadow: '3px 3px 6px rgba(0,0,0,0.9)',
+                           fontSize: '1.25rem',
+                           fontWeight: '800'
+                         }}>
+                      © ArtFeat
+                    </div>
+
+                    {/* ArtFeat Copyright Watermark - Center */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div
+                        className="text-white/80 font-bold text-3xl lg:text-5xl transform rotate-[-25deg] select-none watermark-center"
+                        style={{
+                          textShadow: '3px 3px 6px rgba(0,0,0,0.9), -2px -2px 4px rgba(255,255,255,0.4)',
+                          fontSize: '3.5rem',
+                          letterSpacing: '5px',
+                          fontFamily: 'Arial, sans-serif',
+                          fontWeight: '900'
+                        }}
+                      >
+                        © ArtFeat
+                      </div>
+                    </div>
+
+
+
+
+                    </div>
+                    </CarouselItem>
+                  ))}
                 </CarouselContent>
-                <CarouselPrevious className="left-3 bg-white/90 hover:bg-white border-gray-200 shadow-md" />
-                <CarouselNext className="right-3 bg-white/90 hover:bg-white border-gray-200 shadow-md" />
+                {hasMultipleImages && (
+                  <>
+                    <CarouselPrevious className="left-3 bg-white/90 hover:bg-white border-gray-200 shadow-md" />
+                    <CarouselNext className="right-3 bg-white/90 hover:bg-white border-gray-200 shadow-md" />
+                  </>
+                )}
               </Carousel>
-              <button className="absolute top-4 right-4 bg-white/90 hover:bg-white rounded-full p-2.5 shadow-md transition-all duration-200 hover:shadow-lg">
+              <button className="absolute top-4 right-4 bg-white/90 hover:bg-white rounded-full p-2.5 shadow-md transition-all duration-200 hover:shadow-lg z-10">
                 <Heart
                   size={18}
                   className="text-gray-600 hover:text-red-500 transition-colors"
                 />
               </button>
             </div>
-            <div className="flex justify-center items-center gap-2 mt-3 py-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-sky-500" />
-            </div>
+            {hasMultipleImages && (
+              <div className="flex justify-center items-center gap-2 mt-3 py-2">
+                {images.map((_, index) => (
+                  <span
+                    key={index}
+                    className="w-2.5 h-2.5 rounded-full bg-sky-500"
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -364,6 +452,9 @@ export default function AuctionBidView({ id }: { id: number }) {
                   <Input
                     name="bid"
                     type="number"
+                    required
+                    min={minAllowed}
+                    step="0.01"
                     placeholder={`Enter your bid (minimum $${minAllowed.toLocaleString()})`}
                     className="h-10 text-base border-gray-300 focus:border-sky-500 focus:ring-sky-500"
                   />
@@ -394,10 +485,13 @@ export default function AuctionBidView({ id }: { id: number }) {
                 <Bookmark size={16} />
                 <span className="text-xs font-medium">Save</span>
               </button>
+
             </div>
           </div>
         </div>
       </div>
+
+
     </div>
   );
 }

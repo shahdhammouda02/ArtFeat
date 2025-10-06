@@ -4,10 +4,72 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>ArtFeat - Premium Art Auctions</title>
+
+    <!-- Screenshot protection meta tags -->
+    <meta name="robots" content="noarchive, nosnippet, noimageindex" />
+    <meta name="googlebot" content="noarchive, nosnippet, noimageindex" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none';" />
+
+    <!-- Disable right-click and selection -->
+    <style>
+      body {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Screenshot protection script -->
+    <script>
+      // Disable right-click context menu
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+      });
+
+      // Disable F12, Ctrl+Shift+I, Ctrl+U
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' ||
+            (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+            (e.ctrlKey && e.key === 'u')) {
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      // Disable print screen
+      document.addEventListener('keyup', function(e) {
+        if (e.key === 'PrintScreen') {
+          navigator.clipboard.writeText('');
+          alert('Screenshots are not allowed for copyright protection.');
+        }
+      });
+
+      // Detect developer tools
+      let devtools = {open: false, orientation: null};
+      setInterval(function() {
+        if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+          if (!devtools.open) {
+            devtools.open = true;
+            document.body.style.display = 'none';
+            alert('Developer tools detected. Page content hidden for security.');
+          }
+        } else {
+          if (devtools.open) {
+            devtools.open = false;
+            document.body.style.display = 'block';
+          }
+        }
+      }, 500);
+    </script>
   </body>
 </html>

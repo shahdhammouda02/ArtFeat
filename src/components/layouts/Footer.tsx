@@ -10,7 +10,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-gradient-to-b from-white to-sky-50 w-full m-0 p-0">
+    <footer className="w-full m-0 p-0" style={{ background: 'linear-gradient(135deg, #e5f5fd 0%, #f0f9ff 50%, #e0f2fe 100%)' }}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16 grid gap-8 sm:gap-10 md:gap-12 lg:gap-14 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] items-end">
         <div className="space-y-3 md:space-y-5 max-w-xs">
           <img

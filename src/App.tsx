@@ -2,6 +2,7 @@ import Navbar from "@/components/layouts/Navbar";
 import { Footer } from "@/components/layouts/Footer";
 import { SubNav } from "@/components/layouts/SubNav";
 import { Outlet } from "react-router-dom";
+import "@/styles/screenshot-protection.css";
 
 const App = () => {
   return (
