@@ -1,5 +1,5 @@
 // src/pages/Auctions/components/AuctionPage.tsx
-import AuctionBidView from "./AuctionBidView";
+import AuctionBidView from "./AuctionBidViewTemp";
 import ArtworkDetails from "./ArtworkDetails";
 import BidHistorySection from "./BidHistorySection";
 import SuggestedAuctions from "./SuggestedAuctions";

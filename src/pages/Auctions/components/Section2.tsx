@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import {
@@ -12,7 +11,6 @@ import { auctions } from "@/data/auctionsData";
 import type { Auction } from "@/types/auctions";
 import { Check } from "lucide-react";
 import CountdownTimer from "@/components/ui/countdown-timer";
-import { ScreenshotProtection } from "@/utils/screenshotProtection";
 import {
   Card,
   CardHeader,
@@ -24,14 +22,6 @@ import {
 import BidHistoryTable from "./BidHistoryTable";
 
 const Section2 = () => {
-  // Initialize screenshot protection
-  useEffect(() => {
-    const protection = ScreenshotProtection.getInstance();
-
-    return () => {
-      protection.destroy();
-    };
-  }, []);
   return (
     <section id="live-auctions" className="py-16">
       <div className="max-w-7xl mx-auto px-4">
@@ -53,6 +43,22 @@ const Section2 = () => {
                   className="w-full h-48 object-cover transition-all duration-500 group-hover:scale-105"
                   loading="lazy"
                 />
+
+                {/* Watermark */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div
+                    className="text-white font-bold transform rotate-12 select-none"
+                    style={{
+                      opacity: '0.2',
+                      textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                      fontSize: '1.5rem',
+                      letterSpacing: '2px'
+                    }}
+                  >
+                    © ArtFeat
+                  </div>
+                </div>
+
                 <span className="absolute top-3 left-3 bg-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
                   {item.type}
                 </span>
@@ -83,11 +89,11 @@ const Section2 = () => {
                       <span className="text-sky-600">View History</span>
                     </p>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[625px] max-h-[80vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle>Bid History for {item.title}</DialogTitle>
+                  <DialogContent className="max-w-[600px] w-[95vw] max-h-[80vh] overflow-hidden p-0">
+                    <DialogHeader className="p-4 pb-2 border-b border-gray-100">
+                      <DialogTitle className="text-lg font-semibold">Bid History for {item.title}</DialogTitle>
                     </DialogHeader>
-                    <div className="mt-4">
+                    <div className="overflow-y-auto max-h-[calc(80vh-80px)]">
                       <BidHistoryTable />
                     </div>
                   </DialogContent>
