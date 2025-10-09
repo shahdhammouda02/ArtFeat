@@ -55,11 +55,15 @@ const Section2 = () => {
                       letterSpacing: '2px'
                     }}
                   >
-                    © ArtFeat
+                    © Art-Feat
                   </div>
                 </div>
 
-                <span className="absolute top-3 left-3 bg-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
+                <span className={`absolute top-3 left-3 text-xs font-semibold px-2 py-1 rounded-full shadow-sm ${
+                  item.type === "Digital"
+                    ? "bg-blue-500 text-white"
+                    : "bg-green-500 text-white"
+                }`}>
                   {item.type}
                 </span>
               </div>
@@ -89,12 +93,16 @@ const Section2 = () => {
                       <span className="text-sky-600">View History</span>
                     </p>
                   </DialogTrigger>
-                  <DialogContent className="max-w-[600px] w-[95vw] max-h-[80vh] overflow-hidden p-0">
-                    <DialogHeader className="p-4 pb-2 border-b border-gray-100">
-                      <DialogTitle className="text-lg font-semibold">Bid History for {item.title}</DialogTitle>
-                    </DialogHeader>
-                    <div className="overflow-y-auto max-h-[calc(80vh-80px)]">
-                      <BidHistoryTable />
+                  <DialogContent className="p-0 gap-0 w-auto max-w-none">
+                    <div className="w-[580px] max-h-[80vh] overflow-hidden bg-white rounded-lg shadow-lg border-2 border-red-400">
+                      <DialogHeader className="px-6 py-4 border-b border-gray-100 space-y-0">
+                        <DialogTitle className="text-lg font-semibold">Bid History for {item.title}</DialogTitle>
+                      </DialogHeader>
+                      <div className="overflow-y-auto max-h-[calc(80vh-80px)] py-4 flex justify-center items-start">
+                        <div className="w-full max-w-[520px]">
+                          <BidHistoryTable />
+                        </div>
+                      </div>
                     </div>
                   </DialogContent>
                 </Dialog>

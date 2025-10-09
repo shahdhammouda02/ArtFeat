@@ -149,21 +149,21 @@ const Navbar = () => {
 
           <button
             aria-label="Favorites"
-            className="text-gray-700 hover:text-red-600"
+            className="text-gray-700 hover:text-red-600 flex items-center justify-center"
             type="button"
           >
             <Heart size={22} />
           </button>
           <button
             aria-label="Cart"
-            className="text-gray-700 hover:text-sky-600"
+            className="text-gray-700 hover:text-sky-600 flex items-center justify-center"
             type="button"
           >
             <ShoppingCart size={22} />
           </button>
           <button
             aria-label="Language"
-            className="text-gray-700 hover:text-sky-600"
+            className="text-gray-700 hover:text-sky-600 flex items-center justify-center"
             type="button"
           >
             <Globe size={22} />
@@ -173,7 +173,7 @@ const Navbar = () => {
           <div className="relative">
             <button
               aria-label="Notifications"
-              className="text-gray-700 hover:text-yellow-500 relative"
+              className="text-gray-700 hover:text-yellow-500 relative flex items-center justify-center"
               type="button"
               onClick={() => setNotificationOpen(!notificationOpen)}
             >
@@ -228,21 +228,21 @@ const Navbar = () => {
         <div className="hidden sm:flex lg:hidden items-center space-x-4">
           <button
             aria-label="Favorites"
-            className="text-gray-700 hover:text-red-600"
+            className="text-gray-700 hover:text-red-600 flex items-center justify-center"
             type="button"
           >
             <Heart size={22} />
           </button>
           <button
             aria-label="Cart"
-            className="text-gray-700 hover:text-sky-600"
+            className="text-gray-700 hover:text-sky-600 flex items-center justify-center"
             type="button"
           >
             <ShoppingCart size={22} />
           </button>
           <button
             aria-label="Language"
-            className="text-gray-700 hover:text-sky-600"
+            className="text-gray-700 hover:text-sky-600 flex items-center justify-center"
             type="button"
           >
             <Globe size={22} />
@@ -252,7 +252,7 @@ const Navbar = () => {
           <div className="relative">
             <button
               aria-label="Notifications"
-              className="text-gray-700 hover:text-yellow-500 relative"
+              className="text-gray-700 hover:text-yellow-500 relative flex items-center justify-center"
               type="button"
               onClick={() => setNotificationOpen(!notificationOpen)}
             >
@@ -369,21 +369,21 @@ const Navbar = () => {
             <div className="flex justify-center space-x-6 mt-2 sm:hidden">
               <button
                 aria-label="Favorites"
-                className="text-gray-700 hover:text-red-600 transition-transform duration-300 ease-in-out hover:-translate-y-1.5"
+                className="text-gray-700 hover:text-red-600 transition-transform duration-300 ease-in-out hover:-translate-y-1.5 flex items-center justify-center"
                 type="button"
               >
                 <Heart size={20} />
               </button>
               <button
                 aria-label="Cart"
-                className="text-gray-700 hover:text-sky-600 transition-transform duration-300 ease-in-out hover:-translate-y-1.5"
+                className="text-gray-700 hover:text-sky-600 transition-transform duration-300 ease-in-out hover:-translate-y-1.5 flex items-center justify-center"
                 type="button"
               >
                 <ShoppingCart size={20} />
               </button>
               <button
                 aria-label="Language"
-                className="text-gray-700 hover:text-sky-600 transition-transform duration-300 ease-in-out hover:-translate-y-1.5"
+                className="text-gray-700 hover:text-sky-600 transition-transform duration-300 ease-in-out hover:-translate-y-1.5 flex items-center justify-center"
                 type="button"
               >
                 <Globe size={20} />
@@ -393,11 +393,11 @@ const Navbar = () => {
               <div className="relative">
                 <button
                   aria-label="Notifications"
-                  className="text-gray-700 hover:text-yellow-500 relative"
+                  className="text-gray-700 hover:text-yellow-500 relative transition-transform duration-300 ease-in-out hover:-translate-y-1.5 flex items-center justify-center"
                   type="button"
                   onClick={() => setNotificationOpen(!notificationOpen)}
                 >
-                  <Bell size={22} />
+                  <Bell size={20} />
                   {notificationCount > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                       {notificationCount}

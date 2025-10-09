@@ -3,13 +3,13 @@ import { bidHistory } from "@/data/bidHistory"
 
 const BidHistoryTable = () => {
   return (
-    <div className="bg-white">
-      <table className="w-full">
+    <div className="bg-white w-full max-w-[520px] mx-auto">
+      <table className="w-full table-fixed border-collapse">
         <thead className="bg-sky-50">
           <tr>
-            <th className="px-4 py-2 text-left font-semibold text-gray-900 text-sm">Bidder</th>
-            <th className="px-4 py-2 text-left font-semibold text-gray-900 text-sm">Amount</th>
-            <th className="px-4 py-2 text-left font-semibold text-gray-900 text-sm">Time</th>
+            <th className="w-[30%] px-4 py-2 text-left font-semibold text-gray-900 text-sm">Bidder</th>
+            <th className="w-[35%] px-4 py-2 text-left font-semibold text-gray-900 text-sm">Amount</th>
+            <th className="w-[35%] px-4 py-2 text-left font-semibold text-gray-900 text-sm">Time</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">

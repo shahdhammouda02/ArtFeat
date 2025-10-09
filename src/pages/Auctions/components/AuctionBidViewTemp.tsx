@@ -92,6 +92,20 @@ export default function AuctionBidView({ id }: { id: number }) {
 
   const { d, h, m, s } = timeLeft;
 
+  // Handle input validation for numeric field
+  const handleBidInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const numValue = Number(value);
+
+    // Prevent negative values
+    if (numValue < 0) {
+      e.target.value = "0";
+    }
+
+    // Clear any custom validity when user types
+    e.target.setCustomValidity("");
+  };
+
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
@@ -384,6 +398,13 @@ export default function AuctionBidView({ id }: { id: number }) {
                     step="0.01"
                     placeholder={`Enter your bid (minimum $${minAllowed.toLocaleString()})`}
                     className="h-10 text-base border-gray-300 focus:border-sky-500 focus:ring-sky-500"
+                    onChange={handleBidInputChange}
+                    onKeyDown={(e) => {
+                      // Prevent minus key
+                      if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                        e.preventDefault();
+                      }
+                    }}
                   />
                   <p className="text-sm text-gray-500 mt-1">
                     Minimum bid:{" "}

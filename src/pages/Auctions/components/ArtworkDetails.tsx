@@ -77,7 +77,7 @@ export default function ArtworkDetails({ id }: { id: number }) {
                 fontWeight: '900'
               }}
             >
-              © ArtFeat
+              © Art-Feat
             </div>
           </div>
 
@@ -89,7 +89,7 @@ export default function ArtworkDetails({ id }: { id: number }) {
                  fontSize: '1.25rem',
                  fontWeight: '800'
                }}>
-            © ArtFeat
+            © Art-Feat
           </div>
 
 

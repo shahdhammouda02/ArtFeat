@@ -67,9 +67,44 @@ export default function SuggestedAuctions({ currentId }: Props) {
                     onDragStart={(e) => e.preventDefault()}
                     style={{ userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none' }}
                   />
-                  <span className="absolute top-3 right-3 text-white text-xs font-semibold px-2 py-1 rounded-xl bg-sky-500 transition-colors duration-300 group-hover:bg-opacity-90">
-                    Live Auction
+
+                  {/* ArtFeat Copyright Watermark - Top Left Corner */}
+                  <div className="absolute top-2 left-2 text-white text-xs font-bold select-none pointer-events-none"
+                       style={{
+                         opacity: '0.7',
+                         textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                         fontSize: '0.75rem',
+                         fontWeight: '800'
+                       }}>
+                    © Art-Feat
+                  </div>
+
+                  {/* ArtFeat Copyright Watermark - Center */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div
+                      className="text-white font-bold transform rotate-[-25deg] select-none"
+                      style={{
+                        opacity: '0.25',
+                        textShadow: '1px 1px 2px rgba(0,0,0,0.6)',
+                        fontSize: '1.5rem',
+                        letterSpacing: '2px',
+                        fontFamily: 'Arial, sans-serif',
+                        fontWeight: '900'
+                      }}
+                    >
+                      © Art-Feat
+                    </div>
+                  </div>
+
+                  {/* Type Tag */}
+                  <span className={`absolute top-3 right-3 text-xs font-semibold px-2 py-1 rounded-full shadow-sm ${
+                    item.type === "Digital"
+                      ? "bg-blue-500 text-white"
+                      : "bg-green-500 text-white"
+                  }`}>
+                    {item.type}
                   </span>
+
                 </div>
 
                 <CardHeader className="transition-colors duration-300 group-hover:bg-sky-50/50">
