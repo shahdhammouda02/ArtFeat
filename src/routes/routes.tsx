@@ -5,6 +5,7 @@ import Events from "@/pages/Events/Events";
 import EventRouter from "@/pages/Events/components/EventRouter";
 import Auctions from "@/pages/Auctions/Auctions";
 import SupportArtist from "@/pages/Support_Artist/SupportArtist";
+import Artists  from "@/pages/Artists/Artists";
 export const routes: RouteObject[] = [
   {
     path: "/",
@@ -16,6 +17,8 @@ export const routes: RouteObject[] = [
       { path: "auctions", element: <Auctions /> },
       { path: "auctions/:id", element: <Auctions /> },
       { path: "support-artist", element: <SupportArtist /> },
+       { path: "artists", element: <Artists /> },
+
     ],
   },
 ];
