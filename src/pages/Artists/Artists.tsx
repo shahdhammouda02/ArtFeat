@@ -5,7 +5,7 @@ import JoinAsArtist from "./components/JoinAsArtist";
 
 export default function ArtistsPage() {
   return (
-    <div className="flex flex-col gap-0">
+    <div className="flex flex-col gap-10">
       <Hero />
       <Section2 />
       <FeaturedArtist />
