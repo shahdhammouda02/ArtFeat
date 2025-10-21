@@ -1,6 +1,6 @@
 // Section2.tsx
 import { useMemo, useState } from "react";
-import { Search, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ARTISTS_DATA, TYPES } from "@/data/artists";
@@ -15,7 +15,6 @@ interface ArtistCarouselProps {
 
 function ArtistCarousel({ artist, visibleCount = 3 }: ArtistCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const totalSlides = artist.artworks.length;
   const maxIndex = Math.max(0, totalSlides - visibleCount);
 
@@ -31,11 +30,7 @@ function ArtistCarousel({ artist, visibleCount = 3 }: ArtistCarouselProps) {
 
   return (
     <div className="space-y-4 border-b pb-6">
-      {/* Artist Header - Clickable */}
-      <div 
-        className="flex items-center justify-between cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors duration-200"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
+      <div className="flex items-center justify-between p-3">
         <div className="flex items-center gap-3">
           <img
             src={artist.photo}
@@ -51,81 +46,69 @@ function ArtistCarousel({ artist, visibleCount = 3 }: ArtistCarouselProps) {
           <Button
             variant="secondary"
             className="h-7 px-3 rounded-full border border-gray-300 bg-white text-xs"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
           >
             + Follow
           </Button>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-sky-600">All artworks</span>
-          {isExpanded ? (
-            <ChevronUp className="h-4 w-4 text-sky-600" />
-          ) : (
-            <ChevronDown className="h-4 w-4 text-sky-600" />
-          )}
+          <span className="text-sm font-medium">All artworks</span>
         </div>
       </div>
 
-      {/* Artworks Carousel - Only shown when expanded */}
-      {isExpanded && (
-        <div className="relative mt-3">
-          {/* Navigation Arrows */}
-          {totalSlides > visibleCount && (
-            <>
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-sm h-7 w-7"
-                onClick={prevSlide}
-                disabled={currentIndex === 0}
-              >
-                <ChevronLeft className="h-3 w-3" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-sm h-7 w-7"
-                onClick={nextSlide}
-                disabled={currentIndex >= maxIndex}
-              >
-                <ChevronRight className="h-3 w-3" />
-              </Button>
-            </>
-          )}
+      <div className="relative mt-3">
+        {totalSlides > visibleCount && (
+          <>
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-sm h-7 w-7"
+              onClick={prevSlide}
+              disabled={currentIndex === 0}
+            >
+              <ChevronLeft className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-sm h-7 w-7"
+              onClick={nextSlide}
+              disabled={currentIndex >= maxIndex}
+            >
+              <ChevronRight className="h-3 w-3" />
+            </Button>
+          </>
+        )}
 
-          {/* Artworks Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {visibleArtworks.map((item: Artwork) => (
-              <ArtworkCard key={item.id} item={item} />
+        {/* Artworks Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {visibleArtworks.map((item: Artwork) => (
+            <ArtworkCard key={item.id} item={item} />
+          ))}
+        </div>
+
+        {/* Carousel Indicators */}
+        {totalSlides > visibleCount && (
+          <div className="flex justify-center gap-1 mt-3">
+            {Array.from({ length: maxIndex + 1 }).map((_, index) => (
+              <button
+                key={index}
+                className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                  index === currentIndex ? 'bg-sky-500' : 'bg-gray-300'
+                }`}
+                onClick={() => setCurrentIndex(index)}
+              />
             ))}
           </div>
-
-          {/* Carousel Indicators */}
-          {totalSlides > visibleCount && (
-            <div className="flex justify-center gap-1 mt-3">
-              {Array.from({ length: maxIndex + 1 }).map((_, index) => (
-                <button
-                  key={index}
-                  className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                    index === currentIndex ? 'bg-sky-500' : 'bg-gray-300'
-                  }`}
-                  onClick={() => setCurrentIndex(index)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
 
 export default function Section2() {
-  const [artist] = useState<string>("All Artists");
   const [type, setType] = useState<string>("All Types");
   const [q, setQ] = useState<string>("");
+  const [visibleArtistsCount, setVisibleArtistsCount] = useState<number>(1);
 
   const filteredArtists = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -143,9 +126,22 @@ export default function Section2() {
     });
   }, [q, type]);
 
+  const visibleArtists = filteredArtists.slice(0, visibleArtistsCount);
+  const hasMoreArtists = visibleArtistsCount < filteredArtists.length;
+  const hasLessArtists = visibleArtistsCount > 1;
+
   const reset = () => {
     setType("All Types");
     setQ("");
+    setVisibleArtistsCount(1);
+  };
+
+  const loadMoreArtists = () => {
+    setVisibleArtistsCount(prev => prev + 1);
+  };
+
+  const loadLessArtists = () => {
+    setVisibleArtistsCount(1);
   };
 
   return (
@@ -156,13 +152,9 @@ export default function Section2() {
       {/* Filters Section */}
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-2">
-          <select
-            value={artist}
-            onChange={() => {}}
-            className="h-8 rounded-md border border-gray-300 bg-background px-2 text-xs shadow-sm"
-          >
-            <option>All Artists</option>
-          </select>
+          <div className="h-8 rounded-md border border-gray-300 bg-background px-3 text-xs flex items-center justify-center shadow-sm">
+            All Artists
+          </div>
 
           <select
             value={type}
@@ -207,13 +199,37 @@ export default function Section2() {
             </div>
           </div>
         ) : (
-          filteredArtists.map((artist: Artist) => (
-            <ArtistCarousel 
-              key={artist.id} 
-              artist={artist} 
-              visibleCount={3}
-            />
-          ))
+          <>
+            {visibleArtists.map((artist: Artist) => (
+              <ArtistCarousel 
+                key={artist.id} 
+                artist={artist} 
+                visibleCount={3}
+              />
+            ))}
+            
+            <div className="flex justify-center gap-3 pt-4">
+              {hasLessArtists && (
+                <Button 
+                  onClick={loadLessArtists}
+                  variant="outline" 
+                  className="bg-white hover:bg-gray-50 border border-gray-300 text-gray-600 hover:text-gray-700 px-6 py-2"
+                >
+                  View Less
+                </Button>
+              )}
+              
+              {hasMoreArtists && (
+                <Button 
+                  onClick={loadMoreArtists}
+                  variant="outline" 
+                  className="bg-white hover:bg-gray-50 border border-sky-300 text-sky-600 hover:text-sky-700 px-6 py-2"
+                >
+                  View More Artists
+                </Button>
+              )}
+            </div>
+          </>
         )}
       </div>
     </section>
