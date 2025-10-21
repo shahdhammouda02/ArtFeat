@@ -6,9 +6,21 @@ import catContemporary from "@/assets/images/artists/cat-contemporary.png";
 import catCeramics from "@/assets/images/artists/cat-ceramics.png";
 
 const categories = [
-  { title: "Traditional Art", subtitle: "Ancient Palestinian crafts", img: catTraditional },
-  { title: "Calligraphy", subtitle: "Arabic calligraphic art", img: catCalligraphy },
-  { title: "Contemporary", subtitle: "Modern explorations", img: catContemporary },
+  {
+    title: "Traditional Art",
+    subtitle: "Ancient Palestinian crafts",
+    img: catTraditional,
+  },
+  {
+    title: "Calligraphy",
+    subtitle: "Arabic calligraphic art",
+    img: catCalligraphy,
+  },
+  {
+    title: "Contemporary",
+    subtitle: "Modern explorations",
+    img: catContemporary,
+  },
   { title: "Ceramics", subtitle: "Hand-crafted pottery", img: catCeramics },
 ];
 
@@ -25,7 +37,37 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-7 sm:py-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+      {/* Animated Circles*/}
+      <div className="absolute inset-0 -z-5 overflow-hidden">
+        {/* Circle 1 */}
+        <div className="absolute top-1/4 left-[22%] w-40 h-40 rounded-full bg-white/5 backdrop-blur-xl animate-float-slow" />
+
+        {/* Circle 2 */}
+        <div className="absolute top-1/3 right-[25%] w-32 h-32 rounded-full bg-white/10 backdrop-blur-lg animate-float-medium" />
+
+        {/* Circle 3 */}
+        <div className="absolute bottom-[28%] left-[30%] w-36 h-36 rounded-full bg-white/5 backdrop-blur-xl animate-float-slow" />
+
+        {/* Circle 4 */}
+        <div className="absolute top-[55%] right-[30%] w-28 h-28 rounded-full bg-white/10 backdrop-blur-md animate-float-fast" />
+
+        {/* Circle 5 */}
+        <div className="absolute bottom-[35%] left-[18%] w-34 h-34 rounded-full bg-white/8 backdrop-blur-lg animate-float-medium" />
+
+        {/* Circle 6 */}
+        <div className="absolute top-[20%] right-[20%] w-30 h-30 rounded-full bg-white/6 backdrop-blur-xl animate-float-slow" />
+
+        {/* Extra smaller circles */}
+        <div className="absolute top-[70%] left-[15%] w-20 h-20 rounded-full bg-white/8 backdrop-blur-lg animate-float-fast" />
+        <div className="absolute bottom-[15%] right-[15%] w-24 h-24 rounded-full bg-white/10 backdrop-blur-md animate-float-medium" />
+        <div className="absolute top-[18%] left-[70%] w-18 h-18 rounded-full bg-white/6 backdrop-blur-xl animate-float-slow" />
+
+        {/* Two new left circles */}
+        <div className="absolute top-[10%] left-[10%] w-28 h-28 rounded-full bg-white/8 backdrop-blur-lg animate-float-medium" />
+        <div className="absolute bottom-[10%] left-[12%] w-32 h-32 rounded-full bg-white/6 backdrop-blur-xl animate-float-slow" />
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-7 sm:py-10 grid grid-cols-1 lg:grid-cols-2 gap-10 relative z-10">
         {/* Text Content */}
         <div className="text-white space-y-6 pt-24">
           <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight">
@@ -34,13 +76,23 @@ export default function Hero() {
             <span className="block">Artists</span>
           </h1>
           <p className="text-xl text-white/90 max-w-xl">
-            Explore the rich cultural heritage and contemporary expressions of Palestinian art through our curated collection of talented artists.
+            Explore the rich cultural heritage and contemporary expressions of
+            Palestinian art through our curated collection of talented artists.
           </p>
           <div className="flex items-center gap-3">
-            <Button className="border border-white bg-white hover:bg-gray-100 text-sky-600 px-7 py-6 text-lg font-medium rounded-lg">
+            <Button
+              onClick={() => {
+                const section = document.getElementById("artists-explore");
+                if (section) {
+                  section.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+              className="border border-white bg-white hover:bg-gray-100 text-sky-600 px-7 py-6 text-lg font-medium rounded-lg"
+            >
               Explore Artists
             </Button>
-            <Button className="border border-white text-white bg-white/10 hover:text-white hover:bg-amber-800/20 px-7 py-6 text-lg font-medium rounded-lg">
+
+            <Button className="border border-white text-white bg-white/10 hover:text-white hover:bg-amber-800/10 px-7 py-6 text-lg font-medium rounded-lg">
               Learn More
             </Button>
           </div>
@@ -58,8 +110,12 @@ export default function Hero() {
                 />
               </div>
               <div>
-                <h3 className="text-white font-bold text-lg mb-1">{categories[0].title}</h3>
-                <p className="text-white/80 text-sm">{categories[0].subtitle}</p>
+                <h3 className="text-white font-bold text-lg mb-1">
+                  {categories[0].title}
+                </h3>
+                <p className="text-white/80 text-sm">
+                  {categories[0].subtitle}
+                </p>
               </div>
             </div>
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-105 mt-4">
@@ -71,8 +127,12 @@ export default function Hero() {
                 />
               </div>
               <div>
-                <h3 className="text-white font-bold text-lg mb-1">{categories[2].title}</h3>
-                <p className="text-white/80 text-sm">{categories[2].subtitle}</p>
+                <h3 className="text-white font-bold text-lg mb-1">
+                  {categories[2].title}
+                </h3>
+                <p className="text-white/80 text-sm">
+                  {categories[2].subtitle}
+                </p>
               </div>
             </div>
           </div>
@@ -86,8 +146,12 @@ export default function Hero() {
                 />
               </div>
               <div>
-                <h3 className="text-white font-bold text-lg mb-1">{categories[1].title}</h3>
-                <p className="text-white/80 text-sm">{categories[1].subtitle}</p>
+                <h3 className="text-white font-bold text-lg mb-1">
+                  {categories[1].title}
+                </h3>
+                <p className="text-white/80 text-sm">
+                  {categories[1].subtitle}
+                </p>
               </div>
             </div>
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-105 mt-4">
@@ -99,13 +163,54 @@ export default function Hero() {
                 />
               </div>
               <div>
-                <h3 className="text-white font-bold text-lg mb-1">{categories[3].title}</h3>
-                <p className="text-white/80 text-sm">{categories[3].subtitle}</p>
+                <h3 className="text-white font-bold text-lg mb-1">
+                  {categories[3].title}
+                </h3>
+                <p className="text-white/80 text-sm">
+                  {categories[3].subtitle}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/*CSS styles */}
+      <style>{`
+ @keyframes float-slow {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(0deg) scale(1); }
+  25% { transform: translateY(-25px) translateX(20px) rotate(90deg) scale(1.1); }
+  50% { transform: translateY(20px) translateX(-20px) rotate(180deg) scale(0.9); }
+  75% { transform: translateY(-15px) translateX(15px) rotate(270deg) scale(1.05); }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(0deg) scale(1); }
+  33% { transform: translateY(-20px) translateX(-15px) rotate(120deg) scale(1.15); }
+  66% { transform: translateY(15px) translateX(15px) rotate(240deg) scale(0.9); }
+}
+
+@keyframes float-fast {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(0deg) scale(1); }
+  20% { transform: translateY(-15px) translateX(10px) rotate(72deg) scale(1.2); }
+  40% { transform: translateY(10px) translateX(-15px) rotate(144deg) scale(0.85); }
+  60% { transform: translateY(-10px) translateX(15px) rotate(216deg) scale(1.1); }
+  80% { transform: translateY(10px) translateX(-10px) rotate(288deg) scale(0.95); }
+}
+
+.animate-float-slow {
+  animation: float-slow 9s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float-medium 6s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: float-fast 4s ease-in-out infinite;
+}
+
+`}</style>
     </section>
   );
 }
