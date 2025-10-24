@@ -34,37 +34,25 @@ export default function Hero() {
           alt="Discover Palestinian Artists"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20" />
+        {/* Gradient overlay with transparent colors and blur */}
+        <div className="absolute inset-0 bg-gradient-to-r from-sky-400/50 via-green-400/40 to-yellow-400/40 backdrop-blur-sm" />
       </div>
 
       {/* Animated Circles*/}
       <div className="absolute inset-0 -z-5 overflow-hidden">
-        {/* Circle 1 */}
-        <div className="absolute top-1/4 left-[22%] w-40 h-40 rounded-full bg-white/5 backdrop-blur-xl animate-float-slow" />
+        {/* Left Side Circles */}
+        <div className="absolute top-[15%] left-[8%] w-32 h-32 rounded-full bg-sky-50/10 backdrop-blur-xl animate-float-slow" />
+        <div className="absolute top-[40%] left-[20%] w-28 h-28 rounded-full bg-sky-50/10 backdrop-blur-lg animate-float-medium" />
+        <div className="absolute bottom-[15%] left-[5%] w-36 h-36 rounded-full bg-sky-50/10 backdrop-blur-xl animate-float-slow" />
 
-        {/* Circle 2 */}
-        <div className="absolute top-1/3 right-[25%] w-32 h-32 rounded-full bg-white/10 backdrop-blur-lg animate-float-medium" />
+        {/* Right Side Circles */}
+        <div className="absolute top-[25%] right-[8%] w-30 h-30 rounded-full bg-sky-50/10 backdrop-blur-lg animate-float-medium" />
+        <div className="absolute bottom-[15%] right-[10%] w-40 h-40 rounded-full bg-sky-50/10 backdrop-blur-xl animate-float-slow" />
+        <div className="absolute bottom-[45%] right-[6%] w-24 h-24 rounded-full bg-sky-50/10 backdrop-blur-md animate-float-fast" />
 
-        {/* Circle 3 */}
-        <div className="absolute bottom-[28%] left-[30%] w-36 h-36 rounded-full bg-white/5 backdrop-blur-xl animate-float-slow" />
-
-        {/* Circle 4 */}
-        <div className="absolute top-[55%] right-[30%] w-28 h-28 rounded-full bg-white/10 backdrop-blur-md animate-float-fast" />
-
-        {/* Circle 5 */}
-        <div className="absolute bottom-[35%] left-[18%] w-34 h-34 rounded-full bg-white/8 backdrop-blur-lg animate-float-medium" />
-
-        {/* Circle 6 */}
-        <div className="absolute top-[20%] right-[20%] w-30 h-30 rounded-full bg-white/6 backdrop-blur-xl animate-float-slow" />
-
-        {/* Extra smaller circles */}
-        <div className="absolute top-[70%] left-[15%] w-20 h-20 rounded-full bg-white/8 backdrop-blur-lg animate-float-fast" />
-        <div className="absolute bottom-[15%] right-[15%] w-24 h-24 rounded-full bg-white/10 backdrop-blur-md animate-float-medium" />
-        <div className="absolute top-[18%] left-[70%] w-18 h-18 rounded-full bg-white/6 backdrop-blur-xl animate-float-slow" />
-
-        {/* Two new left circles */}
-        <div className="absolute top-[10%] left-[10%] w-28 h-28 rounded-full bg-white/8 backdrop-blur-lg animate-float-medium" />
-        <div className="absolute bottom-[10%] left-[12%] w-32 h-32 rounded-full bg-white/6 backdrop-blur-xl animate-float-slow" />
+        {/* Center Circles (Few) */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-34 h-34 rounded-full bg-sky-50/10 backdrop-blur-lg animate-float-medium" />
+        <div className="absolute top-[35%] left-[45%] w-28 h-28 rounded-full bg-sky-50/10 backdrop-blur-md animate-float-fast" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-7 sm:py-10 grid grid-cols-1 lg:grid-cols-2 gap-10 relative z-10">
@@ -90,10 +78,6 @@ export default function Hero() {
               className="border border-white bg-white hover:bg-gray-100 text-sky-600 px-7 py-6 text-lg font-medium rounded-lg"
             >
               Explore Artists
-            </Button>
-
-            <Button className="border border-white text-white bg-white/10 hover:text-white hover:bg-amber-800/10 px-7 py-6 text-lg font-medium rounded-lg">
-              Learn More
             </Button>
           </div>
         </div>
