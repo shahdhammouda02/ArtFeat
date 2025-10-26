@@ -1,4 +1,4 @@
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart, TrendingUp } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Artwork } from "@/types/artists";
@@ -27,10 +27,16 @@ export function ArtworkCard({ item }: ArtworkCardProps) {
       </div>
 
       <CardHeader className="p-3 pb-1 group-hover:bg-sky-50/30 transition-colors duration-200">
-        <CardTitle className="text-sm font-medium group-hover:text-sky-900 transition-colors duration-200 line-clamp-1">
-          {item.title}
-        </CardTitle>
-      </CardHeader>
+  <div className="flex items-center justify-between w-full">
+    <CardTitle className="text-sm font-medium group-hover:text-sky-900 transition-colors duration-200 line-clamp-1 flex-1">
+      {item.title}
+    </CardTitle>
+    <div className="flex items-center gap-1 text-xs text-green-600 font-medium ml-2">
+      <TrendingUp className="h-3 w-3" />
+      <span>{item.sales} sold</span>
+    </div>
+  </div>
+</CardHeader>
 
       <CardContent className="p-3 pt-1 flex items-center justify-between group-hover:bg-sky-50/30 transition-colors duration-200">
         <div className="flex flex-col gap-1.5">

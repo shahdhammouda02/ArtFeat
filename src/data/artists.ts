@@ -21,6 +21,7 @@ export const ARTISTS_DATA: Artist[] = [
       price: 635 + (i * 50),
       type: ["Painting", "Oil Painting", "Acrylic", "Digital", "Watercolor"][i % 5],
       img: art,
+      sales: [125, 89, 203, 67, 142, 98][i % 6] // Added sales numbers
     }))
   },
   {
@@ -39,6 +40,7 @@ export const ARTISTS_DATA: Artist[] = [
       price: 520 + (i * 75),
       type: ["Oil Painting", "Acrylic", "Mixed Media", "Sculpture"][i % 4],
       img: art,
+      sales: [78, 156, 45, 189, 112][i % 5] // Added sales numbers
     }))
   },
   {
@@ -56,6 +58,7 @@ export const ARTISTS_DATA: Artist[] = [
       price: 480 + (i * 60),
       type: ["Watercolor", "Digital", "Acrylic", "Print"][i % 4],
       img: art,
+      sales: [234, 76, 165, 91][i % 4] // Added sales numbers
     }))
   }
 ];

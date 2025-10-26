@@ -4,6 +4,7 @@ export interface Artwork {
   price: number;
   type: string;
   img: string;
+  sales?: number;
 }
 
 export interface Artist {
