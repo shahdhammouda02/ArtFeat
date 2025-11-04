@@ -1,70 +1,123 @@
+import { Star, Trophy, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import avatar from "@/assets/images/artists/hero-bg.png";
-import f1 from "@/assets/images/artists/hero-bg.png";
-import f2 from "@/assets/images/artists/cat-traditional.png";
-import f3 from "@/assets/images/artists/cat-contemporary.png";
-import f4 from "@/assets/images/artists/cat-ceramics.png";
+type Artist = {
+  name: string;
+  rank: number;
+  level: string;
+  avatarUrl?: string;
+};
+
+const ARTISTS: Artist[] = [
+  {
+    name: "Eleanor Pena",
+    rank: 1,
+    level: "Grand Master",
+    avatarUrl:
+      "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    name: "Marcus Chen",
+    rank: 2,
+    level: "Master",
+    avatarUrl:
+      "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    name: "Sophia Rodriguez",
+    rank: 3,
+    level: "Expert",
+    avatarUrl:
+      "https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    name: "James Wilson",
+    rank: 4,
+    level: "Professional",
+    avatarUrl:
+      "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    name: "Isabella Martinez",
+    rank: 5,
+    level: "Advanced",
+    avatarUrl:
+      "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+];
 
 export default function FeaturedArtist() {
   return (
-    <section id="learn-more" className="bg-[#EAF5FF] py-14">
-      <div className="container mx-auto px-6 max-w-6xl">
+    <section className="relative py-20 bg-gradient-to-b from-[#0b1b34] via-[#0f1f3f] to-[#0b1b34] text-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* العنوان */}
-        <h2 className="text-3xl md:text-4xl font-extrabold text-black leading-tight mb-3">
-  Featured Artist of the
-  <br />
-  Month
-</h2>
+        <div className="flex justify-center mb-4">
+          <Button
+            variant="outline"
+            className="bg-[#0f1f3f] border border-[#2b3c60] text-white hover:bg-[#1a2a4d] rounded-full px-5"
+          >
+            <Trophy className="w-4 h-4 mr-2 text-sky-400" /> Monthly Leaderboard
+          </Button>
+        </div>
 
+        <h2 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-green-300 to-yellow-300 bg-clip-text text-transparent">
+          Top Artists for this Month
+        </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
-          {/* النص على اليسار */}
-          <div className="space-y-5 text-[1.05rem]">
-            {/* الاسم مع الصورة */}
-            <div className="flex items-center gap-4">
-              <img
-                src={avatar}
-                alt="artist"
-                className="h-14 w-14 rounded-full object-cover ring-2 ring-white/80"
-              />
-              <div className="text-2xl font-semibold text-foreground">
-                Anya Petrova
-              </div>
-            </div>
+        <p className="text-gray-300 mt-3 mb-8">
+          Celebrating our most talented creators who are shaping the future
+        </p>
 
-            {/* الوصف */}
-            <p className="text-muted-foreground leading-8 max-w-xl text-[1.05rem]">
-              Anya Petrova is a contemporary artist known for her vibrant abstract paintings.
-              Her work often explores the interplay of color and light, inspired by natural landscapes
-              and urban environments. With a background in graphic design, Anya brings a unique precision
-              and energy to her canvases, creating pieces that resonate with collectors worldwide.
-            </p>
-
-            {/* الزر */}
-            <Button
-              asChild
-              className="w-fit bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 text-sm rounded-md shadow-sm"
+        {/* البطاقات */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 justify-items-center">
+          {ARTISTS.map((artist) => (
+            <div
+              key={artist.rank}
+              className="relative bg-[#009fc2] rounded-2xl p-6 shadow-lg w-56 transform hover:scale-105 transition duration-300"
             >
-              <a href="/gallery?artist=Anya%20Petrova">View Artist Profile</a>
-            </Button>
-          </div>
+              <div className="absolute -top-5 left-1/2 -translate-x-1/2">
+                <div className="bg-yellow-400 rounded-full px-3 py-1 text-black font-bold shadow-md flex items-center gap-1">
+                  <Star className="w-4 h-4 text-black" />
+                  {artist.rank}
+                </div>
+              </div>
 
-          {/* الصور على اليمين */}
-          <div className="grid grid-cols-2 gap-5">
-            {[f1, f2, f3, f4].map((src, i) => (
-              <div
-                key={i}
-                className="aspect-square overflow-hidden rounded-xl shadow-md"
-              >
+              {/* الصورة */}
+              <div className="mt-4">
                 <img
-                  src={src}
-                  alt={`featured-${i + 1}`}
-                  className="h-full w-full object-cover"
+                  src={artist.avatarUrl}
+                  alt={artist.name}
+                  className="w-24 h-24 mx-auto rounded-full border-4 border-cyan-200 object-cover shadow-md"
                 />
               </div>
-            ))}
-          </div>
+
+              {/* الاسم */}
+              <h3 className="mt-4 font-bold text-lg">{artist.name}</h3>
+
+              {/* الزر */}
+              <div className="mt-3">
+                <Button
+                  asChild
+                  className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded-full text-sm shadow-md"
+                >
+                  <a href="/artist-profile">Visit Profile</a>
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* الزر السفلي */}
+        <div className="mt-12">
+          <Button
+            asChild
+            className="bg-gradient-to-r from-sky-500 to-teal-400 text-white font-semibold py-5 px-10 rounded-full shadow-lg hover:opacity-90 transition"
+          >
+            <a href="/signup-artist">
+              <Users className="w-5 h-5 mr-2" />
+              Join 1,234+ talented artists
+            </a>
+          </Button>
         </div>
       </div>
     </section>
