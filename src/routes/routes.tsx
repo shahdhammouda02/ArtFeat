@@ -6,6 +6,7 @@ import EventRouter from "@/pages/Events/components/EventRouter";
 import Auctions from "@/pages/Auctions/Auctions";
 import SupportArtist from "@/pages/Support_Artist/SupportArtist";
 import Artists  from "@/pages/Artists/Artists";
+import Artworks from "@/pages/Artworks/Artworks";
 export const routes: RouteObject[] = [
   {
     path: "/",
@@ -18,6 +19,7 @@ export const routes: RouteObject[] = [
       { path: "auctions/:id", element: <Auctions /> },
       { path: "support-artist", element: <SupportArtist /> },
        { path: "artists", element: <Artists /> },
+       { path: "all-artworks", element: <Artworks/> },
 
     ],
   },
