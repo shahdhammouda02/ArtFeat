@@ -1,52 +1,14 @@
 import { Star, Trophy, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
+import { ARTISTS_DATA } from "@/data/artistProfile";
 
-type Artist = {
-  name: string;
-  rank: number;
-  level: string;
-  avatarUrl?: string;
-};
-
-const ARTISTS: Artist[] = [
-  {
-    name: "Eleanor Pena",
-    rank: 1,
-    level: "Grand Master",
-    avatarUrl:
-      "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    name: "Marcus Chen",
-    rank: 2,
-    level: "Master",
-    avatarUrl:
-      "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    name: "Sophia Rodriguez",
-    rank: 3,
-    level: "Expert",
-    avatarUrl:
-      "https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    name: "James Wilson",
-    rank: 4,
-    level: "Professional",
-    avatarUrl:
-      "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    name: "Isabella Martinez",
-    rank: 5,
-    level: "Advanced",
-    avatarUrl:
-      "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-];
 
 export default function FeaturedArtist() {
+  const navigate = useNavigate();
+   const handleVisitProfile = (artistId: string) => {
+    navigate(`/artists/${artistId}`); // Navigate to artist profile page
+  };
   return (
     <section className="relative py-20 bg-gradient-to-b from-[#0b1b34] via-[#0f1f3f] to-[#0b1b34] text-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -70,7 +32,7 @@ export default function FeaturedArtist() {
 
         {/* البطاقات */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 justify-items-center">
-          {ARTISTS.map((artist) => (
+          {ARTISTS_DATA.map((artist) => (
             <div
               key={artist.rank}
               className="relative bg-[#009fc2] rounded-2xl p-6 shadow-lg w-56 transform hover:scale-105 transition duration-300"
@@ -99,8 +61,9 @@ export default function FeaturedArtist() {
                 <Button
                   asChild
                   className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded-full text-sm shadow-md"
+                  onClick={() => handleVisitProfile(artist.id)}
                 >
-                  <a href="/artist-profile">Visit Profile</a>
+                  <a href="">Visit Profile</a>
                 </Button>
               </div>
             </div>
