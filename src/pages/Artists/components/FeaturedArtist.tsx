@@ -34,13 +34,13 @@ export default function FeaturedArtist() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 justify-items-center">
           {ARTISTS_DATA.map((artist) => (
             <div
-              key={artist.rank}
+              key={artist.id}
               className="relative bg-[#009fc2] rounded-2xl p-6 shadow-lg w-56 transform hover:scale-105 transition duration-300"
             >
               <div className="absolute -top-5 left-1/2 -translate-x-1/2">
                 <div className="bg-yellow-400 rounded-full px-3 py-1 text-black font-bold shadow-md flex items-center gap-1">
                   <Star className="w-4 h-4 text-black" />
-                  {artist.rank}
+                  {artist.followers}
                 </div>
               </div>
 
