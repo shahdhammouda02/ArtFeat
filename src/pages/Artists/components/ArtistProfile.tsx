@@ -71,16 +71,63 @@ export default function ArtistProfile() {
         );
       
       case 'about':
-        return (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              About
-            </h2>
-            <p className="text-gray-600 text-lg">
-              test about test sentence
-            </p>
-          </div>
-        );
+  return (
+    <div className="max-w-4xl mx-auto py-8">
+      <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+        About {artist.name}
+      </h2>
+      
+      {/* Description */}
+      <div className="mb-8">
+        <p className="text-gray-600 text-lg leading-relaxed">
+          {artist.about.description}
+        </p>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Member Since */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h3 className="font-semibold text-gray-500 text-sm uppercase tracking-wide mb-2">
+            Member since
+          </h3>
+          <p className="text-2xl font-bold text-gray-900">
+            {artist.about.memberSince}
+          </p>
+        </div>
+
+        {/* Total Artworks */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h3 className="font-semibold text-gray-500 text-sm uppercase tracking-wide mb-2">
+            Total artworks
+          </h3>
+          <p className="text-2xl font-bold text-gray-900">
+            {artist.about.totalArtworks}
+          </p>
+        </div>
+
+        {/* Style */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h3 className="font-semibold text-gray-500 text-sm uppercase tracking-wide mb-2">
+            Style
+          </h3>
+          <p className="text-lg font-semibold text-gray-900">
+            {artist.about.style}
+          </p>
+        </div>
+
+        {/* Years of Experience */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h3 className="font-semibold text-gray-500 text-sm uppercase tracking-wide mb-2">
+            Years of experience
+          </h3>
+          <p className="text-2xl font-bold text-gray-900">
+            {artist.about.yearsOfExperience}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
       
       default:
         return null;
