@@ -5,6 +5,8 @@ import { ARTISTS_DATA } from "@/data/artistProfile";
 import { ArtworkCard } from "@/pages/Artists/components/ArtworkCard";
 import { ITEMS } from "@/data/artworks";
 import { useState } from "react";
+import { CollectionCard } from "./CollectionCard";
+import { COLLECTIONS_DATA } from "@/data/collection";
 
 export default function ArtistProfile() {
   const { id } = useParams<{ id: string }>();
@@ -50,13 +52,21 @@ export default function ArtistProfile() {
       
       case 'collections':
         return (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Collections
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              Featured collections
             </h2>
-            <p className="text-gray-600 text-lg">
-              test collection test sentence
-            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {COLLECTIONS_DATA.map((collection) => (
+                 <CollectionCard
+                  key={collection.id}
+                  title={collection.title}
+                  artworksCount={collection.artworksCount}
+                  description={collection.description}
+                  imageUrl={collection.imageUrl}
+                />
+              ))}
+            </div>
           </div>
         );
       
