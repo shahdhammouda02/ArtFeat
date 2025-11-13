@@ -1,17 +1,18 @@
-// ArtworkCard.tsx
 import { Heart, ShoppingCart, TrendingUp } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Artwork } from "@/types/artists";
 import type { Item } from "@/types/artworks";
+import { useState } from "react";
 
 interface ArtworkCardProps {
   item: Artwork | (Item & { type?: string; sales?: number; format?: string });
-  showFormatBadge?: boolean; // Add this prop
+  showFormatBadge?: boolean;
 }
 
 export function ArtworkCard({ item, showFormatBadge = false }: ArtworkCardProps) {
-  // Use 'tag' if 'type' doesn't exist (for Item type)
+  const [isFavorite, setIsFavorite] = useState(false);
+
   const artworkType =
     item.type ||
     ("tag" in item && typeof (item as Item).tag === "string" ? (item as Item).tag : undefined) ||
@@ -27,32 +28,44 @@ export function ArtworkCard({ item, showFormatBadge = false }: ArtworkCardProps)
           alt={item.title}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
+
         {/* Art Feat Text */}
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="text-white text-md font-bold">Art Feat</span>
         </div>
-        
-        {/* Conditional: Show Format Badge OR Heart Icon */}
-        {showFormatBadge ? (
-          // Digital/Physical Badge
-          <div className="absolute top-2 right-2">
-            <Badge 
+
+        {/* 💜 Show both Format Badge and Heart Icon */}
+        <div className="absolute top-2 right-2 flex items-center gap-2">
+          {/* Format Badge */}
+          {showFormatBadge && (
+            <Badge
               variant="secondary"
               className={`text-xs h-5 px-2 ${
-                format === "Digital" 
-                  ? "bg-purple-100 text-purple-700 hover:bg-purple-200" 
+                format === "Digital"
+                  ? "bg-purple-100 text-purple-700 hover:bg-purple-200"
                   : "bg-amber-100 text-amber-700 hover:bg-amber-200"
               } transition-colors duration-200`}
             >
               {format}
             </Badge>
-          </div>
-        ) : (
-          // Heart Icon
-          <div className="absolute top-2 right-2 text-white/80 group-hover:text-red-500 cursor-pointer transition-colors duration-300 bg-black/40 rounded-full p-1 group-hover:bg-black/60">
-            <Heart className="h-3.5 w-3.5" />
-          </div>
-        )}
+          )}
+
+          {/* Heart Icon */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsFavorite((prev) => !prev);
+            }}
+            className="p-1 rounded-full bg-black/40 hover:bg-black/60 transition-colors duration-300"
+            aria-label="Add to favorites"
+          >
+            <Heart
+              className={`h-3.5 w-3.5 transition ${
+                isFavorite ? "text-red-500 fill-red-500" : "text-white/80"
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
       <CardHeader className="p-3 pb-1 group-hover:bg-sky-50/30 transition-colors duration-200">
@@ -69,14 +82,18 @@ export function ArtworkCard({ item, showFormatBadge = false }: ArtworkCardProps)
 
       <CardContent className="p-3 pt-1 flex items-center justify-between group-hover:bg-sky-50/30 transition-colors duration-200">
         <div className="flex flex-col gap-1.5">
-          <Badge 
+          <Badge
             variant="secondary"
             className={`text-xs h-5 px-2 ${
-              artworkType === "Painting" ? "bg-blue-100 text-blue-700 hover:bg-blue-200" :
-              artworkType === "Oil Painting" ? "bg-amber-100 text-amber-700 hover:bg-amber-200" :
-              artworkType === "Digital" ? "bg-purple-100 text-purple-700 hover:bg-purple-200" :
-              artworkType === "Watercolor" ? "bg-cyan-100 text-cyan-700 hover:bg-cyan-200" :
-              "bg-green-100 text-green-700 hover:bg-green-200"
+              artworkType === "Painting"
+                ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                : artworkType === "Oil Painting"
+                ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
+                : artworkType === "Digital"
+                ? "bg-purple-100 text-purple-700 hover:bg-purple-200"
+                : artworkType === "Watercolor"
+                ? "bg-cyan-100 text-cyan-700 hover:bg-cyan-200"
+                : "bg-green-100 text-green-700 hover:bg-green-200"
             } transition-colors duration-200`}
           >
             {artworkType}
