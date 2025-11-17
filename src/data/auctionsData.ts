@@ -20,6 +20,7 @@ const getAuctionEndTimes = () => {
       };
     } catch (e) {
       // If parsing fails, create new times
+      console.log(e)
     }
   }
 

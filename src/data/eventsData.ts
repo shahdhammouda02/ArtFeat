@@ -10,6 +10,7 @@ import pic6 from '@/assets/images/ESCAPE TO ARIZONA.jpg'
 export const ALL_EVENTS: EventItem[] = [
   {
     id: 1,
+     type: "Digital",   
     title: "Abstract Expressions",
     date: "October 24, 2024",
     status: "Ended",
@@ -20,6 +21,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 2,
+      type: "Physical",   
     title: "Ceramic Wonders",
     date: "October 15, 2025",
     status: "Upcoming",
@@ -30,6 +32,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 3,
+     type: "Digital",
     title: "Botanical Illustration",
     date: "September 30, 2025",
     status: "Upcoming",
@@ -40,6 +43,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 4,
+     type: "Digital",
     title: "Urban Canvas Festival",
     date: "December 10, 2025",
     status: "Upcoming",
@@ -50,6 +54,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 5,
+     type: "Digital",
     title: "Sculpture in Motion",
     date: "January 20, 2025",
     status: "Ended",
@@ -60,6 +65,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 6,
+     type: "Digital",
     title: "Nature’s Lens",
     date: "August 25, 2025",
     status: "Upcoming",
@@ -70,6 +76,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 7,
+     type: "Digital",
     title: "Glass Artistry",
     date: "November 10, 2025",
     status: "Upcoming",
@@ -80,6 +87,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 8,
+    type: "Physical", 
     title: "Ink & Paper",
     date: "April 15, 2025",
     status: "Ended",
@@ -90,6 +98,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 9,
+    type: "Physical", 
     title: "Desert Colors",
     date: "September 05, 2025",
     status: "Upcoming",
@@ -100,6 +109,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 10,
+    type: "Physical", 
     title: "Street Vision",
     date: "November 22, 2025",
     status: "Upcoming",
@@ -110,6 +120,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 11,
+    type: "Physical", 
     title: "Ocean Whispers",
     date: "July 30, 2025",
     status: "Ended",
@@ -120,6 +131,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 12,
+    type: "Physical", 
     title: "Metropolis Dreams",
     date: "August 20, 2025",
     status: "Upcoming",
@@ -130,6 +142,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 13,
+    type: "Physical", 
     title: "Wild Clay",
     date: "September 03, 2025",
     status: "Upcoming",
@@ -140,6 +153,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 14,
+    type: "Digital",
     title: "Mountain Echoes",
     date: "October 14, 2025",
     status: "Upcoming",
@@ -150,6 +164,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 15,
+    type: "Digital",
     title: "Paper Stories",
     date: "November 25, 2025",
     status: "Upcoming",
@@ -160,6 +175,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 16,
+    type: "Digital",
     title: "Cosmic Vision",
     date: "December 09, 2025",
     status: "Upcoming",
@@ -170,6 +186,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 17,
+    type: "Digital",
     title: "Golden Frames",
     date: "January 15, 2026",
     status: "Upcoming",
@@ -180,6 +197,7 @@ export const ALL_EVENTS: EventItem[] = [
   },
   {
     id: 18,
+    type: "Digital",
     title: "City Lights Festival",
     date: "February 20, 2026",
     status: "Upcoming",
