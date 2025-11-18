@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart, Globe, Bell, Menu, X } from "lucide-react";
 import logo from "@/assets/images/logo.jpeg";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const navItems = [
   "Gallery",
@@ -33,6 +33,7 @@ const Navbar = () => {
   const [notificationCount, setNotificationCount] = useState(0);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const count = parseInt(localStorage.getItem("notificationCount") || "0");
@@ -131,6 +132,7 @@ const Navbar = () => {
             size="default"
             className="font-semibold"
             aria-label="Login"
+            onClick={() => navigate("/signin")}
           >
             Login
           </Button>
@@ -138,6 +140,7 @@ const Navbar = () => {
             size="default"
             className="font-semibold bg-sky-400 hover:bg-sky-400/90 border-none"
             aria-label="Sign Up"
+            onClick={()=> navigate("/signup")}
           >
             Sign Up
           </Button>
@@ -354,6 +357,10 @@ const Navbar = () => {
               size="sm"
               className="font-semibold w-full max-w-xs"
               aria-label="Login"
+              onClick={() => {
+                setMenuOpen(false);
+                navigate("/signin");
+              }}
             >
               Login
             </Button>
@@ -362,6 +369,10 @@ const Navbar = () => {
               size="sm"
               className="font-semibold w-full max-w-xs bg-sky-400 hover:bg-sky-400/90"
               aria-label="Sign Up"
+              onClick={() => {
+                setMenuOpen(false);
+                navigate("/signup");
+              }}
             >
               Sign Up
             </Button>

@@ -8,6 +8,8 @@ import SupportArtist from "@/pages/Support_Artist/SupportArtist";
 import Artists  from "@/pages/Artists/Artists";
 import Artworks from "@/pages/Artworks/Artworks";
 import ArtistProfile from "@/pages/Artists/components/ArtistProfile";
+import SignIn from "@/pages/auth/signin/SignIn";
+import SignUp from "@/pages/auth/signup/SignUp";
 export const routes: RouteObject[] = [
   {
     path: "/",
@@ -22,6 +24,8 @@ export const routes: RouteObject[] = [
        { path: "artists", element: <Artists /> },
        { path: "artists/:id", element: <ArtistProfile /> },
        { path: "all-artworks", element: <Artworks/> },
+      {path: "signin", element: <SignIn />},
+      {path: "signup", element: <SignUp />},
 
     ],
   },
