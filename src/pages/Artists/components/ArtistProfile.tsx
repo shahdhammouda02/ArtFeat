@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ARTISTS_DATA } from "@/data/artistProfile";
+import { ARTWORKS } from "@/data/artworks";
 import { ArtworkCard } from "@/pages/Artists/components/ArtworkCard";
-import { ARTWORKS } from "@/data/artworks"; // ✅ استبدل ITEMS بـ ARTWORKS
 import { useState } from "react";
 import { CollectionCard } from "./CollectionCard";
 import { COLLECTIONS_DATA } from "@/data/collection";
@@ -10,21 +10,24 @@ import { Heart } from "lucide-react";
 
 export default function ArtistProfile() {
   const { id } = useParams<{ id: string }>();
-  const [activeTab, setActiveTab] = useState<"artwork" | "collections" | "about">("artwork");
+  const [activeTab, setActiveTab] = useState<
+    "artwork" | "collections" | "about"
+  >("artwork");
   const [favoriteCollections, setFavoriteCollections] = useState<string[]>([]);
 
-  // ✅ البحث عن الفنان حسب ID
-  const artist = ARTISTS_DATA.find((artist) => artist.id === id);
+  // 🔹 تحويل id من string إلى number (بسبب نوع artist.id)
+  const artist = ARTISTS_DATA.find((artist) => artist.id === Number(id));
 
-  // ✅ تحويل بيانات الأعمال الفنية
-  const convertedArtworks = ARTWORKS.map((item) => ({
+  // ✅ فلترة الأعمال الخاصة بالفنان المحدد فقط
+  const artistArtworks = ARTWORKS.filter(
+    (art) => art.author === artist?.name
+  ).map((item) => ({
     id: item.id,
     title: item.title,
-    price: parseFloat(item.price.replace("€", "").replace(",", "")),
-    type: item.tag,
-    img: item.image, // ✅ استخدم image بدل img
+    price: item.price,
+    type: item.tag, // تحويل tag → type لتطابق ArtworkCard
+    image: item.image,
     sales: Math.floor(Math.random() * 100),
-    format: item.type, // ✅ استخدم type الحقيقي (Digital أو Physical)
   }));
 
   if (!artist) {
@@ -35,14 +38,16 @@ export default function ArtistProfile() {
     );
   }
 
-  // ✅ إدارة المفضلة في المجموعات
+  // ❤️ المفضلات
   const handleFavoriteToggle = (id: string) => {
     setFavoriteCollections((prev) =>
-      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
+      prev.includes(id)
+        ? prev.filter((favId) => favId !== id)
+        : [...prev, id]
     );
   };
 
-  // ✅ عرض المحتوى حسب التبويب
+  // 🔸 محتوى التبويبات
   const renderContent = () => {
     switch (activeTab) {
       case "artwork":
@@ -51,15 +56,24 @@ export default function ArtistProfile() {
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
               Featured Artworks
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {convertedArtworks.slice(0, 6).map((artwork) => (
-                <ArtworkCard
-                  key={artwork.id}
-                  item={artwork}
-                  showFormatBadge={true}
-                />
-              ))}
-            </div>
+
+            {artistArtworks.length === 0 ? (
+              <p className="text-center text-gray-500">
+                No artworks available for this artist.
+              </p>
+            ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+  {artistArtworks.map((artwork) => (
+    <div key={artwork.id} className="w-full h-full">
+      <ArtworkCard
+        item={artwork}
+        showFormatBadge={true}
+      />
+    </div>
+  ))}
+</div>
+
+            )}
           </div>
         );
 
@@ -80,7 +94,6 @@ export default function ArtistProfile() {
                       description={collection.description}
                       imageUrl={collection.imageUrl}
                     />
-                    {/* ❤️ أيقونة المفضلة */}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -118,8 +131,14 @@ export default function ArtistProfile() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InfoCard label="Member since" value={artist.about.memberSince} />
-              <InfoCard label="Total artworks" value={artist.about.totalArtworks} />
+              <InfoCard
+                label="Member since"
+                value={artist.about.memberSince}
+              />
+              <InfoCard
+                label="Total artworks"
+                value={artist.about.totalArtworks}
+              />
               <InfoCard label="Style" value={artist.about.style} />
               <InfoCard
                 label="Years of experience"
@@ -134,13 +153,12 @@ export default function ArtistProfile() {
     }
   };
 
-  // ✅ واجهة الصفحة الكاملة
+  // 🔹 واجهة الصفحة الرئيسية
   return (
     <div className="min-h-screen bg-white">
-      {/* 🔹 قسم الغلاف */}
+      {/* الغلاف العلوي */}
       <div className="relative h-96 bg-gradient-to-r from-purple-500 to-pink-500">
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          {/* صورة الفنان */}
           <div className="mb-4">
             <div className="w-28 h-28 rounded-full bg-gray-200 mx-auto shadow-lg overflow-hidden">
               <img
@@ -151,8 +169,9 @@ export default function ArtistProfile() {
             </div>
           </div>
 
-          {/* الاسم والمتابعين */}
-          <h1 className="text-2xl font-bold text-white mb-2">{artist.name}</h1>
+          <h1 className="text-2xl font-bold text-white mb-2">
+            {artist.name}
+          </h1>
           <div className="flex justify-center items-center gap-6 mb-4 text-white">
             <div>
               <span className="font-semibold">{artist.followers}</span> followers
@@ -162,14 +181,13 @@ export default function ArtistProfile() {
             </div>
           </div>
 
-          {/* زر المتابعة */}
           <Button className="bg-sky-500 hover:bg-sky-600 text-white px-8 py-2 rounded-lg font-semibold">
             {artist.isFollowing ? "Following" : "Follow"}
           </Button>
         </div>
       </div>
 
-      {/* 🔹 أزرار التبويبات */}
+      {/* التبويبات */}
       <div className="flex justify-center space-x-8 py-6 mt-10">
         {["artwork", "collections", "about"].map((tab) => (
           <Button
@@ -189,13 +207,13 @@ export default function ArtistProfile() {
         ))}
       </div>
 
-      {/* 🔹 المحتوى حسب التبويب */}
+      {/* المحتوى */}
       <div className="container mx-auto px-4 py-8">{renderContent()}</div>
     </div>
   );
 }
 
-/** مكون فرعي لعرض بيانات الفنان في تبويب About */
+/** 🟢 مكوّن فرعي لبطاقات المعلومات */
 function InfoCard({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="bg-gray-50 rounded-lg p-6">

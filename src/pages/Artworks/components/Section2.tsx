@@ -61,14 +61,18 @@ function FilterBlock() {
       {/* 🔹 Artist */}
       <CollapsibleSection title="Artist" defaultOpen>
         <ul className="space-y-2 text-sm">
-          {["A.R. Penick", "Alex Katz", "Alison Jackson", "Bernard Venet", "Bryan Adams"].map(
-            (artist) => (
-              <li key={artist} className="flex items-center gap-2">
-                <input type="checkbox" className="h-4 w-4 rounded border-slate-300" />
-                <span>{artist}</span>
-              </li>
-            )
-          )}
+          {[
+            "A.R. Penick",
+            "Alex Katz",
+            "Alison Jackson",
+            "Bernard Venet",
+            "Bryan Adams",
+          ].map((artist) => (
+            <li key={artist} className="flex items-center gap-2">
+              <input type="checkbox" className="h-4 w-4 rounded border-slate-300" />
+              <span>{artist}</span>
+            </li>
+          ))}
         </ul>
         <button className="text-sky-600 text-xs mt-2">Show More (3 items)</button>
       </CollapsibleSection>
@@ -76,12 +80,14 @@ function FilterBlock() {
       {/* 🔹 Category */}
       <CollapsibleSection title="Category" className="mt-2" defaultOpen>
         <ul className="space-y-2 text-sm">
-          {["Painting", "Sculpture", "Photography", "Print", "Video Media"].map((cat) => (
-            <li key={cat} className="flex items-center gap-2">
-              <input type="checkbox" className="h-4 w-4 rounded border-slate-300" />
-              <span>{cat}</span>
-            </li>
-          ))}
+          {["Painting", "Sculpture", "Photography", "Print", "Video Media"].map(
+            (cat) => (
+              <li key={cat} className="flex items-center gap-2">
+                <input type="checkbox" className="h-4 w-4 rounded border-slate-300" />
+                <span>{cat}</span>
+              </li>
+            )
+          )}
         </ul>
       </CollapsibleSection>
 
@@ -124,11 +130,11 @@ function Card({ item }: { item: Artwork }) {
   };
 
   return (
-    <button
-      type="button"
+    <div
       onClick={openDetails}
-      className="text-left rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden max-w-[330px] mx-auto focus:outline-none focus:ring-2 focus:ring-sky-500"
+      className="text-left rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden max-w-[330px] mx-auto cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-500"
     >
+      {/* الصورة */}
       <div className="relative aspect-[4/3]">
         <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
         <span
@@ -142,6 +148,7 @@ function Card({ item }: { item: Artwork }) {
         </span>
       </div>
 
+      {/* المحتوى */}
       <div className="p-4">
         <p className="text-sky-600 text-sm font-medium hover:underline">{item.title}</p>
         <p className="text-slate-600 text-sm mt-1">
@@ -160,7 +167,7 @@ function Card({ item }: { item: Artwork }) {
           </button>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -180,11 +187,12 @@ export default function Section2() {
             </h3>
           </div>
 
-          <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
-            {ARTWORKS.map((art) => (
-              <Card key={art.id} item={art} />
-            ))}
-          </div>
+        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
+  {ARTWORKS.slice(0, 6).map((art) => (
+    <Card key={art.id} item={art} />
+  ))}
+</div>
+
 
           {/* الترقيم */}
           <div className="mt-6 flex items-center justify-between flex-wrap gap-3">
@@ -199,14 +207,16 @@ export default function Section2() {
 
               {[1, 2, 3, 4, 0, 10, 11].map((n, i) =>
                 n === 0 ? (
-                  <span key={i} className="px-2 text-slate-400 select-none">
+                  <span key={`dots-${i}`} className="px-2 text-slate-400 select-none">
                     …
                   </span>
                 ) : (
                   <button
-                    key={n}
+                    key={`page-${n}`}
                     className={`h-8 w-8 rounded-md text-sm ${
-                      n === 2 ? "bg-sky-500 text-white" : "text-slate-700 hover:bg-slate-100"
+                      n === 2
+                        ? "bg-sky-500 text-white"
+                        : "text-slate-700 hover:bg-slate-100"
                     }`}
                   >
                     {n}
