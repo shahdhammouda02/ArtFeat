@@ -124,7 +124,7 @@ const SignIn = () => {
             <p className="text-gray-600">
               new To ArtFeat?{" "}
               <a
-                href="#"
+                href="/signup"
                 className="text-sky-500 hover:text-sky-600 font-medium"
               >
                 Join now
@@ -137,7 +137,7 @@ const SignIn = () => {
             <div className="flex items-center justify-center gap-3">
               <p className="text-gray-600 mb-0">Are you an Artist?</p>
               <a
-                href="#"
+                href="/artist-signup"
                 className="inline-block bg-sky-800 text-white px-5 py-2.5 rounded-full hover:bg-sky-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-colors font-medium"
               >
                 Let's get you started

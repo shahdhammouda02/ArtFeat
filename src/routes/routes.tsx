@@ -10,6 +10,7 @@ import Artworks from "@/pages/Artworks/Artworks";
 import ArtistProfile from "@/pages/Artists/components/ArtistProfile";
 import SignIn from "@/pages/auth/signin/SignIn";
 import SignUp from "@/pages/auth/signup/SignUp";
+import ArtistSignUp from "@/pages/auth/artistSignup/ArtistSignUp";
 export const routes: RouteObject[] = [
   {
     path: "/",
@@ -26,6 +27,7 @@ export const routes: RouteObject[] = [
        { path: "all-artworks", element: <Artworks/> },
       {path: "signin", element: <SignIn />},
       {path: "signup", element: <SignUp />},
+      {path: "artist-signup", element: <ArtistSignUp />},
 
     ],
   },
