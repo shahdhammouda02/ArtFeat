@@ -8,6 +8,9 @@ import SupportArtist from "@/pages/Support_Artist/SupportArtist";
 import Artists from "@/pages/Artists/Artists";
 import Artworks from "@/pages/Artworks/Artworks";
 import ArtistProfile from "@/pages/Artists/components/ArtistProfile";
+import SignIn from "@/pages/auth/signin/SignIn";
+import SignUp from "@/pages/auth/signup/SignUp";
+import ArtistSignUp from "@/pages/auth/artistSignup/ArtistSignUp";
 import Photography from "@/pages/Photography/Photography";
 import Details from "@/pages/Details/Details";
 
@@ -22,6 +25,14 @@ export const routes: RouteObject[] = [
       { path: "events/:id", element: <EventRouter /> },
      { path: "auctions", element: <Auctions /> },
       { path: "auctions/:id", element: <Auctions /> },
+      { path: "support-artist", element: <SupportArtist /> },
+       { path: "artists", element: <Artists /> },
+       { path: "artists/:id", element: <ArtistProfile /> },
+       { path: "all-artworks", element: <Artworks/> },
+      {path: "signin", element: <SignIn />},
+      {path: "signup", element: <SignUp />},
+      {path: "artist-signup", element: <ArtistSignUp />},
+
    { path: "support-artist", element: <SupportArtist /> },
       { path: "artists", element: <Artists /> },
       { path: "artists/:id", element: <ArtistProfile /> },
