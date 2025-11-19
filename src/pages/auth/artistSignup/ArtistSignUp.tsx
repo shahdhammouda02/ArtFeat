@@ -4,17 +4,17 @@ import { Button } from "@/components/ui/button";
 import signup from "@/assets/images/signup.jpeg";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
-
-type ArtistSignUpFormValues = {
-  name: string;
-  surname: string;
-  country: string;
-  city: string;
-  businessRegistered: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { countries } from "@/data/countries";
+import { authSchema, type ArtistSignUpFormValues } from "@/schemas/authSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const ArtistSignUp = () => {
   const {
@@ -22,17 +22,21 @@ const ArtistSignUp = () => {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<ArtistSignUpFormValues>();
+    setValue,
+  } = useForm<ArtistSignUpFormValues>({
+    resolver: zodResolver(authSchema)
+  });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const onSubmit: (data: ArtistSignUpFormValues) => void = (data) => {
+  const onSubmit = (data: ArtistSignUpFormValues) => {
     console.log(data);
     // Handle artist sign up logic here
   };
 
-  const watchPassword = watch("password");
+  // const watchPassword = watch("password");
+  const watchCountry = watch("country");
 
   return (
     <div className="min-h-screen bg-white flex">
@@ -51,7 +55,7 @@ const ArtistSignUp = () => {
         <div className="mx-auto w-full max-w-lg lg:max-w-xl border border-gray-400 rounded-2xl p-14 bg-white/80 backdrop-blur-sm lg:bg-white shadow-md">
           {/* Header */}
           <div className="text-left mb-10">
-            <h1 className="text-3xl font-bold text-gray-900 mb-3">General Information</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-3">Sign Up</h1>
           </div>
 
           {/* Form */}
@@ -64,9 +68,7 @@ const ArtistSignUp = () => {
                   id="name"
                   type="text"
                   placeholder="Name"
-                  {...register("name", {
-                    required: "Name is required",
-                  })}
+                  {...register("name")}
                   className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                 />
                 {errors.name && (
@@ -82,9 +84,7 @@ const ArtistSignUp = () => {
                   id="surname"
                   type="text"
                   placeholder="Surname"
-                  {...register("surname", {
-                    required: "Surname is required",
-                  })}
+                  {...register("surname")}
                   className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                 />
                 {errors.surname && (
@@ -97,39 +97,55 @@ const ArtistSignUp = () => {
 
             {/* Country and City row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Country field */}
+              {/* Country Select */}
               <div>
-                <Input
-                  id="country"
-                  type="text"
-                  placeholder="Country"
-                  {...register("country", {
-                    required: "Country is required",
-                  })}
-                  className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
-                />
+                <Label htmlFor="country">Country</Label>
+                <Select
+                  value={watchCountry || ""}
+                  onValueChange={(value) => {
+                    setValue("country", value);
+                    setValue("city", ""); // Reset city when country changes
+                  }}
+                >
+                  <SelectTrigger className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent">
+                    <SelectValue placeholder="Select country" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(countries).map(([countryCode, country]) => (
+                      <SelectItem key={countryCode} value={countryCode}>
+                        {country.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {errors.country && (
-                  <p className="text-red-500 text-sm mt-2">
-                    {errors.country.message}
-                  </p>
+                  <p className="text-red-500 text-sm mt-2">{errors.country.message}</p>
                 )}
               </div>
 
-              {/* City field */}
+              {/* City Select */}
               <div>
-                <Input
-                  id="city"
-                  type="text"
-                  placeholder="City"
-                  {...register("city", {
-                    required: "City is required",
-                  })}
-                  className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
-                />
+                <Label htmlFor="city">City</Label>
+                <Select
+                  value={watch("city") || ""}
+                  onValueChange={(value) => setValue("city", value)}
+                  disabled={!watchCountry}
+                >
+                  <SelectTrigger className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent">
+                    <SelectValue placeholder={watchCountry ? "Select city" : "Select country first"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {watchCountry && 
+                      countries[watchCountry as keyof typeof countries]?.cities.map((city) => (
+                        <SelectItem key={city} value={city}>
+                          {city}
+                        </SelectItem>
+                      ))
+                    }
+                  </SelectContent>
+                </Select>
                 {errors.city && (
-                  <p className="text-red-500 text-sm mt-2">
-                    {errors.city.message}
-                  </p>
+                  <p className="text-red-500 text-sm mt-2">{errors.city.message}</p>
                 )}
               </div>
             </div>
@@ -144,9 +160,7 @@ const ArtistSignUp = () => {
                   <input
                     type="radio"
                     value="yes"
-                    {...register("businessRegistered", {
-                      required: "Please select an option",
-                    })}
+                    {...register("businessRegistered")}
                     className="w-4 h-4 text-sky-500 border-gray-300 focus:ring-sky-500"
                   />
                   <span className="ml-2 text-gray-700">Yes</span>
@@ -155,9 +169,7 @@ const ArtistSignUp = () => {
                   <input
                     type="radio"
                     value="no"
-                    {...register("businessRegistered", {
-                      required: "Please select an option",
-                    })}
+                    {...register("businessRegistered")}
                     className="w-4 h-4 text-sky-500 border-gray-300 focus:ring-sky-500"
                   />
                   <span className="ml-2 text-gray-700">No</span>
@@ -176,13 +188,7 @@ const ArtistSignUp = () => {
                 id="email"
                 type="email"
                 placeholder="Email"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Invalid email address",
-                  },
-                })}
+                {...register("email")}
                 className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
               />
               {errors.email && (
@@ -198,13 +204,7 @@ const ArtistSignUp = () => {
                 id="password"
                 placeholder="Password"
                 type={showPassword ? "text" : "password"}
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                })}
+                {...register("password")}
                 className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10"
               />
               {/* Eye icon */}
@@ -232,11 +232,7 @@ const ArtistSignUp = () => {
                 id="confirmPassword"
                 placeholder="Confirm Password"
                 type={showConfirmPassword ? "text" : "password"}
-                {...register("confirmPassword", {
-                  required: "Please confirm your password",
-                  validate: value =>
-                    value === watchPassword || "Passwords do not match",
-                })}
+                {...register("confirmPassword")}
                 className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10"
               />
               {/* Eye icon */}
@@ -260,6 +256,7 @@ const ArtistSignUp = () => {
 
             {/* Sign up button with rounded-xl */}
             <Button
+              type="submit"
               variant="default"
               className="w-full bg-sky-500 text-white py-5 px-4 rounded-full hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             >
