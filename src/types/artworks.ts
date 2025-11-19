@@ -1,9 +1,15 @@
-
-export interface Item {
+export interface Artwork {
   id: number;
-  tag: "Painting" | "Sculpture" | "Photography";
+  type: "Digital" | "Physical";
+  tag: string; 
   title: string;
-  artist: string;
+  author: string;
   price: string;
-  img: string;
-};
+  image: string;
+  description: string;
+  highlights: string[];
+  fileType?: string;
+  size: string;
+  dpi?: number;
+}
+

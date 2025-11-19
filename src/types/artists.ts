@@ -3,7 +3,7 @@ export interface Artwork {
   title: string;
   price: number;
   type: string;
-  img: string;
+  image: string;
   sales?: number;
 }
 

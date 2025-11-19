@@ -16,9 +16,9 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Calendar, ChevronDown, ChevronUp, Filter, Search } from "lucide-react";
-import { ALL_EVENTS, TYPES } from "@/data/eventsData";
+import { Calendar, ChevronDown, ChevronUp, Filter,Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { ALL_EVENTS, TYPES } from "@/data/eventsData";
 import type { EventItem } from "@/types/eventTypes";
 
 const TAG_COLORS: Record<string, string> = {
@@ -157,7 +157,7 @@ export default function Section2() {
                 }`}
               >
                 <div className="relative group">
-                  <img
+                   <img
                     src={e.image}
                     alt={e.title}
                     className="w-full aspect-[16/8] sm:aspect-[4/2.5] object-cover transition-all duration-500 group-hover:scale-105"
