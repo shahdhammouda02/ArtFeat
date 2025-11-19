@@ -5,7 +5,7 @@ interface ArtworkCardProps {
   item: {
     id: number;
     title: string;
-    price: string;
+    price: number | string; 
     type: string;
     image: string;
     sales?: number;

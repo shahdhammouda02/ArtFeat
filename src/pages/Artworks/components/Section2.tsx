@@ -1,5 +1,3 @@
-// src/pages/Artworks/Section2.tsx
-
 import React, { useState } from "react";
 import {
   ShoppingCart,
@@ -134,7 +132,6 @@ function Card({ item }: { item: Artwork }) {
       onClick={openDetails}
       className="text-left rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden max-w-[330px] mx-auto cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-500"
     >
-      {/* الصورة */}
       <div className="relative aspect-[4/3]">
         <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
         <span
@@ -142,13 +139,11 @@ function Card({ item }: { item: Artwork }) {
         >
           {item.tag}
         </span>
-        {/* شعار شفاف */}
         <span className="absolute inset-0 flex items-center justify-center text-white/70 text-4xl font-semibold select-none">
           Art Feat
         </span>
       </div>
 
-      {/* المحتوى */}
       <div className="p-4">
         <p className="text-sky-600 text-sm font-medium hover:underline">{item.title}</p>
         <p className="text-slate-600 text-sm mt-1">
@@ -171,15 +166,11 @@ function Card({ item }: { item: Artwork }) {
   );
 }
 
-/** 🔽 مكوّن القسم الكامل */
 export default function Section2() {
   return (
     <section className="bg-slate-50 py-10">
       <div className="w-full flex gap-6">
-        {/* الفلاتر */}
         <FilterBlock />
-
-        {/* الشبكة */}
         <div className="flex-1 pr-6">
           <div className="mb-8 text-left">
             <h3 className="text-slate-700 text-lg font-medium mb-1">
@@ -193,8 +184,6 @@ export default function Section2() {
   ))}
 </div>
 
-
-          {/* الترقيم */}
           <div className="mt-6 flex items-center justify-between flex-wrap gap-3">
             <p className="text-sm text-sky-600 font-medium">
               Show 1 to {ARTWORKS.length} of {ARTWORKS.length} results

@@ -1,4 +1,3 @@
-// src/data/data.ts
 import type { Artist } from "@/types/artists";
 import art from "@/assets/images/artists/hero-bg.png";
 import artistPhoto from "@/assets/images/artistPhoto.jpg";
@@ -9,7 +8,7 @@ export const ARTISTS_DATA: Artist[] = [
     name: "Ahmed Jack",
     photo: artistPhoto,
     artworks: Array.from({ length: 6 }).map((_, i) => ({
-      id: i + 101, // ✅ IDs فريدة تبدأ من 101
+      id: i + 1, 
       title: [
         "Think Different (Yellow)",
         "The Great Beyond",
@@ -29,7 +28,7 @@ export const ARTISTS_DATA: Artist[] = [
     name: "Rawan Ahmad",
     photo: artistPhoto,
     artworks: Array.from({ length: 5 }).map((_, i) => ({
-      id: i + 201, // ✅ IDs فريدة تبدأ من 201
+      id: i + 1,
       title: [
         "Desert Mirage",
         "Ocean Whispers",
@@ -48,7 +47,7 @@ export const ARTISTS_DATA: Artist[] = [
     name: "Sarah Johnson",
     photo: artistPhoto,
     artworks: Array.from({ length: 4 }).map((_, i) => ({
-      id: i + 301, // ✅ IDs فريدة تبدأ من 301
+      id: i + 1, 
       title: [
         "Golden Hour",
         "Abstract Thoughts",
@@ -66,7 +65,7 @@ export const ARTISTS_DATA: Artist[] = [
     name: "Layla Nasser",
     photo: artistPhoto,
     artworks: Array.from({ length: 5 }).map((_, i) => ({
-      id: i + 401,
+      id: i + 1,
       title: [
         "Crimson Dreams",
         "The Blue Silence",
@@ -85,7 +84,7 @@ export const ARTISTS_DATA: Artist[] = [
     name: "Hani Omar",
     photo: artistPhoto,
     artworks: Array.from({ length: 4 }).map((_, i) => ({
-      id: i + 501,
+      id: i + 1,
       title: [
         "Golden Silence",
         "Oceanic Dreams",

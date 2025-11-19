@@ -15,17 +15,15 @@ export default function ArtistProfile() {
   >("artwork");
   const [favoriteCollections, setFavoriteCollections] = useState<string[]>([]);
 
-  // 🔹 تحويل id من string إلى number (بسبب نوع artist.id)
   const artist = ARTISTS_DATA.find((artist) => artist.id === Number(id));
 
-  // ✅ فلترة الأعمال الخاصة بالفنان المحدد فقط
   const artistArtworks = ARTWORKS.filter(
     (art) => art.author === artist?.name
   ).map((item) => ({
     id: item.id,
     title: item.title,
     price: item.price,
-    type: item.tag, // تحويل tag → type لتطابق ArtworkCard
+    type: item.tag, 
     image: item.image,
     sales: Math.floor(Math.random() * 100),
   }));
@@ -38,7 +36,6 @@ export default function ArtistProfile() {
     );
   }
 
-  // ❤️ المفضلات
   const handleFavoriteToggle = (id: string) => {
     setFavoriteCollections((prev) =>
       prev.includes(id)
@@ -47,7 +44,6 @@ export default function ArtistProfile() {
     );
   };
 
-  // 🔸 محتوى التبويبات
   const renderContent = () => {
     switch (activeTab) {
       case "artwork":
@@ -153,10 +149,8 @@ export default function ArtistProfile() {
     }
   };
 
-  // 🔹 واجهة الصفحة الرئيسية
   return (
     <div className="min-h-screen bg-white">
-      {/* الغلاف العلوي */}
       <div className="relative h-96 bg-gradient-to-r from-purple-500 to-pink-500">
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <div className="mb-4">
@@ -187,7 +181,6 @@ export default function ArtistProfile() {
         </div>
       </div>
 
-      {/* التبويبات */}
       <div className="flex justify-center space-x-8 py-6 mt-10">
         {["artwork", "collections", "about"].map((tab) => (
           <Button
@@ -207,13 +200,11 @@ export default function ArtistProfile() {
         ))}
       </div>
 
-      {/* المحتوى */}
       <div className="container mx-auto px-4 py-8">{renderContent()}</div>
     </div>
   );
 }
 
-/** 🟢 مكوّن فرعي لبطاقات المعلومات */
 function InfoCard({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="bg-gray-50 rounded-lg p-6">
