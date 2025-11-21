@@ -14,4 +14,4 @@ export const authSchema = z.object({
   path: ["confirmPassword"],
 });
 
-export type ArtistSignUpFormValues = z.infer<typeof authSchema>;
+export type SignUpFormValues = z.infer<typeof authSchema>;

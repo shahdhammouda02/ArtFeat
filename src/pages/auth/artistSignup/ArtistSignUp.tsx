@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { countries } from "@/data/countries";
-import { authSchema, type ArtistSignUpFormValues } from "@/schemas/authSchema";
+import { authSchema, type SignUpFormValues } from "@/schemas/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const ArtistSignUp = () => {
@@ -23,14 +23,14 @@ const ArtistSignUp = () => {
     formState: { errors },
     watch,
     setValue,
-  } = useForm<ArtistSignUpFormValues>({
+  } = useForm<SignUpFormValues>({
     resolver: zodResolver(authSchema)
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const onSubmit = (data: ArtistSignUpFormValues) => {
+  const onSubmit = (data: SignUpFormValues) => {
     console.log(data);
     // Handle artist sign up logic here
   };
