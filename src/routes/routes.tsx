@@ -13,6 +13,7 @@ import SignUp from "@/pages/auth/signup/SignUp";
 import ArtistSignUp from "@/pages/auth/artistSignup/ArtistSignUp";
 import Photography from "@/pages/Photography/Photography";
 import Details from "@/pages/Details/Details";
+import ArtistDashboard from "@/pages/ArtistDashboard/ArtistDashboard";
 
 
 export const routes: RouteObject[] = [
@@ -32,6 +33,7 @@ export const routes: RouteObject[] = [
       {path: "signin", element: <SignIn />},
       {path: "signup", element: <SignUp />},
       {path: "artist-signup", element: <ArtistSignUp />},
+      { path: "artist-dashboard", element: <ArtistDashboard /> },
 
    { path: "support-artist", element: <SupportArtist /> },
       { path: "artists", element: <Artists /> },

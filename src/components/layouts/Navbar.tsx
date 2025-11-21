@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -6,9 +6,10 @@ import {
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import { Heart, ShoppingCart, Globe, Bell, Menu, X } from "lucide-react";
+import { Heart, ShoppingCart, Globe, Bell, Menu, X, User, Settings, LogOut, Palette } from "lucide-react";
 import logo from "@/assets/images/logo.jpeg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Auth } from "@/contexts/AuthContext";
 
 const navItems = [
   "Gallery",
@@ -27,6 +28,137 @@ interface Notification {
   timestamp: Date;
 }
 
+// Define types for UserDropdown props
+interface User {
+  avatar?: string;
+  name?: string;
+  email?: string;
+  type?: string;
+}
+
+interface UserDropdownProps {
+  user: User | null;
+  onLogout: () => void;
+  onNavigate: (path: string) => void;
+}
+
+const UserDropdown = ({ user, onLogout, onNavigate }: UserDropdownProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleItemClick = (path: string) => {
+    onNavigate(path);
+    setIsOpen(false);
+  };
+
+  const handleLogout = () => {
+    onLogout();
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      {/* Avatar Trigger */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center space-x-2 hover:bg-gray-100 rounded-lg p-2 transition-colors border border-transparent hover:border-gray-200"
+      >
+        {user?.avatar ? (
+          <img
+            src={user.avatar}
+            alt={user.name}
+            className="w-8 h-8 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center text-white text-sm font-semibold">
+            {user?.name?.charAt(0).toUpperCase()}
+          </div>
+        )}
+        <span className="text-sm font-medium text-gray-700">
+          {user?.name}
+          {user?.type === 'artist' && (
+            <span className="text-xs text-green-600 ml-1">(Artist)</span>
+          )}
+        </span>
+        <svg 
+          className={`w-4 h-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+          {/* User Info */}
+          <div className="px-4 py-3 border-b border-gray-100">
+            <p className="text-sm font-semibold text-gray-900 truncate">{user?.name}</p>
+            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+            {user?.type === 'artist' && (
+              <span className="inline-block mt-1 px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+                Artist Account
+              </span>
+            )}
+          </div>
+          
+          {/* Menu Items */}
+          <div className="py-2">
+            <button
+              onClick={() => handleItemClick('/profile')}
+              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              <User className="w-4 h-4 mr-3" />
+              Your Profile
+            </button>
+            <button
+              onClick={() => handleItemClick('/settings')}
+              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              <Settings className="w-4 h-4 mr-3" />
+              Settings
+            </button>
+            {user?.type === 'artist' && (
+              <button
+                onClick={() => handleItemClick('/artist-dashboard')}
+                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <Palette className="w-4 h-4 mr-3" />
+                Artist Dashboard
+              </button>
+            )}
+          </div>
+          
+          {/* Footer */}
+          <div className="border-t border-gray-100 pt-2">
+            <button
+              onClick={handleLogout}
+              className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-50 transition-colors"
+            >
+              <LogOut className="w-4 h-4 mr-3" />
+              Sign out
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -34,6 +166,7 @@ const Navbar = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const location = useLocation();
   const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = Auth();
 
   useEffect(() => {
     const count = parseInt(localStorage.getItem("notificationCount") || "0");
@@ -77,6 +210,14 @@ const Navbar = () => {
 
   const isActiveNavItem = (item: string) => {
     return currentPath === item.toLowerCase().replace(/\s+/g, " ");
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
   };
 
   return (
@@ -127,23 +268,36 @@ const Navbar = () => {
         </div>
 
         <div className="hidden lg:flex items-center space-x-3">
-          <Button
-            variant="outline"
-            size="default"
-            className="font-semibold"
-            aria-label="Login"
-            onClick={() => navigate("/signin")}
-          >
-            Login
-          </Button>
-          <Button
-            size="default"
-            className="font-semibold bg-sky-400 hover:bg-sky-400/90 border-none"
-            aria-label="Sign Up"
-            onClick={()=> navigate("/signup")}
-          >
-            Sign Up
-          </Button>
+          {isAuthenticated ? (
+            <div className="flex items-center space-x-3">
+              <UserDropdown 
+                user={user} 
+                onLogout={handleLogout}
+                onNavigate={handleNavigate}
+              />
+              
+            </div>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                size="default"
+                className="font-semibold"
+                aria-label="Login"
+                onClick={() => navigate("/signin")}
+              >
+                Login
+              </Button>
+              <Button
+                size="default"
+                className="font-semibold bg-sky-400 hover:bg-sky-400/90 border-none"
+                aria-label="Sign Up"
+                onClick={() => navigate("/signup")}
+              >
+                Sign Up
+              </Button>
+            </>
+          )}
 
           <div
             className="h-7 border-r border-gray-300 mx-2"

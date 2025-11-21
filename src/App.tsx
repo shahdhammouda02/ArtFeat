@@ -2,8 +2,9 @@ import Navbar from "@/components/layouts/Navbar";
 import { Footer } from "@/components/layouts/Footer";
 import { SubNav } from "@/components/layouts/SubNav";
 import { Outlet, useLocation } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
 
-const App = () => {
+const AppContent = () => {
   const location = useLocation();
   const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup' || location.pathname === '/artist-signup';
 
@@ -16,6 +17,14 @@ const App = () => {
       </main>
       {!isAuthPage && <Footer />}
     </div>
+  );
+};
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 };
 

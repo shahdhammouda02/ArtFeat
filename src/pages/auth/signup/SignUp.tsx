@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { countries } from "@/data/countries";
-import { authSchema, type SignUpFormValues } from "@/schemas/authSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Auth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import type { SignUpCredentials } from "@/types/auth";
 
 const SignUp = () => {
   const {
@@ -23,25 +24,43 @@ const SignUp = () => {
     formState: { errors },
     watch,
     setValue,
-  } = useForm<SignUpFormValues>({
-    resolver: zodResolver(authSchema)
-  });
+    setError,
+  } = useForm<SignUpCredentials>();
 
+  const { signUp } = Auth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = (data: SignUpFormValues) => {
-    console.log(data);
-    // Handle sign up logic here
+  const onSubmit = async (data: SignUpCredentials) => {
+    if (data.password !== data.confirmPassword) {
+      setError('confirmPassword', { 
+        type: 'manual', 
+        message: 'Passwords do not match' 
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await signUp(data);
+      navigate("/");
+    } catch (error) {
+      setError('root', { 
+        type: 'manual', 
+        message: error instanceof Error ? error.message : 'Sign up failed' 
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const watchCountry = watch("country");
 
   return (
     <div className="min-h-screen bg-white flex">
-      {/* Left Section - Form with border and rounded */}
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-12 xl:px-12 relative z-10">
-        {/* Background image for small screens */}
         <div className="lg:hidden absolute inset-0 -z-10">
           <img
             src={signup}
@@ -52,23 +71,25 @@ const SignUp = () => {
         </div>
 
         <div className="mx-auto w-full max-w-lg lg:max-w-xl border border-gray-400 rounded-2xl p-14 bg-white/80 backdrop-blur-sm lg:bg-white shadow-md">
-          {/* Header */}
           <div className="text-left mb-10">
             <h1 className="text-3xl font-bold text-gray-900 mb-3">Create Account</h1>
             <p className="text-gray-600">Be the spark of the artistry of ARTFEAT</p>
           </div>
 
-          {/* Form */}
+          {errors.root && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {errors.root.message}
+            </div>
+          )}
+
           <form className="space-y-7" onSubmit={handleSubmit(onSubmit)}>
-            {/* Name and Email row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Name field */}
               <div>
                 <Input
                   id="name"
                   type="text"
                   placeholder="Name"
-                  {...register("name")}
+                  {...register("name", { required: "Name is required" })}
                   className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                 />
                 {errors.name && (
@@ -78,13 +99,18 @@ const SignUp = () => {
                 )}
               </div>
 
-              {/* Email field */}
               <div>
                 <Input
                   id="email"
                   type="email"
                   placeholder="Email"
-                  {...register("email")}
+                  {...register("email", { 
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
                   className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                 />
                 {errors.email && (
@@ -95,18 +121,21 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Password and Confirm Password row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Password field */}
               <div className="relative">
                 <Input
                   id="password"
                   placeholder="Password"
                   type={showPassword ? "text" : "password"}
-                  {...register("password")}
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
                   className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10"
                 />
-                {/* Eye icon */}
                 <button
                   type="button"
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
@@ -125,16 +154,16 @@ const SignUp = () => {
                 )}
               </div>
 
-              {/* Confirm Password field */}
               <div className="relative">
                 <Input
                   id="confirmPassword"
                   placeholder="Confirm Password"
                   type={showConfirmPassword ? "text" : "password"}
-                  {...register("confirmPassword")}
+                  {...register("confirmPassword", {
+                    required: "Please confirm your password",
+                  })}
                   className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10"
                 />
-                {/* Eye icon */}
                 <button
                   type="button"
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
@@ -154,16 +183,14 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Country and City row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Country Select */}
               <div>
                 <Label htmlFor="country">Country</Label>
                 <Select
                   value={watchCountry || ""}
                   onValueChange={(value) => {
                     setValue("country", value);
-                    setValue("city", ""); // Reset city when country changes
+                    setValue("city", "");
                   }}
                 >
                   <SelectTrigger className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent">
@@ -182,11 +209,9 @@ const SignUp = () => {
                 )}
               </div>
 
-              {/* City Select */}
               <div>
                 <Label htmlFor="city">City</Label>
                 <Select
-                  value={watch("city") || ""}
                   onValueChange={(value) => setValue("city", value)}
                   disabled={!watchCountry}
                 >
@@ -209,17 +234,16 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Sign up button with rounded-xl */}
             <Button
               type="submit"
+              disabled={isLoading}
               variant="default"
-              className="w-full bg-sky-500 text-white py-5 px-4 rounded-full hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+              className="w-full bg-sky-500 text-white py-5 px-4 rounded-full hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50"
             >
-              Sign Up
+              {isLoading ? "Creating Account..." : "Sign Up"}
             </Button>
           </form>
 
-          {/* Artist section - centered with background */}
           <div className="text-center mt-8">
             <div className="flex items-center justify-center gap-3">
               <p className="text-gray-600 mb-0">Are you an Artist?</p>
@@ -232,7 +256,6 @@ const SignUp = () => {
             </div>
           </div>
 
-          {/* Already have account section - centered */}
           <div className="text-center mt-8">
             <p className="text-gray-600">
               Already have an account?{" "}
@@ -247,16 +270,13 @@ const SignUp = () => {
         </div>
       </div>
 
-      {/* Right Section - Image with light blue overlay only */}
       <div className="hidden lg:block flex-1 relative">
         <div className="absolute inset-0">
-          {/* Background Image */}
           <img
             src={signup}
             alt="Artistic background"
             className="w-full h-full object-cover"
           />
-          {/* Light Blue Overlay only - no text or icons */}
           <div className="absolute inset-0 bg-sky-500 bg-opacity-50"></div>
         </div>
       </div>
