@@ -1,149 +1,83 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Auth } from "@/contexts/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Mail, Store, MapPin, Globe, Plus } from "lucide-react";
+import { countries } from "@/data/countries";
 
 const ArtistDashboard = () => {
   const { user, isAuthenticated } = Auth();
 
-  if (!isAuthenticated || user?.type !== 'artist') {
-    return <Navigate to="/signin" replace />;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/"); // redirect to home
+    }
+    if (user?.type !== "artist") {
+      navigate("/"); // prevent normal users from entering artist dashboard
+    }
+  }, [isAuthenticated, navigate, user]);
+
+  // In case no user data exists
+  if (!user) {
+    return (
+      <div className="w-full h-[80vh] flex items-center justify-center text-xl font-semibold">
+        Loading profile...
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome back, {user.name}! 🎨
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Manage your artistic portfolio and track your creative journey
-          </p>
-        </div>
+  <div className="w-full flex justify-center py-10 px-4">
+  <div className="w-full max-w-6xl bg-white shadow-md rounded-xl p-8 flex gap-6 items-center">
+    {/* Profile Avatar */}
+    <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-xl font-bold text-white border">
+      {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+    </div>
 
-        {/* Artist Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="text-2xl font-bold text-sky-600">12</div>
-            <p className="text-gray-600">Artworks</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="text-2xl font-bold text-green-600">8</div>
-            <p className="text-gray-600">Sales</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="text-2xl font-bold text-purple-600">156</div>
-            <p className="text-gray-600">Views</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="text-2xl font-bold text-orange-600">4.8</div>
-            <p className="text-gray-600">Rating</p>
-          </div>
-        </div>
+    {/* Info Section */}
+    <div className="flex-1">
+      <h2 className="text-2xl font-bold">{user.name}</h2>
 
-        {/* Artist Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-sky-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">🎨</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Upload New Artwork</h3>
-            <p className="text-gray-600 mb-4">Share your latest creation with the world</p>
-            <button className="w-full bg-sky-500 text-white py-2 px-4 rounded-lg hover:bg-sky-600 transition-colors">
-              Upload Art
-            </button>
-          </div>
+      {/* Email */}
+      <div className="flex items-center gap-2 text-gray-600 mt-2">
+        <Mail size={18} />
+        <span>{user.email}</span>
+      </div>
 
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">📊</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Sales & Analytics</h3>
-            <p className="text-gray-600 mb-4">Track your sales and audience engagement</p>
-            <button className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
-              View Analytics
-            </button>
-          </div>
+      {/* Store Name */}
+      <div className="flex items-center gap-2 text-gray-600 mt-1">
+        <Store size={18} />
+        <span>{user.storename}</span>
+      </div>
 
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">👤</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Artist Profile</h3>
-            <p className="text-gray-600 mb-4">Update your portfolio and artist bio</p>
-            <button className="w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors">
-              Edit Profile
-            </button>
-          </div>
+      {/* Country */}
+      <div className="flex items-center gap-2 text-gray-600 mt-1">
+        <Globe size={18} />
+        <span>
+          {user.country ? countries[user.country as keyof typeof countries]?.name : "Unknown Country"}
+        </span>
+      </div>
 
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">💼</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Commission Requests</h3>
-            <p className="text-gray-600 mb-4">Manage custom commission orders</p>
-            <button className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors">
-              View Requests
-            </button>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">🛒</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Online Store</h3>
-            <p className="text-gray-600 mb-4">Manage your products and inventory</p>
-            <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
-              Manage Store
-            </button>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">📢</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Promotions</h3>
-            <p className="text-gray-600 mb-4">Create promotions and discounts</p>
-            <button className="w-full bg-pink-500 text-white py-2 px-4 rounded-lg hover:bg-pink-600 transition-colors">
-              Run Promotion
-            </button>
-          </div>
-        </div>
-
-        {/* Recent Activity Section */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Activity</h2>
-          <div className="bg-white rounded-lg shadow">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold">New commission request</p>
-                  <p className="text-gray-600 text-sm">From Sarah Johnson</p>
-                </div>
-                <span className="text-sm text-gray-500">2 hours ago</span>
-              </div>
-            </div>
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold">Artwork "Sunset Dreams" sold</p>
-                  <p className="text-gray-600 text-sm">$450 • Print</p>
-                </div>
-                <span className="text-sm text-gray-500">1 day ago</span>
-              </div>
-            </div>
-            <div className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold">New follower</p>
-                  <p className="text-gray-600 text-sm">ArtEnthusiast23 started following you</p>
-                </div>
-                <span className="text-sm text-gray-500">2 days ago</span>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* City */}
+      <div className="flex items-center gap-2 text-gray-600 mt-1">
+        <MapPin size={18} />
+        <span>
+          {user.city ? user.city : "Unknown City"}
+        </span>
       </div>
     </div>
+
+    {/* Actions */}
+    <div className="flex gap-4">
+      <Button className="bg-sky-500 text-white hover:bg-sky-600"><span><Plus /></span> Add Artwork</Button>
+      <Button variant="outline">Add Collection</Button>
+      <Button variant="outline">Edit Profile</Button>
+    </div>
+  </div>
+</div>
+
   );
 };
 

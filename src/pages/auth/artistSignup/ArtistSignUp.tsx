@@ -101,15 +101,15 @@ const ArtistSignUp = () => {
 
               <div>
                 <Input
-                  id="surname"
+                  id="storename"
                   type="text"
-                  placeholder="Surname"
-                  {...register("surname", { required: "Surname is required" })}
+                  placeholder="Store Name"
+                  {...register("storename", { required: "Store Name is required" })}
                   className="w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                 />
-                {errors.surname && (
+                {errors.storename && (
                   <p className="text-red-500 text-sm mt-2">
-                    {errors.surname.message}
+                    {errors.storename.message}
                   </p>
                 )}
               </div>
