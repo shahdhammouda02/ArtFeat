@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Mail, Store, MapPin, Globe, Plus } from "lucide-react";
+import { Mail, Store, MapPin, Globe, Plus, BarChart2, DollarSign, ShoppingCart, Users, UserCheck } from "lucide-react";
 import { countries } from "@/data/countries";
 
 const ArtistDashboard = () => {
@@ -10,17 +10,21 @@ const ArtistDashboard = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/"); // redirect to home
-    }
-    if (user?.type !== "artist") {
-      navigate("/"); // prevent normal users from entering artist dashboard
-    }
-  }, [isAuthenticated, navigate, user]);
+  // local state to prevent redirect on initial load
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
-  // In case no user data exists
-  if (!user) {
+  useEffect(() => {
+    if (user && isAuthenticated !== undefined) {
+      // only navigate after user data is loaded
+      if (!isAuthenticated || user.type !== "artist") {
+        navigate("/"); // redirect non-artists or unauthenticated users
+      } else {
+        setCheckingAuth(false); // user is valid, stop loading
+      }
+    }
+  }, [user, isAuthenticated, navigate]);
+  
+  if (checkingAuth || !user) {
     return (
       <div className="w-full h-[80vh] flex items-center justify-center text-xl font-semibold">
         Loading profile...
@@ -28,57 +32,97 @@ const ArtistDashboard = () => {
     );
   }
 
-  return (
-  <div className="w-full flex justify-center py-10 px-4">
-  <div className="w-full max-w-6xl bg-white shadow-md rounded-xl p-8 flex gap-6 items-center">
+ return (
+  <div className="w-full flex flex-col items-center py-10 px-4">
+  {/* Main Profile Card */}
+  <div className="w-full max-w-6xl bg-white shadow-md rounded-xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center">
     {/* Profile Avatar */}
-    <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-xl font-bold text-white border">
+    <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-xl font-bold text-white border flex-shrink-0">
       {user.name ? user.name.charAt(0).toUpperCase() : "U"}
     </div>
 
     {/* Info Section */}
-    <div className="flex-1">
+    <div className="flex-1 w-full">
       <h2 className="text-2xl font-bold">{user.name}</h2>
 
-      {/* Email */}
-      <div className="flex items-center gap-2 text-gray-600 mt-2">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-600 mt-2">
         <Mail size={18} />
         <span>{user.email}</span>
       </div>
 
-      {/* Store Name */}
-      <div className="flex items-center gap-2 text-gray-600 mt-1">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-600 mt-1">
         <Store size={18} />
         <span>{user.storename}</span>
       </div>
 
-      {/* Country */}
-      <div className="flex items-center gap-2 text-gray-600 mt-1">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-600 mt-1">
         <Globe size={18} />
-        <span>
-          {user.country ? countries[user.country as keyof typeof countries]?.name : "Unknown Country"}
-        </span>
+        <span>{user.country ? countries[user.country as keyof typeof countries]?.name : "Unknown Country"}</span>
       </div>
 
-      {/* City */}
-      <div className="flex items-center gap-2 text-gray-600 mt-1">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-600 mt-1">
         <MapPin size={18} />
-        <span>
-          {user.city ? user.city : "Unknown City"}
-        </span>
+        <span>{user.city ? user.city : "Unknown City"}</span>
       </div>
     </div>
 
     {/* Actions */}
-    <div className="flex gap-4">
-      <Button className="bg-sky-500 text-white hover:bg-sky-600"><span><Plus /></span> Add Artwork</Button>
-      <Button variant="outline">Add Collection</Button>
-      <Button variant="outline">Edit Profile</Button>
+    <div className="flex flex-wrap gap-3 mt-4 md:mt-0">
+      <Button className="bg-sky-500 text-white hover:bg-sky-600 flex-1">
+        <Plus className="mr-1" /> Add Artwork
+      </Button>
+      <Button variant="outline" className="flex-1">Add Collection</Button>
+      <Button variant="outline" className="flex-1">Edit Profile</Button>
+    </div>
+  </div>
+
+  {/* Stats Section */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-6 max-w-6xl w-full">
+    {/** Example card */}
+    <div className="bg-white shadow-md p-4 rounded-lg">
+      <div className="flex items-center justify-between">
+        <p className="text-md text-sky-500 font-medium">Total Funds</p>
+        <BarChart2 size={24} className="text-gray-700" />
+      </div>
+      <p className="text-lg font-bold mt-2">$12,450</p>
+    </div>
+
+    <div className="bg-white shadow-md p-4 rounded-lg">
+      <div className="flex items-center justify-between">
+        <p className="text-md text-sky-500 font-medium">Total Sales</p>
+        <ShoppingCart size={24} className="text-gray-700" />
+      </div>
+      <p className="text-lg font-bold mt-2">87</p>
+    </div>
+
+    <div className="bg-white shadow-md p-4 rounded-lg">
+      <div className="flex items-center justify-between">
+        <p className="text-md text-sky-500 font-medium">Followers</p>
+        <Users size={24} className="text-gray-700" />
+      </div>
+      <p className="text-lg font-bold mt-2">2.5K</p>
+    </div>
+
+    <div className="bg-white shadow-md p-4 rounded-lg">
+      <div className="flex items-center justify-between">
+        <p className="text-md text-sky-500 font-medium">Following</p>
+        <UserCheck size={24} className="text-gray-700" />
+      </div>
+      <p className="text-lg font-bold mt-2">210</p>
+    </div>
+
+    <div className="bg-white shadow-md p-4 rounded-lg">
+      <div className="flex items-center justify-between">
+        <p className="text-md text-sky-500 font-medium">Avg. Sale Price</p>
+        <DollarSign size={24} className="text-gray-700" />
+      </div>
+      <p className="text-lg font-bold mt-2">$143</p>
     </div>
   </div>
 </div>
 
-  );
+);
+
 };
 
 export default ArtistDashboard;
