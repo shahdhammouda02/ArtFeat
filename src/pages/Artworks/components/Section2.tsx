@@ -151,7 +151,7 @@ function Card({ item }: { item: Artwork }) {
         </p>
 
         <div className="mt-3 flex items-center justify-between">
-          <div className="text-slate-900 font-semibold">{item.price}</div>
+          <div className="text-slate-900 font-semibold">${item.price}</div>
           <button
             type="button"
             title="Add to cart"

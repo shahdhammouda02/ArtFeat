@@ -4,7 +4,7 @@ export interface Artwork {
   tag: string; 
   title: string;
   author: string;
-  price: string;
+  price:number;
   image: string;
   description: string;
   highlights: string[];

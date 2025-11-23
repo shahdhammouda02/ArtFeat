@@ -1,5 +1,7 @@
 import React from "react";
-import { Heart, ShoppingCart, ChevronDown, CheckCircle2 } from "lucide-react";
+import { ShoppingCart, ChevronDown } from "lucide-react";
+import { User, FileText, Ruler, Image as ImageIcon } from "lucide-react";
+
 import type { Artwork } from "@/types/artworks";
 import { ARTWORKS } from "@/data/artworks";
 
@@ -68,65 +70,99 @@ const DigitalDetails: React.FC<DigitalDetailsProps> = ({ artwork }) => {
               ${artwork.price}
             </div>
 
-            {/* النوع (Tag) */}
-            <span className="inline-block bg-pink-100 text-pink-600 text-xs font-semibold px-3 py-1 rounded-full">
-              {artwork.type}
-            </span>
+          
+{/* النوع (Tag) */}
+<div className="flex items-center gap-2 mt-3">
+  <span className="inline-block bg-pink-100 text-pink-600 text-xs font-semibold px-3 py-1 rounded-full">
+    {artwork.type}
+  </span>
+  <span className="inline-block bg-sky-100 text-sky-600 text-xs font-semibold px-3 py-1 rounded-full">
+    {artwork.tag}
+  </span>
+</div>
 
-            {/* زر Add to Cart */}
-            <div className="mt-6 flex items-center gap-3">
-              <button className="flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-md text-sm font-medium transition">
-                <ShoppingCart className="w-4 h-4" />
-                Add to Cart
-              </button>
+{/* زر Add to Cart */}
+<div className="mt-6">
+<button className="w-1/4 flex justify-center items-center gap-2 border border-sky-500 text-sky-600 hover:bg-sky-50 transition rounded-md py-2.5 font-medium text-sm">
+    <ShoppingCart className="w-4 h-4" />
+    Add to Cart
+  </button>
 
-              <button className="p-2 border rounded-md hover:bg-gray-100 transition">
-                <Heart className="w-5 h-5 text-gray-600" />
-              </button>
             </div>
+{/* تفاصيل إضافية */}
+<div className="mt-6 border-0 pt-2">
+  <details open className="space-y-4">
+    <summary className="flex items-center gap-2 cursor-pointer font-semibold text-gray-900 text-base">
+      Item Details
+      <ChevronDown className="w-4 h-4 text-gray-500" />
+    </summary>
 
-            {/* تفاصيل إضافية */}
-            <div className="mt-10 border-t pt-4">
-              <details open className="space-y-3">
-                <summary className="flex items-center gap-2 cursor-pointer font-semibold text-gray-900 text-base">
-                  Item Details
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
-                </summary>
+    <div className="mt-3 space-y-4 text-sm text-gray-700 leading-relaxed">
+      <h4 className="font-semibold text-sky-600 text-sm">Highlights</h4>
 
-                <div className="mt-3 space-y-3 text-sm text-gray-700">
-                  <h4 className="font-semibold text-gray-900">Highlights</h4>
+      {/* النقاط بالأيقونات */}
+      <ul className="space-y-2">
+        <li className="flex items-start gap-2">
+          <User className="w-4 h-4 text-gray-800 mt-[2px]" />
+          <span>
+            Designed by{" "}
+            <span className="font-medium text-sky-600">{artwork.author}</span>
+          </span>
+        </li>
 
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-sky-500 mt-[2px]" />
-                      Designed by <span className="font-medium">{artwork.author}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-sky-500 mt-[2px]" />
-                      Digital download (1 PDF)
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-sky-500 mt-[2px]" />
-                      Hand-drawn, sketch style, minimalistic digital wall art.
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-sky-500 mt-[2px]" />
-                      Size: 31×45cm — 300dpi high resolution.
-                    </li>
-                  </ul>
+        <li className="flex items-start gap-2">
+          <ImageIcon className="w-4 h-4 text-gray-800 mt-[2px]" />
+          <span>Digital download</span>
+        </li>
 
-                  <p className="text-sky-600 text-sm font-semibold pt-2">
-                    Instant Download
-                  </p>
+        <li className="flex items-start gap-2">
+          <FileText className="w-4 h-4 text-gray-800 mt-[2px]" />
+          <span>Digital file types: 1 PDF</span>
+        </li>
+      </ul>
 
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    Your files will be available to download once payment is
-                    confirmed. Instant download items don’t accept returns,
-                    exchanges, or cancellations.
-                  </p>
-                </div>
-              </details>
-            </div>
+      {/* الفقرات النصية */}
+    <p className="text-gray-600 text-sm pl-6">
+  All of our artworks are original, and designed by hand at studio
+  diudende. Wake up your walls with artwork from diudende studio!
+</p>
+
+<p className="text-gray-600 text-sm pl-6">
+  Hand-drawn, sketch style, digital wall art. Hang this minimalistic,
+  warm neutral autumn artwork in your kitchen.
+</p>
+
+{/* الحجم */}
+<div className="flex items-start gap-2">
+  <Ruler className="w-4 h-4 text-gray-800 mt-[2px]" />
+  <div>
+    <p className="text-sm font-semibold text-gray-800">Size:</p>
+    <p className="text-gray-600 text-sm">
+      {artwork.size}
+      {artwork.dpi && (
+        <>
+          <br />
+          {artwork.dpi} dpi
+        </>
+      )}
+    </p>
+  </div>
+</div>
+
+
+      {/* Instant Download */}
+      <div className="pt-2">
+        <p className="text-sky-600 font-semibold text-sm">Instant Download</p>
+        <p className="text-gray-600 text-sm leading-relaxed">
+          Your files will be available on email to download once payment is
+          confirmed. Instant download items don’t accept returns, exchanges,
+          or cancellations.
+        </p>
+      </div>
+    </div>
+  </details>
+</div>
+
           </div>
         </section>
 
@@ -170,7 +206,7 @@ const DigitalDetails: React.FC<DigitalDetailsProps> = ({ artwork }) => {
           <div className="flex items-center justify-between mt-2">
             <div>
               <p className="text-gray-900 font-bold text-sm">
-                {item.price}
+                ${item.price}
               </p>
               <div className="flex items-center text-amber-400 text-xs">
                 {"★".repeat(5)}
