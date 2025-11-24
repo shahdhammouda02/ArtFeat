@@ -13,6 +13,9 @@ import {
   ShoppingCart,
   Users,
   UserCheck,
+  Search,
+  ChevronDown,
+  Mic,
 } from "lucide-react";
 import { countries } from "@/data/countries";
 
@@ -150,49 +153,105 @@ const ArtistDashboard = () => {
         </div>
       </div>
 
-     {/* Navigation Buttons Section */}
-<div className="w-full max-w-6xl flex flex-col items-center mt-6 mb-6">
-  {/* Main Nav Buttons */}
-  <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-0">
-    {navItems.map((item) => (
-      <Button
-        key={item}
-        variant="outline"
-        className={`
+      {/* Navigation Buttons Section */}
+      {/* Navigation Buttons Section */}
+      <div className="w-full max-w-6xl flex flex-col items-center mt-6 mb-6">
+        {/* Main Nav Buttons */}
+        <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-0">
+          {navItems.map((item) => (
+            <Button
+              key={item}
+              variant="outline"
+              className={`
           flex-1 rounded-none border-gray-200 py-3
-          ${activeNav === item ? "bg-white text-black hover:bg-white" : "bg-gray-200 text-gray-700 hover:bg-gray-200"}
+          ${
+            activeNav === item
+              ? "bg-white text-black hover:bg-white"
+              : "bg-gray-200 text-gray-700 hover:bg-white"
+          }
         `}
-        onMouseDown={() => setActiveNav(item)}
-        onClick={() => setActiveNav(item)}
-      >
-        {item}
-      </Button>
-    ))}
-  </div>
+              onMouseDown={() => setActiveNav(item)}
+              onClick={() => setActiveNav(item)}
+            >
+              {item}
+            </Button>
+          ))}
+        </div>
 
-  {/* Artwork Sub Buttons */}
-  {activeNav === "Artwork" && (
-    <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-0 mt-4">
-      {artworkSubItems.map((subItem) => (
-        <Button
-          key={subItem}
-          variant="outline"
-          className={`
-            flex-1 rounded-none border-gray-200 py-3
-            ${activeSubNav === subItem ? "bg-white" : "bg-gray-200"}
-            text-sky-500
-            hover:bg-white hover:text-sky-600
-          `}
-          onMouseDown={() => setActiveSubNav(subItem)}
-          onClick={() => setActiveSubNav(subItem)}
-        >
-          {subItem}
-        </Button>
-      ))}
-    </div>
-  )}
-</div>
+        {/* Artwork Sub Buttons */}
+        {activeNav === "Artwork" && (
+          <>
+            <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-0 mt-4">
+              {artworkSubItems.map((subItem) => (
+                <Button
+                  key={subItem}
+                  variant="outline"
+                  className={`
+              flex-1 rounded-none border-gray-200 py-3
+              ${activeSubNav === subItem ? "bg-white" : "bg-gray-200"}
+              text-sky-500
+              hover:bg-white hover:text-sky-600
+            `}
+                  onMouseDown={() => setActiveSubNav(subItem)}
+                  onClick={() => setActiveSubNav(subItem)}
+                >
+                  {subItem}
+                </Button>
+              ))}
+            </div>
+            {/* Dropdown and Search Section - Like in the image */}
+            <div
+              className="flex flex-col sm:flex-row w-full gap-4 mt-10 border shadow-lg border-none p-5 rounded-full items-center 
+  max-sm:rounded-2xl max-sm:p-4 max-sm:gap-3 max-sm:items-stretch"
+            >
+              {/* Artwork Type Dropdown */}
+              <div
+                className="relative flex-1 sm:flex-initial sm:w-64 rounded-xl border border-gray-300 
+    max-sm:w-full"
+              >
+                <select
+                  value={activeSubNav}
+                  onChange={(e) => setActiveSubNav(e.target.value)}
+                  className="w-full p-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent appearance-none cursor-pointer rounded-xl"
+                >
+                  {artworkSubItems.map((subItem) => (
+                    <option key={subItem} value={subItem}>
+                      {subItem}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  size={20}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                />
+              </div>
 
+              {/* Search Input */}
+              <div className="relative flex-1 flex items-center gap-2 max-sm:flex-col max-sm:gap-3 max-sm:w-full">
+                <div className="relative flex-1 w-full">
+                  <input
+                    type="text"
+                    placeholder="Search.."
+                    className="w-full p-2 border border-sky-500 rounded-l-full focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent pr-12 
+        max-sm:rounded-full"
+                  />
+                  <Mic
+                    size={20}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  />
+                </div>
+
+                <Button
+                  variant="default"
+                  className="bg-sky-500 hover:bg-sky-600 text-white py-5 px-3 rounded-full w-fit max-sm:w-fit max-sm:rounded-full"
+                >
+                  <Search size={28} />
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
