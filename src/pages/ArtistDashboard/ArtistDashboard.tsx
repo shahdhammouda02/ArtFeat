@@ -3,6 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Auth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import {
   Mail,
   Store,
   MapPin,
@@ -18,6 +25,9 @@ import {
   Mic,
 } from "lucide-react";
 import { countries } from "@/data/countries";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import image from "@/assets/images/art-gallery.jpeg";
 
 const navItems = [
   "Artwork",
@@ -28,12 +38,59 @@ const navItems = [
 ];
 const artworkSubItems = ["All Artworks", "Physical", "Digital"];
 
+const mockArtworks = [
+  {
+    id: 1,
+    title: "Digital Horizon",
+    type: "Digital",
+    price: 99,
+    image: image,
+  },
+  {
+    id: 2,
+    title: "Urban Echoes",
+    type: "Physical",
+    price: 450,
+    image: image,
+  },
+  {
+    id: 3,
+    title: "Abstract Flow",
+    type: "Digital",
+    price: 75,
+    image: image,
+  },
+  {
+    id: 4,
+    title: "Forest Whisper",
+    type: "Physical",
+    price: 280,
+    image: image,
+  },
+  {
+    id: 5,
+    title: "Digital Networks",
+    type: "Digital",
+    price: 120,
+    image: image,
+  },
+  {
+    id: 6,
+    title: "Mountain Dreams",
+    type: "Physical",
+    price: 350,
+    image: image,
+  },
+];
+
 const ArtistDashboard = () => {
   const { user, isAuthenticated } = Auth();
   const navigate = useNavigate();
 
   const [activeNav, setActiveNav] = useState("Artwork");
   const [activeSubNav, setActiveSubNav] = useState("All Artworks");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [artworks, setArtworks] = useState(mockArtworks);
 
   // local state to prevent redirect on initial load
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -48,6 +105,33 @@ const ArtistDashboard = () => {
       }
     }
   }, [user, isAuthenticated, navigate]);
+
+  useEffect(() => {
+    let filtered = mockArtworks;
+
+    // Filter by type
+    if (activeSubNav !== "All Artworks") {
+      filtered = filtered.filter((artwork) => artwork.type === activeSubNav);
+    }
+
+    // Filter by search query
+    if (searchQuery.trim() !== "") {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (artwork) =>
+          artwork.title.toLowerCase().includes(query) ||
+          artwork.type.toLowerCase().includes(query) ||
+          artwork.price.toString().includes(query)
+      );
+    }
+
+    setArtworks(filtered);
+  }, [activeSubNav, searchQuery]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Search is handled by the useEffect above
+  };
 
   if (checkingAuth || !user) {
     return (
@@ -154,7 +238,6 @@ const ArtistDashboard = () => {
       </div>
 
       {/* Navigation Buttons Section */}
-      {/* Navigation Buttons Section */}
       <div className="w-full max-w-6xl flex flex-col items-center mt-6 mb-6">
         {/* Main Nav Buttons */}
         <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-0">
@@ -199,9 +282,10 @@ const ArtistDashboard = () => {
                 </Button>
               ))}
             </div>
+
             {/* Dropdown and Search Section - Like in the image */}
             <div
-              className="flex flex-col sm:flex-row w-full gap-4 mt-10 border shadow-lg border-none p-5 rounded-full items-center 
+              className="flex flex-col sm:flex-row w-full gap-4 mt-8 border shadow-lg border-none p-5 rounded-full items-center 
   max-sm:rounded-2xl max-sm:p-4 max-sm:gap-3 max-sm:items-stretch"
             >
               {/* Artwork Type Dropdown */}
@@ -232,6 +316,8 @@ const ArtistDashboard = () => {
                   <input
                     type="text"
                     placeholder="Search.."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full p-2 border border-sky-500 rounded-l-full focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent pr-12 
         max-sm:rounded-full"
                   />
@@ -244,6 +330,7 @@ const ArtistDashboard = () => {
                 <Button
                   variant="default"
                   className="bg-sky-500 hover:bg-sky-600 text-white py-5 px-3 rounded-full w-fit max-sm:w-fit max-sm:rounded-full"
+                  onClick={handleSearch}
                 >
                   <Search size={28} />
                 </Button>
@@ -252,6 +339,129 @@ const ArtistDashboard = () => {
           </>
         )}
       </div>
+
+      {/* Artwork Cards - Carousel when more than 4, Grid when 4 or less */}
+      {activeNav === "Artwork" && (
+        <div className="w-full max-w-6xl mt-8 border p-7 rounded-lg bg-white shadow-md border-none">
+          {artworks.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">
+                No artworks found matching your criteria.
+              </p>
+            </div>
+          ) : artworks.length <= 4 ? (
+            // Grid layout for 4 or fewer items
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {artworks.map((artwork) => (
+                <Card
+                  key={artwork.id}
+                  className="overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  <div className="aspect-[4/3] bg-gray-200 flex items-center justify-center">
+                    <img
+                      src={artwork.image}
+                      alt={artwork.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <CardContent className="p-4">
+                    <div className=" mb-2">
+                      <h3 className="font-bold text-xl">{artwork.title}</h3>
+                      <Badge
+                        variant={
+                          artwork.type === "Digital" ? "default" : "secondary"
+                        }
+                        className={`
+                          ${
+                            artwork.type === "Digital"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-green-100 text-green-800"
+                          }
+                        `}
+                      >
+                        {artwork.type}
+                      </Badge>
+                    </div>
+                    <p className="text-lg font-bold text-gray-900">
+                      ${artwork.price}
+                    </p>
+                  </CardContent>
+                  <CardFooter className="p-4 pt-0">
+                    <Button variant="outline" className="w-full">
+                      View Details
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            // Carousel layout for more than 4 items using shadcn Carousel
+            <div className="relative">
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                className="w-full"
+              >
+                <CarouselContent>
+                  {artworks.map((artwork) => (
+                    <CarouselItem
+                      key={artwork.id}
+                      className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                    >
+                      <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                        <div className="aspect-[4/3] bg-gray-200 flex items-center justify-center">
+                          <img
+                            src={artwork.image}
+                            alt={artwork.title}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                        <CardContent className="p-4">
+                          <div className="mb-2">
+                            <h3 className="font-bold text-xl">
+                              {artwork.title}
+                            </h3>
+                            <Badge
+                              variant={
+                                artwork.type === "Digital"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                              className={`
+                                ${
+                                  artwork.type === "Digital"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-green-100 text-green-800"
+                                }
+                              `}
+                            >
+                              {artwork.type}
+                            </Badge>
+                          </div>
+                          <p className="text-lg font-bold text-gray-900">
+                            ${artwork.price}
+                          </p>
+                        </CardContent>
+                        <CardFooter className="p-4 pt-0">
+                          <Button variant="outline" className="w-full">
+                            View Details
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4" />
+                <CarouselNext className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4" />
+              </Carousel>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
