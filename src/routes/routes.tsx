@@ -14,6 +14,7 @@ import ArtistSignUp from "@/pages/auth/artistSignup/ArtistSignUp";
 import Photography from "@/pages/Photography/Photography";
 import Details from "@/pages/Details/Details";
 import ArtistDashboard from "@/pages/ArtistDashboard/ArtistDashboard";
+import AddArtwork from "@/pages/ArtistDashboard/components/AddArtwork";
 
 
 export const routes: RouteObject[] = [
@@ -34,6 +35,7 @@ export const routes: RouteObject[] = [
       {path: "signup", element: <SignUp />},
       {path: "artist-signup", element: <ArtistSignUp />},
       { path: "artist-dashboard", element: <ArtistDashboard /> },
+      { path: "artist-dashboard/add-artwork", element: <AddArtwork /> },
 
    { path: "support-artist", element: <SupportArtist /> },
       { path: "artists", element: <Artists /> },

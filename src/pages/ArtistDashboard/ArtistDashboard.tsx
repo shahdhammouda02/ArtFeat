@@ -23,6 +23,8 @@ import {
   Search,
   ChevronDown,
   Mic,
+  Edit,
+  Album
 } from "lucide-react";
 import { countries } from "@/data/countries";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -94,6 +96,10 @@ const ArtistDashboard = () => {
 
   // local state to prevent redirect on initial load
   const [checkingAuth, setCheckingAuth] = useState(true);
+
+  const handleAddArtwork = () => {
+    navigate("add-artwork");
+  };
 
   useEffect(() => {
     if (user && isAuthenticated !== undefined) {
@@ -181,13 +187,15 @@ const ArtistDashboard = () => {
 
         {/* Actions */}
         <div className="flex flex-wrap gap-3 mt-4 md:mt-0">
-          <Button className="bg-sky-500 text-white hover:bg-sky-600 flex-1">
+          <Button className="bg-sky-500 text-white hover:bg-sky-600 flex-1" onClick={handleAddArtwork}>
             <Plus className="mr-1" /> Add Artwork
           </Button>
           <Button variant="outline" className="flex-1">
+            <Album />
             Add Collection
           </Button>
           <Button variant="outline" className="flex-1">
+            <Edit />
             Edit Profile
           </Button>
         </div>
