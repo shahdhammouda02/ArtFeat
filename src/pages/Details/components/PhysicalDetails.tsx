@@ -51,8 +51,50 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
                 Art Feat
               </div>
 
-              <button className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center hover:bg-white shadow">
-                <Heart className="w-4 h-4 text-gray-700" />
+              {/* ❤️ أيقونة القلب */}
+              <button
+                className="absolute top-3 right-3 bg-transparent text-white hover:opacity-80 transition"
+                title="Add to favorites"
+              >
+                <Heart className="w-6 h-6 stroke-white" strokeWidth={2} />
+              </button>
+
+              {/* ▶️ السهم اليمين */}
+              <button
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border border-white text-white p-2 rounded-full shadow transition hover:bg-white/10"
+                title="Next image"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="white"
+                  strokeWidth="2"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              {/* 🔍 أيقونة التكبير */}
+              <button
+                className="absolute bottom-3 right-3 bg-transparent border border-white text-white p-2 rounded-full shadow transition hover:bg-white/10"
+                title="Zoom image"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="white"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z"
+                  />
+                </svg>
               </button>
             </div>
           </div>
@@ -97,125 +139,136 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
               </button>
             </div>
 
-          {/* تفاصيل العمل */}
-<details open className="pt-5">
-  <summary className="flex items-center gap-2 cursor-pointer font-semibold text-gray-900 text-base">
-    Item Details
-    <ChevronDown className="w-4 h-4 text-gray-500" />
-  </summary>
+            {/* تفاصيل العمل */}
+            <details open className="pt-5">
+              <summary className="flex items-center gap-2 cursor-pointer font-semibold text-gray-900 text-base">
+                Item Details
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              </summary>
 
-  <div className="mt-3 space-y-4 text-sm text-gray-700 leading-relaxed">
-    <h4 className="font-semibold text-sky-600 text-sm">Highlights</h4>
+              <div className="mt-3 space-y-4 text-sm text-gray-700 leading-relaxed">
+                <h4 className="font-semibold text-sky-600 text-sm">Highlights</h4>
 
-    <ul className="space-y-3">
-      {/* Designed by */}
-      <li className="flex items-start gap-2">
-        <User className="w-4 h-4 text-black mt-[2px]" />
-        <span>
-          Designed by{" "}
-          <span className="font-medium text-sky-600">
-            {artwork.author}
-          </span>
-        </span>
-      </li>
+                <ul className="space-y-3">
+                  {/* Designed by */}
+                  <li className="flex items-start gap-2">
+                    <User className="w-4 h-4 text-black mt-[2px]" />
+                    <span>
+                      Designed by{" "}
+                      <span className="font-medium text-sky-600">
+                        {artwork.author}
+                      </span>
+                    </span>
+                  </li>
 
-      {/* Materials */}
-      <li className="flex items-start gap-2">
-        <Package className="w-4 h-4 text-black mt-[2px]" />
-        <span>Materials: wool felt, needle felted, jute thread</span>
-      </li>
+                  {/* Materials */}
+                  <li className="flex items-start gap-2">
+                    <Package className="w-4 h-4 text-black mt-[2px]" />
+                    <span>Materials: wool felt, needle felted, jute thread</span>
+                  </li>
 
-      {/* Size */}
-      <li className="flex items-start gap-2">
-        <Ruler className="w-4 h-4 text-black mt-[2px]" />
-        <div>
-          <p className="font-medium text-gray-900">Size:</p>
-          <div className="grid grid-cols-2 gap-x-4 text-xs text-gray-600 pl-6">
-            <span>Width: 3 inches</span>
-            <span>Height: 6 inches</span>
-            <span>Depth: 1 inch</span>
-            <span>Length: 15cm</span>
-          </div>
-        </div>
-      </li>
-
-      {/* Weight */}
-      <li className="flex items-start gap-2">
-        <Scale className="w-4 h-4 text-black mt-[2px]" />
-        <span>Weight: 3.2 kg</span>
-      </li>
-    </ul>
-
-    {/* الفقرات السفلية */}
-<div className="space-y-2">
-  <p className="text-gray-600 text-sm leading-relaxed">
-    All of our artworks are original, and designed by hand at studio
-    diudende. Wake up your walls with artwork from diudende studio!
-  </p>
-
-  <p className="text-gray-600 text-sm leading-relaxed">
-    Hand-drawn, sketch style, physical wall art. Hang this
-    minimalistic, warm neutral autumn artwork in your kitchen.
-  </p>
-</div>
-
-  </div>
-</details>
-
-
-        {/* قسم الشحن */}
-<details open className="pt-5 mt-4">
-  <summary className="flex items-center gap-2 cursor-pointer font-semibold text-gray-900 text-base">
-    Shipping
-    <ChevronDown className="w-4 h-4 text-gray-500" />
-  </summary>
-
-  <div className="mt-3 text-sm text-gray-700 space-y-4 pl-2">
-    {/* 🔹 سطر: Shipping Options */}
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
-<CheckCircle2 className="w-4 h-4 text-black" />
-        <span>Shipping Options to Palestine Available</span>
-      </div>
-      <button className="text-xs text-sky-600 hover:underline">
-        change
-      </button>
-    </div>
-
-    {/* 🔹 سطر: Returns */}
-    <div className="flex items-center gap-2">
-      <Package className="w-4 h-4 text-black" />
-      <span>Returns & exchanges not accepted</span>
-    </div>
-
-    {/* 🔹 سطر: اختيار شركة الشحن */}
-    <div className="space-y-2">
-      <div className="flex items-center gap-2">
-        <Truck className="w-4 h-4 text-black" />
-        <select className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
-          <option>choose shipping company</option>
-        </select>
-      </div>
-
-      {/* 🔸 خيارات الشحن */}
-      <label className="flex items-center gap-2 pl-6 cursor-pointer">
-        <input type="radio" name="ship" defaultChecked className="accent-sky-500" />
-        <span>Post Logistics – $15 (5–7 days)</span>
-      </label>
-      <label className="flex items-center gap-2 pl-6 cursor-pointer">
-        <input type="radio" name="ship" className="accent-sky-500" />
-        <span>DHL Express – $25 (2–3 days)</span>
-      </label>
-    </div>
-
-    {/* 🔹 سطر: Guaranteed Delivery */}
-    <div className="flex items-center gap-2 pl-6">
-      <CheckCircle2 className="w-4 h-4 text-black" />
-      <span>Guaranteed delivery</span>
+                  {/* Size */}
+                  <li className="flex items-start gap-2">
+  <Ruler className="w-4 h-4 text-black mt-[2px]" />
+  <div>
+    <p className="font-medium text-gray-900">Size:</p>
+    <div className="grid grid-cols-2 gap-x-4 text-xs text-gray-600 pl-6">
+      <span>
+        Width: {artwork.size?.width?.value} {artwork.size?.width?.unit}
+      </span>
+      <span>
+        Height: {artwork.size?.height?.value} {artwork.size?.height?.unit}
+      </span>
+      <span>
+        Depth: {artwork.size?.depth?.value} {artwork.size?.depth?.unit}
+      </span>
+      <span>
+        Length: {artwork.size?.length?.value} {artwork.size?.length?.unit}
+      </span>
     </div>
   </div>
-</details>
+</li>
 
+
+                  {/* Weight */}
+                  <li className="flex items-start gap-2">
+                    <Scale className="w-4 h-4 text-black mt-[2px]" />
+                    <span>Weight: 3.2 kg</span>
+                  </li>
+                </ul>
+
+                {/* الفقرات السفلية */}
+                <div className="space-y-2">
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    All of our artworks are original, and designed by hand at studio
+                    diudende. Wake up your walls with artwork from diudende studio!
+                  </p>
+
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    Hand-drawn, sketch style, physical wall art. Hang this
+                    minimalistic, warm neutral autumn artwork in your kitchen.
+                  </p>
+                </div>
+              </div>
+            </details>
+
+            {/* قسم الشحن */}
+            <details open className="pt-5 mt-4">
+              <summary className="flex items-center gap-2 cursor-pointer font-semibold text-gray-900 text-base">
+                Shipping
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              </summary>
+
+              <div className="mt-3 text-sm text-gray-700 space-y-4 pl-2">
+                {/* 🔹 سطر: Shipping Options */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-black" />
+                    <span>Shipping Options to Palestine Available</span>
+                  </div>
+                  <button className="text-xs text-sky-600 hover:underline">
+                    change
+                  </button>
+                </div>
+
+                {/* 🔹 سطر: Returns */}
+                <div className="flex items-center gap-2">
+                  <Package className="w-4 h-4 text-black" />
+                  <span>Returns & exchanges not accepted</span>
+                </div>
+
+                {/* 🔹 سطر: اختيار شركة الشحن */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Truck className="w-4 h-4 text-black" />
+                    <select className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                      <option>choose shipping company</option>
+                    </select>
+                  </div>
+
+                  {/* 🔸 خيارات الشحن */}
+                  <label className="flex items-center gap-2 pl-6 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="ship"
+                      defaultChecked
+                      className="accent-sky-500"
+                    />
+                    <span>Post Logistics – $15 (5–7 days)</span>
+                  </label>
+                  <label className="flex items-center gap-2 pl-6 cursor-pointer">
+                    <input type="radio" name="ship" className="accent-sky-500" />
+                    <span>DHL Express – $25 (2–3 days)</span>
+                  </label>
+                </div>
+
+                {/* 🔹 سطر: Guaranteed Delivery */}
+                <div className="flex items-center gap-2 pl-6">
+                  <CheckCircle2 className="w-4 h-4 text-black" />
+                  <span>Guaranteed delivery</span>
+                </div>
+              </div>
+            </details>
           </div>
         </section>
       </div>

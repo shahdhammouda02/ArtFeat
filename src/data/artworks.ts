@@ -18,7 +18,10 @@ export const ARTWORKS: Artwork[] = [
       "Perfect for modern living rooms",
     ],
     fileType: "JPG",
-    size: "6000 × 4000 px",
+    size: {
+      width: { value: 6000, unit: "px" },
+      height: { value: 4000, unit: "px" },
+    },
     dpi: 300,
   },
   {
@@ -37,7 +40,12 @@ export const ARTWORKS: Artwork[] = [
       "Signed by the artist",
       "Includes certificate of authenticity",
     ],
-    size: "45 × 20 × 18 cm",
+    size: {
+      width: { value: 45, unit: "cm" },
+      height: { value: 20, unit: "cm" },
+      depth: { value: 18, unit: "cm" },
+      length: { value: 15, unit: "cm" },
+    },
   },
   {
     id: 3,
@@ -56,7 +64,10 @@ export const ARTWORKS: Artwork[] = [
       "Perfect for minimalist interiors",
     ],
     fileType: "TIFF",
-    size: "5000 × 3333 px",
+    size: {
+      width: { value: 5000, unit: "px" },
+      height: { value: 3333, unit: "px" },
+    },
     dpi: 300,
   },
   {
@@ -75,7 +86,12 @@ export const ARTWORKS: Artwork[] = [
       "Vibrant, long-lasting pigments",
       "Ready to hang (stretched on frame)",
     ],
-    size: "80 × 60 cm",
+    size: {
+      width: { value: 80, unit: "cm" },
+      height: { value: 60, unit: "cm" },
+      depth: { value: 2.5, unit: "cm" },
+      length: { value: 65, unit: "cm" },
+    },
   },
   {
     id: 5,
@@ -94,7 +110,10 @@ export const ARTWORKS: Artwork[] = [
       "Instant download after purchase",
     ],
     fileType: "PNG",
-    size: "5500 × 3500 px",
+    size: {
+      width: { value: 5500, unit: "px" },
+      height: { value: 3500, unit: "px" },
+    },
     dpi: 300,
   },
   {
@@ -113,7 +132,12 @@ export const ARTWORKS: Artwork[] = [
       "Signed and numbered edition",
       "Includes solid marble base",
     ],
-    size: "35 × 15 × 15 cm",
+    size: {
+      width: { value: 35, unit: "cm" },
+      height: { value: 15, unit: "cm" },
+      depth: { value: 15, unit: "cm" },
+      length: { value: 10, unit: "cm" },
+    },
   },
   {
     id: 7,
@@ -122,10 +146,15 @@ export const ARTWORKS: Artwork[] = [
     title: "Autumn Whisper",
     author: "Marcus Thorne",
     price: 5000,
-    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200",
     description: "Warm autumn scenery for modern wall art.",
     highlights: ["Digital file type: 1 PDF", "High resolution", "Instant download"],
-    size: "31x45cm",
+    size: {
+      width: { value: 31, unit: "cm" },
+      height: { value: 45, unit: "cm" },
+    },
+    dpi: 300,
   },
   {
     id: 8,
@@ -134,10 +163,15 @@ export const ARTWORKS: Artwork[] = [
     title: "Golden Dreams",
     author: "Marcus Thorne",
     price: 5000,
-    image: "https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?q=80&w=1200",
     description: "Perfect for cozy interiors.",
     highlights: ["High quality digital print", "Instant download"],
-    size: "31x45cm",
+    size: {
+      width: { value: 31, unit: "cm" },
+      height: { value: 45, unit: "cm" },
+    },
+    dpi: 300,
   },
   {
     id: 9,
@@ -146,9 +180,14 @@ export const ARTWORKS: Artwork[] = [
     title: "Blue Horizon",
     author: "Marcus Thorne",
     price: 5000,
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200",
     description: "Soothing minimal art.",
     highlights: ["Digital download", "300dpi", "PDF file included"],
-    size: "31x45cm",
+    size: {
+      width: { value: 31, unit: "cm" },
+      height: { value: 45, unit: "cm" },
+    },
+    dpi: 300,
   },
 ];
