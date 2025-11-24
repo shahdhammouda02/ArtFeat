@@ -1,148 +1,467 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Auth } from "@/contexts/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import {
+  Mail,
+  Store,
+  MapPin,
+  Globe,
+  Plus,
+  BarChart2,
+  DollarSign,
+  ShoppingCart,
+  Users,
+  UserCheck,
+  Search,
+  ChevronDown,
+  Mic,
+} from "lucide-react";
+import { countries } from "@/data/countries";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import image from "@/assets/images/art-gallery.jpeg";
+
+const navItems = [
+  "Artwork",
+  "Collection",
+  "Favorites",
+  "About",
+  "Sales Withdrawal",
+];
+const artworkSubItems = ["All Artworks", "Physical", "Digital"];
+
+const mockArtworks = [
+  {
+    id: 1,
+    title: "Digital Horizon",
+    type: "Digital",
+    price: 99,
+    image: image,
+  },
+  {
+    id: 2,
+    title: "Urban Echoes",
+    type: "Physical",
+    price: 450,
+    image: image,
+  },
+  {
+    id: 3,
+    title: "Abstract Flow",
+    type: "Digital",
+    price: 75,
+    image: image,
+  },
+  {
+    id: 4,
+    title: "Forest Whisper",
+    type: "Physical",
+    price: 280,
+    image: image,
+  },
+  {
+    id: 5,
+    title: "Digital Networks",
+    type: "Digital",
+    price: 120,
+    image: image,
+  },
+  {
+    id: 6,
+    title: "Mountain Dreams",
+    type: "Physical",
+    price: 350,
+    image: image,
+  },
+];
 
 const ArtistDashboard = () => {
   const { user, isAuthenticated } = Auth();
+  const navigate = useNavigate();
 
-  if (!isAuthenticated || user?.type !== 'artist') {
-    return <Navigate to="/signin" replace />;
+  const [activeNav, setActiveNav] = useState("Artwork");
+  const [activeSubNav, setActiveSubNav] = useState("All Artworks");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [artworks, setArtworks] = useState(mockArtworks);
+
+  // local state to prevent redirect on initial load
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    if (user && isAuthenticated !== undefined) {
+      // only navigate after user data is loaded
+      if (!isAuthenticated || user.type !== "artist") {
+        navigate("/"); // redirect non-artists or unauthenticated users
+      } else {
+        setCheckingAuth(false); // user is valid, stop loading
+      }
+    }
+  }, [user, isAuthenticated, navigate]);
+
+  useEffect(() => {
+    let filtered = mockArtworks;
+
+    // Filter by type
+    if (activeSubNav !== "All Artworks") {
+      filtered = filtered.filter((artwork) => artwork.type === activeSubNav);
+    }
+
+    // Filter by search query
+    if (searchQuery.trim() !== "") {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (artwork) =>
+          artwork.title.toLowerCase().includes(query) ||
+          artwork.type.toLowerCase().includes(query) ||
+          artwork.price.toString().includes(query)
+      );
+    }
+
+    setArtworks(filtered);
+  }, [activeSubNav, searchQuery]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Search is handled by the useEffect above
+  };
+
+  if (checkingAuth || !user) {
+    return (
+      <div className="w-full h-[80vh] flex items-center justify-center text-xl font-semibold">
+        Loading profile...
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome back, {user.name}! 🎨
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Manage your artistic portfolio and track your creative journey
-          </p>
+    <div className="w-full flex flex-col items-center py-10 px-4">
+      {/* Main Profile Card */}
+      <div className="w-full max-w-6xl bg-white shadow-md rounded-xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center">
+        {/* Profile Avatar */}
+        <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-xl font-bold text-white border flex-shrink-0">
+          {user.name ? user.name.charAt(0).toUpperCase() : "U"}
         </div>
 
-        {/* Artist Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="text-2xl font-bold text-sky-600">12</div>
-            <p className="text-gray-600">Artworks</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="text-2xl font-bold text-green-600">8</div>
-            <p className="text-gray-600">Sales</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="text-2xl font-bold text-purple-600">156</div>
-            <p className="text-gray-600">Views</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="text-2xl font-bold text-orange-600">4.8</div>
-            <p className="text-gray-600">Rating</p>
-          </div>
-        </div>
+        {/* Info Section */}
+        <div className="flex-1 w-full">
+          <h2 className="text-2xl font-bold">{user.name}</h2>
 
-        {/* Artist Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-sky-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">🎨</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Upload New Artwork</h3>
-            <p className="text-gray-600 mb-4">Share your latest creation with the world</p>
-            <button className="w-full bg-sky-500 text-white py-2 px-4 rounded-lg hover:bg-sky-600 transition-colors">
-              Upload Art
-            </button>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-600 mt-2">
+            <Mail size={18} />
+            <span>{user.email}</span>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">📊</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Sales & Analytics</h3>
-            <p className="text-gray-600 mb-4">Track your sales and audience engagement</p>
-            <button className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
-              View Analytics
-            </button>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-600 mt-1">
+            <Store size={18} />
+            <span>{user.storename}</span>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">👤</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Artist Profile</h3>
-            <p className="text-gray-600 mb-4">Update your portfolio and artist bio</p>
-            <button className="w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors">
-              Edit Profile
-            </button>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-600 mt-1">
+            <Globe size={18} />
+            <span>
+              {user.country
+                ? countries[user.country as keyof typeof countries]?.name
+                : "Unknown Country"}
+            </span>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">💼</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Commission Requests</h3>
-            <p className="text-gray-600 mb-4">Manage custom commission orders</p>
-            <button className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors">
-              View Requests
-            </button>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">🛒</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Online Store</h3>
-            <p className="text-gray-600 mb-4">Manage your products and inventory</p>
-            <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
-              Manage Store
-            </button>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-2xl">📢</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Promotions</h3>
-            <p className="text-gray-600 mb-4">Create promotions and discounts</p>
-            <button className="w-full bg-pink-500 text-white py-2 px-4 rounded-lg hover:bg-pink-600 transition-colors">
-              Run Promotion
-            </button>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-600 mt-1">
+            <MapPin size={18} />
+            <span>{user.city ? user.city : "Unknown City"}</span>
           </div>
         </div>
 
-        {/* Recent Activity Section */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Activity</h2>
-          <div className="bg-white rounded-lg shadow">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold">New commission request</p>
-                  <p className="text-gray-600 text-sm">From Sarah Johnson</p>
-                </div>
-                <span className="text-sm text-gray-500">2 hours ago</span>
-              </div>
-            </div>
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold">Artwork "Sunset Dreams" sold</p>
-                  <p className="text-gray-600 text-sm">$450 • Print</p>
-                </div>
-                <span className="text-sm text-gray-500">1 day ago</span>
-              </div>
-            </div>
-            <div className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold">New follower</p>
-                  <p className="text-gray-600 text-sm">ArtEnthusiast23 started following you</p>
-                </div>
-                <span className="text-sm text-gray-500">2 days ago</span>
-              </div>
-            </div>
-          </div>
+        {/* Actions */}
+        <div className="flex flex-wrap gap-3 mt-4 md:mt-0">
+          <Button className="bg-sky-500 text-white hover:bg-sky-600 flex-1">
+            <Plus className="mr-1" /> Add Artwork
+          </Button>
+          <Button variant="outline" className="flex-1">
+            Add Collection
+          </Button>
+          <Button variant="outline" className="flex-1">
+            Edit Profile
+          </Button>
         </div>
       </div>
+
+      {/* Stats Section */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-6 max-w-6xl w-full">
+        {/** Example card */}
+        <div className="bg-white shadow-md p-4 rounded-lg">
+          <div className="flex items-center justify-between">
+            <p className="text-md text-sky-500 font-medium">Total Funds</p>
+            <BarChart2 size={24} className="text-gray-700" />
+          </div>
+          <p className="text-lg font-bold mt-2">$12,450</p>
+        </div>
+
+        <div className="bg-white shadow-md p-4 rounded-lg">
+          <div className="flex items-center justify-between">
+            <p className="text-md text-sky-500 font-medium">Total Sales</p>
+            <ShoppingCart size={24} className="text-gray-700" />
+          </div>
+          <p className="text-lg font-bold mt-2">87</p>
+        </div>
+
+        <div className="bg-white shadow-md p-4 rounded-lg">
+          <div className="flex items-center justify-between">
+            <p className="text-md text-sky-500 font-medium">Followers</p>
+            <Users size={24} className="text-gray-700" />
+          </div>
+          <p className="text-lg font-bold mt-2">2.5K</p>
+        </div>
+
+        <div className="bg-white shadow-md p-4 rounded-lg">
+          <div className="flex items-center justify-between">
+            <p className="text-md text-sky-500 font-medium">Following</p>
+            <UserCheck size={24} className="text-gray-700" />
+          </div>
+          <p className="text-lg font-bold mt-2">210</p>
+        </div>
+
+        <div className="bg-white shadow-md p-4 rounded-lg">
+          <div className="flex items-center justify-between">
+            <p className="text-md text-sky-500 font-medium">Avg. Sale Price</p>
+            <DollarSign size={24} className="text-gray-700" />
+          </div>
+          <p className="text-lg font-bold mt-2">$143</p>
+        </div>
+      </div>
+
+      {/* Navigation Buttons Section */}
+      <div className="w-full max-w-6xl flex flex-col items-center mt-6 mb-6">
+        {/* Main Nav Buttons */}
+        <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-0">
+          {navItems.map((item) => (
+            <Button
+              key={item}
+              variant="outline"
+              className={`
+          flex-1 rounded-none border-gray-200 py-3
+          ${
+            activeNav === item
+              ? "bg-white text-black hover:bg-white"
+              : "bg-gray-200 text-gray-700 hover:bg-white"
+          }
+        `}
+              onMouseDown={() => setActiveNav(item)}
+              onClick={() => setActiveNav(item)}
+            >
+              {item}
+            </Button>
+          ))}
+        </div>
+
+        {/* Artwork Sub Buttons */}
+        {activeNav === "Artwork" && (
+          <>
+            <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-0 mt-4">
+              {artworkSubItems.map((subItem) => (
+                <Button
+                  key={subItem}
+                  variant="outline"
+                  className={`
+              flex-1 rounded-none border-gray-200 py-3
+              ${activeSubNav === subItem ? "bg-white" : "bg-gray-200"}
+              text-sky-500
+              hover:bg-white hover:text-sky-600
+            `}
+                  onMouseDown={() => setActiveSubNav(subItem)}
+                  onClick={() => setActiveSubNav(subItem)}
+                >
+                  {subItem}
+                </Button>
+              ))}
+            </div>
+
+            {/* Dropdown and Search Section - Like in the image */}
+            <div
+              className="flex flex-col sm:flex-row w-full gap-4 mt-8 border shadow-lg border-none p-5 rounded-full items-center 
+  max-sm:rounded-2xl max-sm:p-4 max-sm:gap-3 max-sm:items-stretch"
+            >
+              {/* Artwork Type Dropdown */}
+              <div
+                className="relative flex-1 sm:flex-initial sm:w-64 rounded-xl border border-gray-300 
+    max-sm:w-full"
+              >
+                <select
+                  value={activeSubNav}
+                  onChange={(e) => setActiveSubNav(e.target.value)}
+                  className="w-full p-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent appearance-none cursor-pointer rounded-xl"
+                >
+                  {artworkSubItems.map((subItem) => (
+                    <option key={subItem} value={subItem}>
+                      {subItem}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  size={20}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                />
+              </div>
+
+              {/* Search Input */}
+              <div className="relative flex-1 flex items-center gap-2 max-sm:flex-col max-sm:gap-3 max-sm:w-full">
+                <div className="relative flex-1 w-full">
+                  <input
+                    type="text"
+                    placeholder="Search.."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full p-2 border border-sky-500 rounded-l-full focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent pr-12 
+        max-sm:rounded-full"
+                  />
+                  <Mic
+                    size={20}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  />
+                </div>
+
+                <Button
+                  variant="default"
+                  className="bg-sky-500 hover:bg-sky-600 text-white py-5 px-3 rounded-full w-fit max-sm:w-fit max-sm:rounded-full"
+                  onClick={handleSearch}
+                >
+                  <Search size={28} />
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Artwork Cards - Carousel when more than 4, Grid when 4 or less */}
+      {activeNav === "Artwork" && (
+        <div className="w-full max-w-6xl mt-8 border p-7 rounded-lg bg-white shadow-md border-none">
+          {artworks.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">
+                No artworks found matching your criteria.
+              </p>
+            </div>
+          ) : artworks.length <= 4 ? (
+            // Grid layout for 4 or fewer items
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {artworks.map((artwork) => (
+                <Card
+                  key={artwork.id}
+                  className="overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  <div className="aspect-[4/3] bg-gray-200 flex items-center justify-center">
+                    <img
+                      src={artwork.image}
+                      alt={artwork.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <CardContent className="p-4">
+                    <div className=" mb-2">
+                      <h3 className="font-bold text-xl">{artwork.title}</h3>
+                      <Badge
+                        variant={
+                          artwork.type === "Digital" ? "default" : "secondary"
+                        }
+                        className={`
+                          ${
+                            artwork.type === "Digital"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-green-100 text-green-800"
+                          }
+                        `}
+                      >
+                        {artwork.type}
+                      </Badge>
+                    </div>
+                    <p className="text-lg font-bold text-gray-900">
+                      ${artwork.price}
+                    </p>
+                  </CardContent>
+                  <CardFooter className="p-4 pt-0">
+                    <Button variant="outline" className="w-full">
+                      View Details
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            // Carousel layout for more than 4 items using shadcn Carousel
+            <div className="relative">
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                className="w-full"
+              >
+                <CarouselContent>
+                  {artworks.map((artwork) => (
+                    <CarouselItem
+                      key={artwork.id}
+                      className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                    >
+                      <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                        <div className="aspect-[4/3] bg-gray-200 flex items-center justify-center">
+                          <img
+                            src={artwork.image}
+                            alt={artwork.title}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                        <CardContent className="p-4">
+                          <div className="mb-2">
+                            <h3 className="font-bold text-xl">
+                              {artwork.title}
+                            </h3>
+                            <Badge
+                              variant={
+                                artwork.type === "Digital"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                              className={`
+                                ${
+                                  artwork.type === "Digital"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-green-100 text-green-800"
+                                }
+                              `}
+                            >
+                              {artwork.type}
+                            </Badge>
+                          </div>
+                          <p className="text-lg font-bold text-gray-900">
+                            ${artwork.price}
+                          </p>
+                        </CardContent>
+                        <CardFooter className="p-4 pt-0">
+                          <Button variant="outline" className="w-full">
+                            View Details
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4" />
+                <CarouselNext className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4" />
+              </Carousel>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

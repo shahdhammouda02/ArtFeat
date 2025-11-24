@@ -5,10 +5,15 @@ export interface User {
   type: 'user' | 'artist';
   avatar?: string;
   joinDate: string;
+
+  country?: string;
+  city?: string;
+  storename?: string;
 }
 
 export interface StoredUser extends User {
   password: string;
+  businessRegistered?: string;
   portfolio?: string;
   bio?: string;
   specialties?: string[];
@@ -35,7 +40,7 @@ export type SignUpCredentials = {
 };
 
 export type ArtistSignUpCredentials = SignUpCredentials & {
-  surname: string;
+  storename: string;
   businessRegistered: string;
   portfolio?: string;
   bio?: string;
