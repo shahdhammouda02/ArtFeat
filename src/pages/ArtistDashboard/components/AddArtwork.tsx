@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, Ruler, Scale, Upload } from "lucide-react";
+import { Minus, Plus, Ruler, Scale, Upload, ImagePlus } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -446,6 +446,166 @@ const AddArtwork = () => {
     );
   };
 
+  const DigitalForm = () => {
+    const [files, setFiles] = useState<(File | null)[]>(Array(5).fill(null));
+
+    const handleFileChange = (
+      index: number,
+      event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      const file = event.target.files?.[0] || null;
+      setFiles((prev) => {
+        const newFiles = [...prev];
+        newFiles[index] = file;
+        return newFiles;
+      });
+    };
+
+    const previews = useMemo(
+      () => files.map((file) => (file ? URL.createObjectURL(file) : null)),
+      [files]
+    );
+
+    return (
+      <div className="flex flex-col items-start justify-start min-h-[400px] gap-6 p-4 sm:p-8 w-full max-w-6xl">
+        <h1 className="text-xl sm:text-2xl font-bold text-left w-full">
+          Digital Artwork Details
+        </h1>
+
+        {/* Upload Original Artwork Section */}
+        <div className="w-full border rounded-xl p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
+          <div className="flex flex-col gap-2 text-left">
+            <h2 className="text-lg font-semibold">Upload Original Artwork</h2>
+            <p className="text-sm text-gray-600">
+              Add the primary image for your digital artwork. Max file size:
+              33MB.
+            </p>
+          </div>
+
+          <div className="border-t border-gray-200 my-2"></div>
+
+          <Label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 gap-3 cursor-pointer hover:border-sky-500 transition">
+            {previews[0] ? (
+              <div className="flex flex-col items-center gap-3 w-full h-full">
+                <img
+                  src={previews[0]}
+                  alt="Original artwork preview"
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+                <p className="text-xs text-gray-600">{files[0]?.name}</p>
+              </div>
+            ) : (
+              <>
+                <ImagePlus className="w-8 h-8 sm:w-12 sm:h-12 text-gray-500" />
+                <div className="text-center">
+                  <p className="text-sm sm:text-base font-medium text-gray-700">
+                    Drag and drop your artwork here, or click to browse
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                    Supported formats: al, psd, fda, _processe_, _clip_,
+                    _allosign_ Max file size: 200MB.
+                  </p>
+                </div>
+              </>
+            )}
+            <Input
+              type="file"
+              accept=".al,.psd,.fda,._processe_,._clip_,._allosign_,.png,.jpg,.jpeg"
+              className="hidden"
+              onChange={(e) => handleFileChange(0, e)}
+            />
+          </Label>
+        </div>
+
+        {/* Upload View Artwork Section */}
+        <div className="w-full border rounded-xl p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
+          <h2 className="text-lg font-semibold text-left">
+            Upload View Artwork
+          </h2>
+
+          <Label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 gap-3 cursor-pointer hover:border-sky-500 transition">
+            {previews[1] ? (
+              <div className="flex flex-col items-center gap-3 w-full h-full">
+                <img
+                  src={previews[1]}
+                  alt="View artwork preview"
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+                <p className="text-xs text-gray-600">{files[1]?.name}</p>
+              </div>
+            ) : (
+              <>
+                <ImagePlus className="w-8 h-8 sm:w-12 sm:h-12 text-gray-500" />
+                <div className="text-center">
+                  <p className="text-sm sm:text-base font-medium text-gray-700">
+                    Drag and drop your artwork here, or click to browse
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                    Supported formats: al, psd, fda, _processe_, _clip_,
+                    _allosign_ Max file size: 200MB.
+                  </p>
+                </div>
+              </>
+            )}
+            <Input
+              type="file"
+              accept=".al,.psd,.fda,._processe_,._clip_,._allosign_,.png,.jpg,.jpeg"
+              className="hidden"
+              onChange={(e) => handleFileChange(1, e)}
+            />
+          </Label>
+        </div>
+
+        {/* Additional Image Uploads */}
+        <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[2, 3, 4].map((index) => (
+            <div
+              key={index}
+              className="border rounded-xl p-4 flex flex-col gap-3"
+            >
+              <Label className="flex flex-col items-center justify-center border border-gray-300 rounded-lg p-4 gap-2 cursor-pointer hover:border-sky-500 transition">
+                {previews[index] ? (
+                  <>
+                    <img
+                      src={previews[index]!}
+                      alt={`Artwork ${index - 1}`}
+                      className="w-full h-20 object-cover rounded"
+                    />
+                    <span className="text-xs text-gray-600 text-center">
+                      {files[index]?.name}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <ImagePlus className="w-6 h-6 text-gray-500" />
+                    <span className="text-xs text-gray-600 text-center">
+                      Upload Image (up to 10MB)
+                    </span>
+                    <span className="text-[10px] text-red-400">PNG , SVG</span>
+                  </>
+                )}
+                <Input
+                  type="file"
+                  accept=".png,.svg,.jpg,.jpeg"
+                  className="hidden"
+                  onChange={(e) => handleFileChange(index, e)}
+                />
+              </Label>
+            </div>
+          ))}
+        </div>
+
+        <Button
+          variant="outline"
+          className="mt-4 sm:mt-6"
+          onClick={() => setArtworkType("none")}
+        >
+          Back
+        </Button>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[300px] gap-4 sm:gap-6 p-4 sm:p-8 w-full">
       {artworkType === "none" && (
@@ -473,20 +633,7 @@ const AddArtwork = () => {
       )}
 
       {artworkType === "physical" && <PhysicalForm />}
-      {artworkType === "digital" && (
-        <div className="flex flex-col items-center gap-4 sm:gap-6 w-full max-w-6xl">
-          <h1 className="text-xl sm:text-2xl font-bold">
-            Digital Artwork Details
-          </h1>
-          <Button
-            variant="outline"
-            className="mt-4 sm:mt-6"
-            onClick={() => setArtworkType("none")}
-          >
-            Back
-          </Button>
-        </div>
-      )}
+      {artworkType === "digital" && <DigitalForm />}
     </div>
   );
 };
