@@ -33,6 +33,11 @@ const AddArtwork = () => {
     const [tags, setTags] = useState("");
     const [quantity, setQuantity] = useState(10);
     const [description, setDescription] = useState("");
+    const [materials, setMaterials] = useState("");
+    const [length, setLength] = useState("");
+    const [width, setWidth] = useState("");
+    const [depth, setDepth] = useState("");
+    const [weight, setWeight] = useState("");
 
     const decreaseQuantity = () => setQuantity((prev) => Math.max(0, prev - 1));
     const increaseQuantity = () => setQuantity((prev) => prev + 1);
@@ -62,9 +67,18 @@ const AddArtwork = () => {
                 ) : (
                   <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-gray-500" />
                 )}
-                <span className="text-xs sm:text-sm text-gray-600 truncate text-center">
+                <span
+                  className="
+                      text-xs sm:text-sm text-gray-600 
+                      text-center 
+                      whitespace-normal 
+                      break-words 
+                      sm:truncate
+                    "
+                >
                   {file ? file.name : "Upload Image (up to 10MB)"}
                 </span>
+
                 <span className="text-[10px] sm:text-xs text-red-400">
                   PNG, SVG
                 </span>
@@ -163,13 +177,95 @@ const AddArtwork = () => {
           </div>
         </div>
 
-        <Button
-          variant="outline"
-          className="mt-4 sm:mt-6"
-          onClick={() => setArtworkType("none")}
-        >
-          Back
-        </Button>
+        {/* Physical Attributes Section */}
+        <div className="w-full border rounded-xl p-4 sm:p-6 flex flex-col gap-3 sm:gap-4">
+          <h2 className="text-lg font-semibold mb-2 sm:mb-4">
+            Physical Attributes
+          </h2>
+
+          <div className="flex flex-col gap-1">
+            <Label className="text-sm font-medium">Materials</Label>
+            <textarea
+              className="border border-gray-300 rounded px-2 py-1 sm:px-3 sm:py-2 focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
+              rows={3}
+              placeholder="List the materials used in this artwork"
+              value={materials}
+              onChange={(e) => setMaterials(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <Label className="text-sm font-medium">Dimensions</Label>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="flex flex-col gap-1">
+                <Input
+                  type="text"
+                  placeholder="Length (cm)"
+                  className="border border-gray-300 rounded px-2 py-1 sm:px-3 sm:py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  value={length}
+                  onChange={(e) => setLength(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <Input
+                  type="text"
+                  placeholder="Width (cm)"
+                  className="border border-gray-300 rounded px-2 py-1 sm:px-3 sm:py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  value={width}
+                  onChange={(e) => setWidth(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <Input
+                  type="text"
+                  placeholder="Depth (cm)"
+                  className="border border-gray-300 rounded px-2 py-1 sm:px-3 sm:py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  value={depth}
+                  onChange={(e) => setDepth(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <Label className="text-sm font-medium">Weight (kg)</Label>
+            <Input
+              type="text"
+              placeholder="0.0"
+              className="border border-gray-300 rounded px-2 py-1 sm:px-3 sm:py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="w-full flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
+          {/* Left: Back Button */}
+          <Button
+            variant="outline"
+            className="sm:mt-0"
+            onClick={() => setArtworkType("none")}
+          >
+            Back
+          </Button>
+
+          {/* Right: View + Publish Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <Button
+              variant="default"
+              className="bg-sky-500 text-white hover:bg-sky-600 w-full sm:w-auto"
+            >
+              View Artwork
+            </Button>
+
+            <Button
+              variant="default"
+              className="bg-sky-500 text-white hover:bg-sky-600 w-full sm:w-auto"
+            >
+              Publish Artwork
+            </Button>
+          </div>
+        </div>
       </div>
     );
   };
