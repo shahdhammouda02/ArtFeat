@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, Upload } from "lucide-react";
+import { Minus, Plus, Ruler, Scale, Upload } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 const AddArtwork = () => {
   const [artworkType, setArtworkType] = useState<
@@ -38,10 +39,184 @@ const AddArtwork = () => {
     const [width, setWidth] = useState("");
     const [depth, setDepth] = useState("");
     const [weight, setWeight] = useState("");
+    const [showPreview, setShowPreview] = useState(false);
 
     const decreaseQuantity = () => setQuantity((prev) => Math.max(0, prev - 1));
     const increaseQuantity = () => setQuantity((prev) => prev + 1);
 
+    const handleViewArtwork = () => {
+      setShowPreview(true);
+    };
+
+    // Filter out null values and ensure we only have strings
+    const validPreviews = previews.filter(
+      (preview): preview is string => preview !== null
+    );
+
+    const artworkData = {
+      title,
+      price,
+      tags,
+      quantity,
+      description,
+      materials,
+      dimensions: { length, width, depth },
+      weight,
+      images: validPreviews,
+    };
+
+    // If showPreview is true, show the preview page instead of the form
+    if (showPreview) {
+      return (
+        <div className="flex flex-col items-center justify-start min-h-screen gap-6 p-4 sm:p-8 w-full max-w-6xl">
+          <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
+            <h1 className="text-xl sm:text-2xl font-bold">
+              Review Your Artwork Submission
+            </h1>
+            <Button variant="outline" onClick={() => setShowPreview(false)}>
+              Back to Edit
+            </Button>
+          </div>
+
+          <div className="w-full space-y-6 sm:space-y-8">
+            {/* Images Preview */}
+            {artworkData.images.length > 0 && (
+              <div className="space-y-2 sm:space-y-4">
+                <h3 className="text-lg font-semibold">Artwork Images</h3>
+                <p className="text-gray-600">
+                  Ensure all images clearly represent your artwork
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                  {artworkData.images.map((image, index) => (
+                    <img
+                      key={index}
+                      src={image}
+                      alt={`Artwork preview ${index + 1}`}
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Artwork Details */}
+            <div className="mb-6 sm:mb-8 space-y-2 sm:space-y-3">
+              <h3 className="text-lg font-semibold">Artwork Details</h3>
+              <p className="text-gray-600">
+                Verify general information about your artwork
+              </p>
+              <div className="space-y-2 sm:space-y-3">
+                <div>
+                  <Label className="font-medium text-sm">Artwork Title</Label>
+                  <p className="text-gray-700 mt-1">
+                    {title || "Not provided"}
+                  </p>
+                </div>
+                <div>
+                  <Label className="font-medium text-sm">Tags</Label>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {tags
+                      ? tags.split(",").map((tag, index) => (
+                          <Badge
+                            key={index}
+                            variant="outline"
+                            className="border-gray-300 bg-gray-100 text-gray-600 rounded-full"
+                          >
+                            {tag.trim()}
+                          </Badge>
+                        ))
+                      : "Not provided"}
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 text-gray-700">
+                  <div className="flex flex-col">
+                    <span className="font-medium text-sm">Price</span>
+                    <span className="inline-flex items-center gap-1 font-medium">
+                      ${price || "0"}
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-medium text-sm">Quantity</span>
+                    <span className="inline-flex items-center gap-1 font-medium">
+                      {quantity}
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <Label className="font-medium text-sm">Description</Label>
+                  <p className="text-gray-700 mt-1 whitespace-pre-wrap">
+                    {description || "Not provided"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Physical Attributes */}
+            <div className="mb-6 sm:mb-8 space-y-2 sm:space-y-3">
+              <h3 className="text-lg font-semibold">Physical Attributes</h3>
+              <p className="text-gray-600">
+                Confirm the physical characteristics of your artwork
+              </p>
+              <div className="space-y-2 sm:space-y-3">
+                <div>
+                  <Label className="font-medium text-sm">Materials</Label>
+                  <p className="text-gray-700 mt-1 whitespace-pre-wrap">
+                    {materials || "Not provided"}
+                  </p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 text-gray-700">
+                  <div className="flex flex-col">
+                    <span>Length (cm)</span>
+                    <span className="inline-flex items-center gap-1 font-medium">
+                      <Ruler className="h-4 w-4" />
+                      {length || "0"} cm
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span>Width (cm)</span>
+                    <span className="inline-flex items-center gap-1 font-medium">
+                      <Ruler className="h-4 w-4" />
+                      {width || "0"} cm
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span>Depth (cm)</span>
+                    <span className="inline-flex items-center gap-1 font-medium">
+                      <Ruler className="h-4 w-4" />
+                      {depth || "0"} cm
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <Label className="font-medium text-sm">Weight Kg</Label>
+                  <div className="flex items-center gap-2 text-gray-700 mt-1">
+                    <Scale className="h-4 w-4" />
+                    <span>{weight || "0"} kg</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Preview Page Buttons */}
+            <div className="w-full flex flex-col sm:flex-row justify-between items-center mt-4 sm:mt-6 gap-3 sm:gap-4">
+              <Button variant="outline" onClick={() => setShowPreview(false)}>
+                Back to Edit
+              </Button>
+              <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <Button
+                  variant="default"
+                  className="bg-sky-500 text-white hover:bg-sky-600 w-full sm:w-auto"
+                >
+                  Publish Artwork
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Original form when showPreview is false
     return (
       <div className="flex flex-col items-center justify-start min-h-[400px] gap-6 p-4 sm:p-8 w-full max-w-6xl">
         <h1 className="text-xl sm:text-2xl font-bold text-center">
@@ -254,6 +429,7 @@ const AddArtwork = () => {
             <Button
               variant="default"
               className="bg-sky-500 text-white hover:bg-sky-600 w-full sm:w-auto"
+              onClick={handleViewArtwork}
             >
               View Artwork
             </Button>
