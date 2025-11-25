@@ -14,7 +14,7 @@ import ArtistSignUp from "@/pages/auth/artistSignup/ArtistSignUp";
 import Photography from "@/pages/Photography/Photography";
 import Details from "@/pages/Details/Details";
 import ArtistDashboard from "@/pages/ArtistDashboard/ArtistDashboard";
-import AddArtwork from "@/pages/ArtistDashboard/components/AddArtwork";
+import AddArtwork from "@/pages/ArtistDashboard/components/add-artwork/AddArtwork";
 
 
 export const routes: RouteObject[] = [
