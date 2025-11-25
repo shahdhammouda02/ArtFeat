@@ -448,6 +448,11 @@ const AddArtwork = () => {
 
   const DigitalForm = () => {
     const [files, setFiles] = useState<(File | null)[]>(Array(5).fill(null));
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [tags, setTags] = useState("");
+    const [price, setPrice] = useState("");
+    const [additionalNotes, setAdditionalNotes] = useState("");
 
     const handleFileChange = (
       index: number,
@@ -577,7 +582,7 @@ const AddArtwork = () => {
                   </>
                 ) : (
                   <>
-                    <ImagePlus className="w-6 h-6 text-gray-500" />
+                    <Upload className="w-6 h-6 text-gray-500" />
                     <span className="text-xs text-gray-600 text-center">
                       Upload Image (up to 10MB)
                     </span>
@@ -593,6 +598,95 @@ const AddArtwork = () => {
               </Label>
             </div>
           ))}
+        </div>
+
+        {/* Updated Section: Artwork Information, Pricing & Policy, Additional Notes */}
+        <div className="w-full border rounded-xl p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
+          {/* Artwork Information */}
+          <div className="flex flex-col gap-2 text-left">
+            <h2 className="text-lg font-semibold">Artwork Information</h2>
+            <p className="text-sm text-gray-600">
+              Provide essential details about your digital masterpieces.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex flex-col gap-1">
+              <Label className="text-sm font-medium">Artwork Title</Label>
+              <Input
+                type="text"
+                placeholder="My Digital Masterpiece"
+                className="border border-gray-300 rounded px-2 py-1 sm:px-3 sm:py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <Label className="text-sm font-medium">Description</Label>
+              <textarea
+                className="border border-gray-300 rounded px-2 py-1 sm:px-3 sm:py-2 focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
+                rows={4}
+                placeholder="Describe your artwork, inspiration, and unique aspects..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <Label className="text-sm font-medium">Tags</Label>
+              <Input
+                type="text"
+                placeholder="e.g., Arkansas, alegrahan, #aurreal (nomina separante)"
+                className="border border-gray-300 rounded px-2 py-1 sm:px-3 sm:py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="border-t border-gray-200 my-2"></div>
+
+          {/* Pricing & Policy */}
+          <div className="flex flex-col gap-2 text-left">
+            <h2 className="text-lg font-semibold">Pricing & Policy</h2>
+            <p className="text-sm text-gray-600">
+              Set the price and defines the return policy for your artwork.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <Label className="text-sm font-medium">Price</Label>
+            <Input
+              type="text"
+              placeholder="$ 20.99"
+              className="border border-gray-300 rounded px-2 py-1 sm:px-3 sm:py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
+          </div>
+
+          <div className="border-t border-gray-200 my-2"></div>
+
+          {/* Additional Notes */}
+          <div className="flex flex-col gap-2 text-left">
+            <h2 className="text-lg font-semibold">Additional Notes</h2>
+            <p className="text-sm text-gray-600">
+              Any private notes for yourself or specific instructions for
+              buyers.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <Label className="text-sm font-medium">Arms Notes (Optional)</Label>
+            <textarea
+              className="border border-gray-300 rounded px-2 py-1 sm:px-3 sm:py-2 focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
+              rows={3}
+              placeholder="Add any specific details, licensing info, or private notes for your reference..."
+              value={additionalNotes}
+              onChange={(e) => setAdditionalNotes(e.target.value)}
+            />
+          </div>
         </div>
 
         <Button
