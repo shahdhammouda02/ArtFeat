@@ -15,6 +15,7 @@ export interface Artwork {
   author: string;
   price: number;
   image: string;
+  images?: string[];
   description: string;
   highlights: string[];
   fileType?: string;

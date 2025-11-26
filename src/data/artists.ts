@@ -1,101 +1,40 @@
 import type { Artist } from "@/types/artists";
-import art from "@/assets/images/artists/hero-bg.png";
 import artistPhoto from "@/assets/images/artistPhoto.jpg";
+import { ARTWORKS } from "@/data/artworks";
+
+const getArtworksByAuthor = (author: string) =>
+  ARTWORKS.filter((art) => art.author.toLowerCase() === author.toLowerCase());
 
 export const ARTISTS_DATA: Artist[] = [
   {
     id: 1,
     name: "Ahmed Jack",
     photo: artistPhoto,
-    artworks: Array.from({ length: 6 }).map((_, i) => ({
-      id: i + 1, 
-      title: [
-        "Think Different (Yellow)",
-        "The Great Beyond",
-        "Fly Over Wide Fields",
-        "Art in Motion",
-        "Urban Dreams",
-        "Silent Echoes",
-      ][i % 6],
-      price: 635 + i * 50,
-      type: ["Painting", "Oil Painting", "Acrylic", "Digital", "Watercolor"][i % 5],
-      image: art,
-      sales: [125, 89, 203, 67, 142, 98][i % 6],
-    })),
+    artworks: getArtworksByAuthor("Ahmed Jack"),
   },
   {
     id: 2,
-    name: "Rawan Ahmad",
+    name: "Bernard Venet",
     photo: artistPhoto,
-    artworks: Array.from({ length: 5 }).map((_, i) => ({
-      id: i + 1,
-      title: [
-        "Desert Mirage",
-        "Ocean Whispers",
-        "Mountain Majesty",
-        "City Lights",
-        "Forest Symphony",
-      ][i % 5],
-      price: 520 + i * 75,
-      type: ["Oil Painting", "Acrylic", "Mixed Media", "Sculpture"][i % 4],
-      image: art,
-      sales: [78, 156, 45, 189, 112][i % 5],
-    })),
+    artworks: getArtworksByAuthor("Bernard Venet"),
   },
   {
     id: 3,
-    name: "Sarah Johnson",
+    name: "Marcus Thorne",
     photo: artistPhoto,
-    artworks: Array.from({ length: 4 }).map((_, i) => ({
-      id: i + 1, 
-      title: [
-        "Golden Hour",
-        "Abstract Thoughts",
-        "Color Fusion",
-        "Minimalist Dreams",
-      ][i % 4],
-      price: 480 + i * 60,
-      type: ["Watercolor", "Digital", "Acrylic", "Print"][i % 4],
-      image: art,
-      sales: [234, 76, 165, 91][i % 4],
-    })),
+    artworks: getArtworksByAuthor("Marcus Thorne"),
   },
   {
     id: 4,
-    name: "Layla Nasser",
+    name: "Alison Jackson",
     photo: artistPhoto,
-    artworks: Array.from({ length: 5 }).map((_, i) => ({
-      id: i + 1,
-      title: [
-        "Crimson Dreams",
-        "The Blue Silence",
-        "Beyond Reflections",
-        "Shades of Dawn",
-        "Infinite Motion",
-      ][i % 5],
-      price: 700 + i * 80,
-      type: ["Acrylic", "Digital", "Watercolor", "Oil Painting"][i % 4],
-      image: art,
-      sales: [88, 210, 135, 64, 157][i % 5],
-    })),
+    artworks: getArtworksByAuthor("Alison Jackson"),
   },
   {
     id: 5,
-    name: "Hani Omar",
+    name: "Alex Katz",
     photo: artistPhoto,
-    artworks: Array.from({ length: 4 }).map((_, i) => ({
-      id: i + 1,
-      title: [
-        "Golden Silence",
-        "Oceanic Dreams",
-        "Roots of Light",
-        "City Reflections",
-      ][i % 4],
-      price: 640 + i * 70,
-      type: ["Digital", "Painting", "Mixed Media", "Sculpture"][i % 4],
-      image: art,
-      sales: [199, 155, 88, 132][i % 4],
-    })),
+    artworks: getArtworksByAuthor("Alex Katz"),
   },
 ];
 
