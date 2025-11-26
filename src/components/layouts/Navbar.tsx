@@ -6,7 +6,7 @@ import {
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import { Heart, ShoppingCart, Globe, Bell, Menu, X, User, Settings, LogOut, Palette } from "lucide-react";
+import { Heart, ShoppingCart, Globe, Bell, Menu, X, User, LogOut, Palette } from "lucide-react";
 import logo from "@/assets/images/logo.jpeg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Auth } from "@/contexts/AuthContext";
@@ -125,13 +125,7 @@ const UserDropdown = ({ user, onLogout, onNavigate }: UserDropdownProps) => {
               <User className="w-4 h-4 mr-3" />
               Your Profile
             </button>
-            <button
-              onClick={() => handleItemClick('/settings')}
-              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              <Settings className="w-4 h-4 mr-3" />
-              Settings
-            </button>
+            
             {user?.type === 'artist' && (
               <button
                 onClick={() => handleItemClick('/artist-dashboard')}
