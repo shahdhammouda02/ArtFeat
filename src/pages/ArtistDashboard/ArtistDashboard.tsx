@@ -332,11 +332,10 @@ const ArtistDashboard = () => {
           <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2">$143</p>
         </div>
       </div>
-
-      {/* Navigation Buttons Section */}
+{/* Navigation Buttons Section */}
       <div className="w-full max-w-6xl flex flex-col items-center mt-4 sm:mt-6 mb-4 sm:mb-6">
         {/* Main Nav Buttons */}
-        <div className="flex flex-col sm:flex-row w-full gap-1 sm:gap-2">
+        <div className="flex flex-col sm:flex-row w-full gap-0">
           {navItems.map((item) => (
             <Button
               key={item}
@@ -360,7 +359,7 @@ const ArtistDashboard = () => {
         {/* Artwork Sub Buttons */}
         {activeNav === "Artworks" && (
           <>
-            <div className="flex flex-col sm:flex-row w-full gap-1 sm:gap-2 mt-3 sm:mt-4">
+            <div className="flex flex-col sm:flex-row w-full gap-0 mt-3 sm:mt-4">
               {artworkSubItems.map((subItem) => (
                 <Button
                   key={subItem}
@@ -434,7 +433,7 @@ const ArtistDashboard = () => {
 
         {/* Collection Sub Button - Single long button */}
         {activeNav === "Collections" && (
-          <div className="flex flex-col sm:flex-row w-full gap-1 sm:gap-2 mt-3 sm:mt-4">
+          <div className="flex flex-col sm:flex-row w-full gap-0 mt-3 sm:mt-4">
             <Button
               variant="outline"
               className={`
@@ -449,7 +448,7 @@ const ArtistDashboard = () => {
           </div>
         )}
       </div>
-
+      
       {/* Collection Search Section */}
       {activeNav === "Collections" && (
         <div
