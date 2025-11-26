@@ -144,6 +144,10 @@ const ArtistDashboard = () => {
     navigate("add-artwork");
   };
 
+  const handleAddCollection = () => {
+    navigate("create-collection");
+  };
+
   useEffect(() => {
     if (user && isAuthenticated !== undefined) {
       // only navigate after user data is loaded
@@ -275,7 +279,7 @@ const ArtistDashboard = () => {
           <Button className="bg-sky-500 text-white hover:bg-sky-600 w-full sm:flex-1 text-sm sm:text-base py-2 h-auto" onClick={handleAddArtwork}>
             <Plus className="mr-1 w-4 h-4 sm:w-5 sm:h-5" /> Add Artwork
           </Button>
-          <Button variant="outline" className="w-full sm:flex-1 text-sm sm:text-base py-2 h-auto">
+          <Button variant="outline" className="w-full sm:flex-1 text-sm sm:text-base py-2 h-auto" onClick={handleAddCollection}>
             <Album className="w-4 h-4 sm:w-5 sm:h-5" />
             Add Collection
           </Button>
