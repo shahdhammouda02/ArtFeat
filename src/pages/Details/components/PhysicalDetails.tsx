@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Heart,
   Truck,
@@ -20,7 +20,15 @@ type PhysicalDetailsProps = {
 const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
   const [liked, setLiked] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(artwork.image);
+
+  // ✅ مصفوفة تشمل الصورة الرئيسية + الفرعيات للتنقل بالأسهم
+  const allImages = [artwork.image, ...(artwork.images ?? [])];
+  const [selectedImage, setSelectedImage] = useState(allImages[0]);
+
+  // ✅ تحديث الصورة عند تغيير العمل
+  useEffect(() => {
+    setSelectedImage(artwork.image);
+  }, [artwork]);
 
   return (
     <main className="bg-white py-10">
@@ -28,7 +36,7 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
         <section className="grid grid-cols-1 lg:grid-cols-[480px,1fr] gap-12 items-start">
           {/* 🔹 الصور */}
           <div className="flex gap-4">
-            {/* ✅ الصور المصغّرة من artwork.images */}
+            {/* ✅ الصور المصغّرة (من artwork.images فقط) */}
             <div className="flex flex-col gap-3">
               {artwork.images?.map((img, i) => (
                 <button
@@ -76,14 +84,13 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
                 />
               </button>
 
-              {/* ◀️ السهم اليسار */}
+              {/* ◀️ السهم السابق */}
               <button
                 onClick={() => {
-                  const currentIndex = artwork.images?.indexOf(selectedImage) ?? 0;
+                  const currentIndex = allImages.indexOf(selectedImage);
                   const prevIndex =
-                    ((currentIndex - 1 + (artwork.images?.length ?? 1)) %
-                      (artwork.images?.length ?? 1));
-                  setSelectedImage(artwork.images?.[prevIndex] ?? artwork.image);
+                    (currentIndex - 1 + allImages.length) % allImages.length;
+                  setSelectedImage(allImages[prevIndex]);
                 }}
                 className="absolute left-3 top-1/2 -translate-y-1/2 bg-transparent border border-white text-white p-2 rounded-full shadow transition hover:bg-white/10"
                 title="Previous image"
@@ -100,13 +107,12 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
                 </svg>
               </button>
 
-              {/* ▶️ السهم اليمين */}
+              {/* ▶️ السهم التالي */}
               <button
                 onClick={() => {
-                  const currentIndex = artwork.images?.indexOf(selectedImage) ?? 0;
-                  const nextIndex =
-                    ((currentIndex + 1) % (artwork.images?.length ?? 1));
-                  setSelectedImage(artwork.images?.[nextIndex] ?? artwork.image);
+                  const currentIndex = allImages.indexOf(selectedImage);
+                  const nextIndex = (currentIndex + 1) % allImages.length;
+                  setSelectedImage(allImages[nextIndex]);
                 }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border border-white text-white p-2 rounded-full shadow transition hover:bg-white/10"
                 title="Next image"

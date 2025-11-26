@@ -16,15 +16,16 @@ import { ARTWORKS } from "@/data/artworks";
 const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
   const [liked, setLiked] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(artwork.image);
   const navigate = useNavigate();
 
-  // ✅ عندما يتغير العمل يتم تحديث الصورة المعروضة تلقائيًا
+  const allImages = [artwork.image, ...(artwork.images ?? [])];
+  const [selectedImage, setSelectedImage] = useState(allImages[0]);
+
+  // ✅ عند تغيير العمل يتم تحديث الصورة الأساسية
   useEffect(() => {
     setSelectedImage(artwork.image);
   }, [artwork]);
 
-  // اقتراحات من نفس النوع
   const suggested = ARTWORKS.filter(
     (item) => item.type === artwork.type && item.id !== artwork.id
   );
@@ -36,7 +37,7 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
         <section className="grid grid-cols-1 lg:grid-cols-[480px,1fr] gap-12 items-start">
           {/* 🔹 الصور */}
           <div className="flex gap-4">
-            {/* ✅ الصور المصغّرة */}
+            {/* ✅ الصور المصغّرة (فقط الفرعيات) */}
             <div className="flex flex-col gap-3">
               {artwork.images?.map((img, i) => (
                 <button
@@ -64,8 +65,6 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
                 alt={artwork.title}
                 className="w-full h-[480px] object-cover rounded-xl border border-gray-200"
               />
-
-              {/* ✅ العلامة المائية */}
               <div className="absolute inset-0 flex items-center justify-center text-white/80 text-5xl font-semibold select-none">
                 Art Feat
               </div>
@@ -89,11 +88,10 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
               {/* ◀️ السهم السابق */}
               <button
                 onClick={() => {
-                  const images = artwork.images ?? [artwork.image];
-                  const currentIndex = images.indexOf(selectedImage);
+                  const currentIndex = allImages.indexOf(selectedImage);
                   const prevIndex =
-                    (currentIndex - 1 + images.length) % images.length;
-                  setSelectedImage(images[prevIndex]);
+                    (currentIndex - 1 + allImages.length) % allImages.length;
+                  setSelectedImage(allImages[prevIndex]);
                 }}
                 className="absolute left-3 top-1/2 -translate-y-1/2 bg-transparent border border-white text-white p-2 rounded-full shadow transition hover:bg-white/10"
                 title="Previous image"
@@ -113,10 +111,9 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
               {/* ▶️ السهم التالي */}
               <button
                 onClick={() => {
-                  const images = artwork.images ?? [artwork.image];
-                  const currentIndex = images.indexOf(selectedImage);
-                  const nextIndex = (currentIndex + 1) % images.length;
-                  setSelectedImage(images[nextIndex]);
+                  const currentIndex = allImages.indexOf(selectedImage);
+                  const nextIndex = (currentIndex + 1) % allImages.length;
+                  setSelectedImage(allImages[nextIndex]);
                 }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border border-white text-white p-2 rounded-full shadow transition hover:bg-white/10"
                 title="Next image"
@@ -303,37 +300,36 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
       </div>
 
       {/* ✅ نافذة التكبير */}
-      {/* ✅ نافذة التكبير */}
-          {isZoomed && (
-            <div
-              onClick={() => setIsZoomed(false)}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 cursor-zoom-out"
+      {isZoomed && (
+        <div
+          onClick={() => setIsZoomed(false)}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 cursor-zoom-out"
+        >
+          <div className="relative max-w-5xl w-full px-4">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsZoomed(false);
+              }}
+              className="absolute top-6 right-8 text-white hover:text-gray-300 transition p-1.5 rounded-full hover:bg-white/10 z-50"
+              title="Close"
             >
-              <div className="relative max-w-5xl w-full px-4">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsZoomed(false);
-                  }}
-                  className="absolute top-6 right-8 text-white hover:text-gray-300 transition p-1.5 rounded-full hover:bg-white/10 z-50"
-                  title="Close"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-    
-                <div className="relative">
-                  <img
-                    src={selectedImage}
-                    alt={artwork.title}
-                    className="w-full max-h-[90vh] object-contain rounded-lg shadow-lg select-none"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center text-white/70 text-5xl font-semibold select-none pointer-events-none">
-                    Art Feat
-                  </div>
-                </div>
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="relative">
+              <img
+                src={selectedImage}
+                alt={artwork.title}
+                className="w-full max-h-[90vh] object-contain rounded-lg shadow-lg select-none"
+              />
+              <div className="absolute inset-0 flex items-center justify-center text-white/70 text-5xl font-semibold select-none pointer-events-none">
+                Art Feat
               </div>
             </div>
-          )}
+          </div>
+        </div>
+      )}
     </main>
   );
 };
