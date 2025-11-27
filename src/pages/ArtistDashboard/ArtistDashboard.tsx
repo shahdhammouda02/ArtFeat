@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Carousel,
   CarouselContent,
@@ -24,12 +26,15 @@ import {
   ChevronDown,
   Mic,
   Edit,
-  Album
+  Album,
 } from "lucide-react";
 import { countries } from "@/data/countries";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import image from "@/assets/images/art-gallery.jpeg";
+import artistFollower from "@/assets/images/artistPhoto.jpg";
+import savedArtwork from "@/assets/images/saved.jpg";
+import { Label } from "@/components/ui/label";
 
 const navItems = [
   "Artworks",
@@ -93,36 +98,63 @@ const mockCollections = [
     title: "Abstract Series",
     artworkCount: 8,
     image: image,
-    description: "A collection of abstract digital artworks exploring color and form."
+    description:
+      "A collection of abstract digital artworks exploring color and form.",
   },
   {
     id: 2,
     title: "Urban Landscapes",
     artworkCount: 12,
     image: image,
-    description: "Cityscapes and urban environments from around the world."
+    description: "Cityscapes and urban environments from around the world.",
   },
   {
     id: 3,
     title: "Nature Collection",
     artworkCount: 15,
     image: image,
-    description: "Inspired by the beauty of natural landscapes and wildlife."
+    description: "Inspired by the beauty of natural landscapes and wildlife.",
   },
   {
     id: 4,
     title: "Digital Dreams",
     artworkCount: 6,
     image: image,
-    description: "Futuristic and surreal digital art pieces."
+    description: "Futuristic and surreal digital art pieces.",
   },
   {
     id: 5,
     title: "Minimalist Works",
     artworkCount: 10,
     image: image,
-    description: "Simple, clean, and minimalist art focusing on essential elements."
-  }
+    description:
+      "Simple, clean, and minimalist art focusing on essential elements.",
+  },
+];
+const savedArtworksData = [
+  { artist: "Maria Artista", price: "$1,200", image: savedArtwork },
+  { artist: "John Painter", price: "$950", image: savedArtwork },
+  { artist: "Lena Sketch", price: "$1,500", image: savedArtwork },
+  { artist: "Alex Form", price: "$800", image: savedArtwork },
+  { artist: "Sarah Urban", price: "$1,100", image: savedArtwork },
+  { artist: "Mystic Visions", price: "$2,000", image: savedArtwork },
+];
+
+const followedArtistsData = [
+  { name: "Sophia Chen", followers: "15.2K Followers", image: artistFollower },
+  { name: "David Lee", followers: "8.7K Followers", image: artistFollower },
+  { name: "Elena Varga", followers: "22.1K Followers", image: artistFollower },
+  {
+    name: "Hiroshi Tanaka",
+    followers: "5.9K Followers",
+    image: artistFollower,
+  },
+];
+
+const savedCollectionsData = [
+  { name: "Modern Abstract Expressionism", count: "12 Artworks" },
+  { name: "Classic Renaissance Portraits", count: "8 Artworks" },
+  { name: "Contemporary Digital Art", count: "15 Artworks" },
 ];
 
 const ArtistDashboard = () => {
@@ -131,11 +163,19 @@ const ArtistDashboard = () => {
 
   const [activeNav, setActiveNav] = useState("Artworks");
   const [activeSubNav, setActiveSubNav] = useState("All Artworks");
-  const [activeCollectionSubNav, setActiveCollectionSubNav] = useState("All Collections");
+  const [activeCollectionSubNav, setActiveCollectionSubNav] =
+    useState("All Collections");
   const [searchQuery, setSearchQuery] = useState("");
   const [collectionSearchQuery, setCollectionSearchQuery] = useState("");
   const [artworks, setArtworks] = useState(mockArtworks);
   const [collections, setCollections] = useState(mockCollections);
+
+  const [activeFilters, setActiveFilters] = useState({
+    all: true,
+    artists: false,
+    artworks: false,
+    collections: false,
+  });
 
   // local state to prevent redirect on initial load
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -181,7 +221,7 @@ const ArtistDashboard = () => {
     setArtworks(filtered);
   }, [activeSubNav, searchQuery]);
 
- useEffect(() => {
+  useEffect(() => {
     let filtered = mockCollections;
 
     // Filter by type
@@ -209,7 +249,6 @@ const ArtistDashboard = () => {
     setCollections(filtered);
   }, [activeCollectionSubNav, collectionSearchQuery]);
 
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     // Search is handled by the useEffect above
@@ -219,6 +258,71 @@ const ArtistDashboard = () => {
     e.preventDefault();
     // Search is handled by the useEffect above
   };
+
+  // Calculate counts from actual data
+  const filterCounts = {
+    all:
+      savedArtworksData.length +
+      followedArtistsData.length +
+      savedCollectionsData.length,
+    artists: followedArtistsData.length,
+    artworks: savedArtworksData.length,
+    collections: savedCollectionsData.length,
+  };
+
+  // Handle filter changes
+  const handleFilterChange = (filterId: keyof typeof activeFilters) => {
+    if (filterId === "all") {
+      setActiveFilters({
+        all: true,
+        artists: false,
+        artworks: false,
+        collections: false,
+      });
+    } else {
+      setActiveFilters((prev) => ({
+        ...prev,
+        all: false,
+        [filterId]: !prev[filterId],
+      }));
+    }
+  };
+
+  // Filter data based on active filters and search
+  const filteredArtworks = useMemo(() => {
+    if (!activeFilters.artworks && !activeFilters.all) return [];
+
+    return savedArtworksData.filter(
+      (artwork) =>
+        artwork.artist.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        artwork.price.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, activeFilters]);
+
+  const filteredArtists = useMemo(() => {
+    if (!activeFilters.artists && !activeFilters.all) return [];
+
+    return followedArtistsData.filter(
+      (artist) =>
+        artist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        artist.followers.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, activeFilters]);
+
+  const filteredCollections = useMemo(() => {
+    if (!activeFilters.collections && !activeFilters.all) return [];
+
+    return savedCollectionsData.filter(
+      (collection) =>
+        collection.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        collection.count.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, activeFilters]);
+
+  // Determine what to show
+  const showArtworks = activeFilters.artworks || activeFilters.all;
+  const showArtists = activeFilters.artists || activeFilters.all;
+  const showCollections = activeFilters.collections || activeFilters.all;
 
   if (checkingAuth || !user) {
     return (
@@ -269,21 +373,33 @@ const ArtistDashboard = () => {
           <div className="flex flex-col items-center md:items-start gap-1 sm:gap-2 text-gray-600 mt-1">
             <div className="flex items-center gap-2">
               <MapPin size={16} className="sm:w-[18px]" />
-              <span className="text-sm sm:text-base">{user.city ? user.city : "Unknown City"}</span>
+              <span className="text-sm sm:text-base">
+                {user.city ? user.city : "Unknown City"}
+              </span>
             </div>
           </div>
         </div>
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row w-full md:w-auto gap-2 sm:gap-3 mt-4 md:mt-0">
-          <Button className="bg-sky-500 text-white hover:bg-sky-600 w-full sm:flex-1 text-sm sm:text-base py-2 h-auto" onClick={handleAddArtwork}>
+          <Button
+            className="bg-sky-500 text-white hover:bg-sky-600 w-full sm:flex-1 text-sm sm:text-base py-2 h-auto"
+            onClick={handleAddArtwork}
+          >
             <Plus className="mr-1 w-4 h-4 sm:w-5 sm:h-5" /> Add Artwork
           </Button>
-          <Button variant="outline" className="w-full sm:flex-1 text-sm sm:text-base py-2 h-auto" onClick={handleAddCollection}>
+          <Button
+            variant="outline"
+            className="w-full sm:flex-1 text-sm sm:text-base py-2 h-auto"
+            onClick={handleAddCollection}
+          >
             <Album className="w-4 h-4 sm:w-5 sm:h-5" />
             Add Collection
           </Button>
-          <Button variant="outline" className="w-full sm:flex-1 text-sm sm:text-base py-2 h-auto">
+          <Button
+            variant="outline"
+            className="w-full sm:flex-1 text-sm sm:text-base py-2 h-auto"
+          >
             <Edit className="w-4 h-4 sm:w-5 sm:h-5" />
             Edit Profile
           </Button>
@@ -294,7 +410,9 @@ const ArtistDashboard = () => {
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mt-4 sm:mt-6 max-w-6xl w-full">
         <div className="bg-white shadow-md p-3 sm:p-4 rounded-lg">
           <div className="flex items-center justify-between">
-            <p className="text-xs sm:text-md text-sky-500 font-medium">Total Funds</p>
+            <p className="text-xs sm:text-md text-sky-500 font-medium">
+              Total Funds
+            </p>
             <BarChart2 size={20} className="sm:w-6 sm:h-6 text-gray-700" />
           </div>
           <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2">$12,450</p>
@@ -302,7 +420,9 @@ const ArtistDashboard = () => {
 
         <div className="bg-white shadow-md p-3 sm:p-4 rounded-lg">
           <div className="flex items-center justify-between">
-            <p className="text-xs sm:text-md text-sky-500 font-medium">Total Sales</p>
+            <p className="text-xs sm:text-md text-sky-500 font-medium">
+              Total Sales
+            </p>
             <ShoppingCart size={20} className="sm:w-6 sm:h-6 text-gray-700" />
           </div>
           <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2">87</p>
@@ -310,7 +430,9 @@ const ArtistDashboard = () => {
 
         <div className="bg-white shadow-md p-3 sm:p-4 rounded-lg">
           <div className="flex items-center justify-between">
-            <p className="text-xs sm:text-md text-sky-500 font-medium">Followers</p>
+            <p className="text-xs sm:text-md text-sky-500 font-medium">
+              Followers
+            </p>
             <Users size={20} className="sm:w-6 sm:h-6 text-gray-700" />
           </div>
           <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2">2.5K</p>
@@ -318,7 +440,9 @@ const ArtistDashboard = () => {
 
         <div className="bg-white shadow-md p-3 sm:p-4 rounded-lg">
           <div className="flex items-center justify-between">
-            <p className="text-xs sm:text-md text-sky-500 font-medium">Following</p>
+            <p className="text-xs sm:text-md text-sky-500 font-medium">
+              Following
+            </p>
             <UserCheck size={20} className="sm:w-6 sm:h-6 text-gray-700" />
           </div>
           <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2">210</p>
@@ -326,13 +450,15 @@ const ArtistDashboard = () => {
 
         <div className="bg-white shadow-md p-3 sm:p-4 rounded-lg col-span-2 sm:col-span-1 md:col-span-1">
           <div className="flex items-center justify-between">
-            <p className="text-xs sm:text-md text-sky-500 font-medium">Avg. Sale Price</p>
+            <p className="text-xs sm:text-md text-sky-500 font-medium">
+              Avg. Sale Price
+            </p>
             <DollarSign size={20} className="sm:w-6 sm:h-6 text-gray-700" />
           </div>
           <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2">$143</p>
         </div>
       </div>
-{/* Navigation Buttons Section */}
+      {/* Navigation Buttons Section */}
       <div className="w-full max-w-6xl flex flex-col items-center mt-4 sm:mt-6 mb-4 sm:mb-6">
         {/* Main Nav Buttons */}
         <div className="flex flex-col sm:flex-row w-full gap-0">
@@ -379,13 +505,9 @@ const ArtistDashboard = () => {
             </div>
 
             {/* Dropdown and Search Section */}
-            <div
-              className="flex flex-col sm:flex-row w-full gap-3 sm:gap-4 mt-6 sm:mt-8 border shadow-lg border-none p-4 sm:p-5 rounded-2xl sm:rounded-full items-center"
-            >
+            <div className="flex flex-col sm:flex-row w-full gap-3 sm:gap-4 mt-6 sm:mt-8 border shadow-lg border-none p-4 sm:p-5 rounded-2xl sm:rounded-full items-center">
               {/* Artwork Type Dropdown */}
-              <div
-                className="relative w-full sm:flex-initial sm:w-64 rounded-xl border border-gray-300"
-              >
+              <div className="relative w-full sm:flex-initial sm:w-64 rounded-xl border border-gray-300">
                 <select
                   value={activeSubNav}
                   onChange={(e) => setActiveSubNav(e.target.value)}
@@ -448,16 +570,12 @@ const ArtistDashboard = () => {
           </div>
         )}
       </div>
-      
+
       {/* Collection Search Section */}
       {activeNav === "Collections" && (
-        <div
-          className="flex flex-col sm:flex-row w-full max-w-6xl gap-3 sm:gap-4 mt-6 sm:mt-8 border shadow-lg border-none p-4 sm:p-5 rounded-2xl sm:rounded-full items-center"
-        >
+        <div className="flex flex-col sm:flex-row w-full max-w-6xl gap-3 sm:gap-4 mt-6 sm:mt-8 border shadow-lg border-none p-4 sm:p-5 rounded-2xl sm:rounded-full items-center">
           {/* Collection Type Dropdown */}
-          <div
-            className="relative w-full sm:flex-initial sm:w-64 rounded-xl border border-gray-300"
-          >
+          <div className="relative w-full sm:flex-initial sm:w-64 rounded-xl border border-gray-300">
             <select
               value={activeCollectionSubNav}
               onChange={(e) => setActiveCollectionSubNav(e.target.value)}
@@ -529,7 +647,9 @@ const ArtistDashboard = () => {
                   </div>
                   <CardContent className="p-3 sm:p-4">
                     <div className="mb-2">
-                      <h3 className="font-bold text-lg sm:text-xl">{artwork.title}</h3>
+                      <h3 className="font-bold text-lg sm:text-xl">
+                        {artwork.title}
+                      </h3>
                       <Badge
                         variant={
                           artwork.type === "Digital" ? "default" : "secondary"
@@ -551,7 +671,10 @@ const ArtistDashboard = () => {
                     </p>
                   </CardContent>
                   <CardFooter className="p-3 sm:p-4 pt-0">
-                    <Button variant="outline" className="w-full text-sm sm:text-base py-2">
+                    <Button
+                      variant="outline"
+                      className="w-full text-sm sm:text-base py-2"
+                    >
                       View Details
                     </Button>
                   </CardFooter>
@@ -611,7 +734,10 @@ const ArtistDashboard = () => {
                           </p>
                         </CardContent>
                         <CardFooter className="p-3 sm:p-4 pt-0">
-                          <Button variant="outline" className="w-full text-sm sm:text-base py-2">
+                          <Button
+                            variant="outline"
+                            className="w-full text-sm sm:text-base py-2"
+                          >
                             View Details
                           </Button>
                         </CardFooter>
@@ -731,6 +857,190 @@ const ArtistDashboard = () => {
               </Carousel>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Favorites Section */}
+      {activeNav === "Favorites" && (
+        <div className="w-full max-w-6xl mt-6 sm:mt-8 border p-4 sm:p-6 rounded-lg bg-white shadow-md">
+          {/* Header */}
+          <div className="mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
+              My Favorites
+            </h2>
+
+            {/* Filter Row */}
+            <div className="flex flex-col lg:flex-row gap-3 lg:gap-4 items-start lg:items-center justify-between mb-6 p-3 lg:p-4 bg-white rounded-lg border border-gray-200">
+              {/* Search Input */}
+              <div className="w-full lg:flex-1">
+                <div className="relative">
+                  <Search
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    size={18}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Search favorites"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 text-sm lg:text-base"
+                  />
+                </div>
+              </div>
+
+              {/* Filter Checkboxes */}
+              <div className="flex flex-wrap gap-3 lg:gap-4 items-center w-full lg:w-auto justify-start lg:justify-end">
+                {[
+                  { id: "all", label: `All Items (${filterCounts.all})` },
+                  { id: "artists", label: `Artists (${filterCounts.artists})` },
+                  {
+                    id: "artworks",
+                    label: `Artworks (${filterCounts.artworks})`,
+                  },
+                  {
+                    id: "collections",
+                    label: `Collections (${filterCounts.collections})`,
+                  },
+                ].map((item) => (
+                  <div key={item.id} className="flex items-center gap-2">
+                    <Checkbox
+                      id={item.id}
+                      checked={
+                        activeFilters[item.id as keyof typeof activeFilters]
+                      }
+                      onCheckedChange={() =>
+                        handleFilterChange(
+                          item.id as keyof typeof activeFilters
+                        )
+                      }
+                      className="data-[state=checked]:bg-sky-500 data-[state=checked]:border-sky-500 w-4 h-4"
+                    />
+                    <Label
+                      htmlFor={item.id}
+                      className="text-xs lg:text-sm text-gray-700 cursor-pointer whitespace-nowrap"
+                    >
+                      {item.label}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Saved Artworks Section */}
+          {showArtworks && filteredArtworks.length > 0 && (
+            <Card className="mb-6 sm:mb-8">
+              <CardContent className="p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-bold mb-4">
+                  Saved Artworks
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  {filteredArtworks.map((artwork, index) => (
+                    <Card
+                      key={index}
+                      className="overflow-hidden hover:shadow-lg transition-shadow"
+                    >
+                      <div className="aspect-[4/2] bg-gray-200">
+                        <img
+                          src={artwork.image}
+                          alt={artwork.artist}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <CardContent className="p-3 sm:p-4">
+                        <h4 className="font-bold text-base sm:text-lg">
+                          {artwork.artist}
+                        </h4>
+                        <p className="text-gray-600 text-sm sm:text-base mt-1">
+                          {artwork.price}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Followed Artists Section */}
+          {showArtists && filteredArtists.length > 0 && (
+            <Card className="mb-6 sm:mb-8">
+              <CardContent className="p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-bold mb-4">
+                  Followed Artists
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                  {filteredArtists.map((artist, index) => (
+                    <Card
+                      key={index}
+                      className="p-3 sm:p-4 hover:shadow-lg transition-shadow"
+                    >
+                      <CardContent className="p-0 flex flex-row items-center gap-3 sm:gap-4">
+                        {/* Artist Image */}
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+                          <img
+                            src={artist.image}
+                            alt={artist.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+
+                        {/* Name + Followers */}
+                        <div className="flex flex-col min-w-0 flex-1">
+                          <h4 className="font-bold text-base sm:text-lg text-left truncate">
+                            {artist.name}
+                          </h4>
+                          <p className="text-gray-600 text-xs sm:text-sm text-left">
+                            {artist.followers}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Saved Collections Section */}
+          {showCollections && filteredCollections.length > 0 && (
+            <Card>
+              <CardContent className="p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-bold mb-4">
+                  Saved Collections
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  {filteredCollections.map((collection, index) => (
+                    <Card
+                      key={index}
+                      className="overflow-hidden hover:shadow-lg transition-shadow"
+                    >
+                      <CardContent className="p-3 sm:p-4">
+                        <h4 className="font-bold text-base sm:text-lg">
+                          {collection.name}
+                        </h4>
+                        <p className="text-gray-600 text-sm sm:text-base mt-1">
+                          {collection.count}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* No results message */}
+          {searchQuery &&
+            filteredArtworks.length === 0 &&
+            filteredArtists.length === 0 &&
+            filteredCollections.length === 0 && (
+              <div className="text-center py-6 sm:py-8">
+                <p className="text-gray-500 text-sm sm:text-base">
+                  No results found for "{searchQuery}"
+                </p>
+              </div>
+            )}
         </div>
       )}
     </div>
