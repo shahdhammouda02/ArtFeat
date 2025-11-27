@@ -4,6 +4,7 @@ import { Auth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Carousel,
   CarouselContent,
@@ -177,6 +178,15 @@ const ArtistDashboard = () => {
     collections: false,
   });
 
+  const [aboutData, setAboutData] = useState({
+    about:
+      "A professional copy of the brand, which is typically a product or type where it is not used to create a variety of products. Artists' Art and artistry, such as the traditional arts and a second of independent creative artists' art are the most challenging art experience.",
+    year: "2019",
+    totalArtworks: mockArtworks.length, // Dynamic count from artworks
+    styles: "Expressionism, classical, Digital, Saturation",
+    yearsOfExperience: "10",
+  });
+
   // local state to prevent redirect on initial load
   const [checkingAuth, setCheckingAuth] = useState(true);
 
@@ -323,6 +333,13 @@ const ArtistDashboard = () => {
   const showArtworks = activeFilters.artworks || activeFilters.all;
   const showArtists = activeFilters.artists || activeFilters.all;
   const showCollections = activeFilters.collections || activeFilters.all;
+
+  // Add this handler function
+  const handleSaveAbout = () => {
+    // In a real app, you would save to backend here
+    console.log("Saving about data:", aboutData);
+    alert("About information saved successfully!");
+  };
 
   if (checkingAuth || !user) {
     return (
@@ -573,7 +590,7 @@ const ArtistDashboard = () => {
 
       {/* Collection Search Section */}
       {activeNav === "Collections" && (
-        <div className="flex flex-col sm:flex-row w-full max-w-6xl gap-3 sm:gap-4 mt-6 sm:mt-8 border shadow-lg border-none p-4 sm:p-5 rounded-2xl sm:rounded-full items-center">
+        <div className="flex flex-col sm:flex-row w-full max-w-6xl gap-3 mt-1 sm:mt-3 sm:gap-4 border shadow-lg border-none p-4 sm:p-5 rounded-2xl sm:rounded-full items-center">
           {/* Collection Type Dropdown */}
           <div className="relative w-full sm:flex-initial sm:w-64 rounded-xl border border-gray-300">
             <select
@@ -598,7 +615,7 @@ const ArtistDashboard = () => {
             <div className="relative flex-1 w-full">
               <input
                 type="text"
-                placeholder="Search collections.."
+                placeholder="Search collection"
                 value={collectionSearchQuery}
                 onChange={(e) => setCollectionSearchQuery(e.target.value)}
                 className="w-full p-2 border border-sky-500 rounded-full sm:rounded-l-full focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent pr-10 sm:pr-12 text-sm sm:text-base"
@@ -755,7 +772,7 @@ const ArtistDashboard = () => {
 
       {/* Collection Cards - Carousel when more than 3, Grid when 3 or less */}
       {activeNav === "Collections" && (
-        <div className="w-full max-w-6xl mt-6 sm:mt-8 border p-4 sm:p-7 rounded-lg bg-white shadow-md border-none">
+        <div className="w-full max-w-6xl mt-10 sm:mt-12 border p-4 sm:p-7 rounded-lg bg-white shadow-md border-none">
           {collections.length === 0 ? (
             <div className="text-center py-8 sm:py-12">
               <p className="text-gray-500 text-base sm:text-lg">
@@ -1041,6 +1058,147 @@ const ArtistDashboard = () => {
                 </p>
               </div>
             )}
+        </div>
+      )}
+
+      {activeNav === "About" && (
+        <div className="w-full max-w-6xl mt-6 sm:mt-8 border p-4 sm:p-7 rounded-lg bg-white shadow-md border-none">
+          <div className="space-y-6">
+            {/* About Section */}
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-gray-900">
+                Artist Profile
+              </h2>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="about-description"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  About
+                </Label>
+                <Textarea
+                  id="about-description"
+                  value={aboutData.about}
+                  onChange={(e) =>
+                    setAboutData((prev) => ({
+                      ...prev,
+                      about: e.target.value,
+                    }))
+                  }
+                  className="min-h-[100px] resize-none border-gray-300 focus:border-sky-500 text-sm sm:text-base"
+                  placeholder="Enter your about description..."
+                />
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200 pt-4">
+              {/* Website Direct Print Section */}
+              <div className="mb-6">
+                <div className="grid grid-cols-1 gap-4">
+                  {" "}
+                  {/* changed here */}
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="member-year"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Member Since (Year)
+                    </Label>
+                    <Input
+                      id="member-year"
+                      value={aboutData.year}
+                      onChange={(e) =>
+                        setAboutData((prev) => ({
+                          ...prev,
+                          year: e.target.value,
+                        }))
+                      }
+                      className="border-gray-300 focus:border-sky-500 text-sm sm:text-base"
+                      placeholder="Enter year"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="total-artworks"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Total Artworks
+                    </Label>
+                    <Input
+                      id="total-artworks"
+                      value={aboutData.totalArtworks}
+                      onChange={(e) =>
+                        setAboutData((prev) => ({
+                          ...prev,
+                          totalArtworks: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      type="number"
+                      className="border-gray-300 focus:border-sky-500 text-sm sm:text-base"
+                      placeholder="Enter total artworks"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Style Section */}
+              <div>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="art-styles"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Style (comma separated)
+                    </Label>
+                    <Input
+                      id="art-styles"
+                      value={aboutData.styles}
+                      onChange={(e) =>
+                        setAboutData((prev) => ({
+                          ...prev,
+                          styles: e.target.value,
+                        }))
+                      }
+                      className="border-gray-300 focus:border-sky-500 text-sm sm:text-base"
+                      placeholder="Enter art styles (comma separated)"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="years-experience"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Years Of Experience
+                    </Label>
+                    <Input
+                      id="years-experience"
+                      value={aboutData.yearsOfExperience}
+                      onChange={(e) =>
+                        setAboutData((prev) => ({
+                          ...prev,
+                          yearsOfExperience: e.target.value,
+                        }))
+                      }
+                      className="border-gray-300 focus:border-sky-500 text-sm sm:text-base"
+                      placeholder="Enter years of experience"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Save Button */}
+            <div className="flex justify-end pt-4">
+              <Button
+                onClick={handleSaveAbout}
+                className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2"
+              >
+                Save
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>
