@@ -6,7 +6,18 @@ import {
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import { Heart, ShoppingCart, Globe, Bell, Menu, X, User, LogOut, Palette } from "lucide-react";
+import {
+  Heart,
+  ShoppingCart,
+  Globe,
+  Bell,
+  Menu,
+  X,
+  User,
+  LogOut,
+  Palette,
+  ChevronDown,
+} from "lucide-react";
 import logo from "@/assets/images/logo.jpeg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Auth } from "@/contexts/AuthContext";
@@ -20,7 +31,6 @@ const navItems = [
   "Who we are",
 ];
 
-// تعريف نوع الإشعار
 interface Notification {
   id: number;
   message: string;
@@ -49,13 +59,16 @@ const UserDropdown = ({ user, onLogout, onNavigate }: UserDropdownProps) => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleItemClick = (path: string) => {
@@ -88,17 +101,24 @@ const UserDropdown = ({ user, onLogout, onNavigate }: UserDropdownProps) => {
         )}
         <span className="text-sm font-medium text-gray-700">
           {user?.name}
-          {user?.type === 'artist' && (
+          {user?.type === "artist" && (
             <span className="text-xs text-green-600 ml-1">(Artist)</span>
           )}
         </span>
-        <svg 
-          className={`w-4 h-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          fill="none" 
-          stroke="currentColor" 
+        <svg
+          className={`w-4 h-4 text-gray-500 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+          fill="none"
+          stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </button>
 
@@ -107,28 +127,30 @@ const UserDropdown = ({ user, onLogout, onNavigate }: UserDropdownProps) => {
         <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
           {/* User Info */}
           <div className="px-4 py-3 border-b border-gray-100">
-            <p className="text-sm font-semibold text-gray-900 truncate">{user?.name}</p>
+            <p className="text-sm font-semibold text-gray-900 truncate">
+              {user?.name}
+            </p>
             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-            {user?.type === 'artist' && (
+            {user?.type === "artist" && (
               <span className="inline-block mt-1 px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
                 Artist Account
               </span>
             )}
           </div>
-          
+
           {/* Menu Items */}
           <div className="py-2">
             <button
-              onClick={() => handleItemClick('/profile')}
+              onClick={() => handleItemClick("/profile")}
               className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
             >
               <User className="w-4 h-4 mr-3" />
               Your Profile
             </button>
-            
-            {user?.type === 'artist' && (
+
+            {user?.type === "artist" && (
               <button
-                onClick={() => handleItemClick('/artist-dashboard')}
+                onClick={() => handleItemClick("/artist-dashboard")}
                 className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 <Palette className="w-4 h-4 mr-3" />
@@ -136,7 +158,7 @@ const UserDropdown = ({ user, onLogout, onNavigate }: UserDropdownProps) => {
               </button>
             )}
           </div>
-          
+
           {/* Footer */}
           <div className="border-t border-gray-100 pt-2">
             <button
@@ -214,6 +236,8 @@ const Navbar = () => {
     navigate(path);
   };
 
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // Add this line
+
   return (
     <nav
       className="w-full bg-white border-b border-gray-200 shadow-md sticky top-0 z-50"
@@ -264,12 +288,11 @@ const Navbar = () => {
         <div className="hidden lg:flex items-center space-x-3">
           {isAuthenticated ? (
             <div className="flex items-center space-x-3">
-              <UserDropdown 
-                user={user} 
+              <UserDropdown
+                user={user}
                 onLogout={handleLogout}
                 onNavigate={handleNavigate}
               />
-              
             </div>
           ) : (
             <>
@@ -300,21 +323,21 @@ const Navbar = () => {
 
           <button
             aria-label="Favorites"
-            className="text-gray-700 hover:text-red-600 flex items-center justify-center"
+            className="text-gray-700 hover:text-red-600 flex items-center justify-center hover:-translate-y-1 transition-transform duration-300 ease-in-out"
             type="button"
           >
             <Heart size={22} />
           </button>
           <button
             aria-label="Cart"
-            className="text-gray-700 hover:text-sky-600 flex items-center justify-center"
+            className="text-gray-700 hover:text-sky-600 flex items-center justify-center hover:-translate-y-1 transition-transform duration-300 ease-in-out"
             type="button"
           >
             <ShoppingCart size={22} />
           </button>
           <button
             aria-label="Language"
-            className="text-gray-700 hover:text-sky-600 flex items-center justify-center"
+            className="text-gray-700 hover:text-gray-600 flex items-center justify-center hover:-translate-y-1 transition-transform duration-300 ease-in-out"
             type="button"
           >
             <Globe size={22} />
@@ -324,7 +347,7 @@ const Navbar = () => {
           <div className="relative">
             <button
               aria-label="Notifications"
-              className="text-gray-700 hover:text-yellow-500 relative flex items-center justify-center"
+              className="text-gray-700 hover:text-yellow-500 relative flex items-center justify-center hover:-translate-y-1 transition-transform duration-300 ease-in-out"
               type="button"
               onClick={() => setNotificationOpen(!notificationOpen)}
             >
@@ -376,84 +399,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className="hidden sm:flex lg:hidden items-center space-x-4">
-          <button
-            aria-label="Favorites"
-            className="text-gray-700 hover:text-red-600 flex items-center justify-center"
-            type="button"
-          >
-            <Heart size={22} />
-          </button>
-          <button
-            aria-label="Cart"
-            className="text-gray-700 hover:text-sky-600 flex items-center justify-center"
-            type="button"
-          >
-            <ShoppingCart size={22} />
-          </button>
-          <button
-            aria-label="Language"
-            className="text-gray-700 hover:text-sky-600 flex items-center justify-center"
-            type="button"
-          >
-            <Globe size={22} />
-          </button>
-
-          {/* Notification Bell for Mobile (with dropdown) */}
-          <div className="relative">
-            <button
-              aria-label="Notifications"
-              className="text-gray-700 hover:text-yellow-500 relative flex items-center justify-center"
-              type="button"
-              onClick={() => setNotificationOpen(!notificationOpen)}
-            >
-              <Bell size={22} />
-              {notificationCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {notificationCount}
-                </span>
-              )}
-            </button>
-
-            {notificationOpen && (
-              <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                <div className="p-3 border-b border-gray-200 flex justify-between items-center">
-                  <h3 className="font-semibold text-gray-800">Notifications</h3>
-                  {notifications.length > 0 && (
-                    <button
-                      onClick={clearNotifications}
-                      className="text-xs text-sky-600 hover:text-sky-800"
-                    >
-                      Clear All
-                    </button>
-                  )}
-                </div>
-                <div className="max-h-80 overflow-y-auto">
-                  {notifications.length > 0 ? (
-                    notifications.map((notification) => (
-                      <div
-                        key={notification.id}
-                        className="p-3 border-b border-gray-100 hover:bg-gray-50"
-                      >
-                        <p className="text-sm text-gray-700">
-                          {notification.message}
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {new Date(notification.timestamp).toLocaleString()}
-                        </p>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="p-4 text-center text-gray-500">
-                      No notifications yet
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
         <button
           className="lg:hidden text-gray-700 hover:text-gray-900 focus:outline-none"
           onClick={() => setMenuOpen((prev) => !prev)}
@@ -469,12 +414,12 @@ const Navbar = () => {
       {menuOpen && (
         <div
           id="mobile-menu"
-          className="lg:hidden bg-white border-t border-gray-200 shadow-md flex flex-col items-center justify-center text-center"
+          className="lg:hidden bg-white border-t border-gray-200 shadow-md flex flex-col items-center text-center transition-all duration-300 ease-in-out"
           role="menu"
           aria-label="Mobile menu"
         >
           <NavigationMenu>
-            <NavigationMenuList className="flex flex-col items-center space-y-3 p-4">
+            <NavigationMenuList className="flex flex-col items-center space-y-4 p-4">
               {navItems.map((item) => (
                 <NavigationMenuItem
                   key={item}
@@ -499,33 +444,142 @@ const Navbar = () => {
             </NavigationMenuList>
           </NavigationMenu>
 
-          <div className="flex flex-col items-center px-4 pb-4 space-y-2 w-full">
-            <Button
-              variant="outline"
-              size="sm"
-              className="font-semibold w-full max-w-xs"
-              aria-label="Login"
-              onClick={() => {
-                setMenuOpen(false);
-                navigate("/signin");
-              }}
-            >
-              Login
-            </Button>
-            <Button
-              variant="default"
-              size="sm"
-              className="font-semibold w-full max-w-xs bg-sky-400 hover:bg-sky-400/90"
-              aria-label="Sign Up"
-              onClick={() => {
-                setMenuOpen(false);
-                navigate("/signup");
-              }}
-            >
-              Sign Up
-            </Button>
+          <div className="flex flex-col items-center px-4 pb-4 space-y-4 w-full">
+            {isAuthenticated ? (
+              <div className="w-full flex flex-col items-center mb-2 py-2 relative">
+                {/* User Info Trigger - Centered */}
+                <Button
+                  variant="outline"
+                  onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                  className="flex items-center justify-between w-full max-w-[200px] px-4 py-3 rounded-lg cursor-pointer p-7"
+                >
+                  <div className="flex items-center gap-3">
+                    {user?.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-sky-500 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
+                        {user?.name?.charAt(0).toUpperCase()}
+                      </div>
+                    )}
 
-            <div className="flex justify-center space-x-6 mt-2 sm:hidden">
+                    <div className="flex flex-col items-start">
+                      <span className="text-sm font-medium text-gray-700">
+                        {user?.name?.split(" ")[0]}
+                      </span>
+                      {user?.type === "artist" && (
+                        <span className="text-xs text-green-600">(Artist)</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Correct dropdown icon */}
+                  <ChevronDown
+                    size={16}
+                    className={`text-gray-500 transition-transform ${
+                      isUserDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </Button>
+
+                {/* Dropdown Menu - Below user info */}
+                {isUserDropdownOpen && (
+                  <div className="w-full max-w-[280px] mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-40">
+                    {/* User Info */}
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <p className="text-sm font-semibold text-gray-900 truncate">
+                        {user?.name}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {user?.email}
+                      </p>
+                      {user?.type === "artist" && (
+                        <span className="inline-block mt-1 px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+                          Artist Account
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Menu Items */}
+                    <div className="py-2">
+                      <button
+                        onClick={() => {
+                          handleNavigate("/profile");
+                          setMenuOpen(false);
+                          setIsUserDropdownOpen(false);
+                        }}
+                        className="flex items-center justify-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <User className="w-4 h-4 mr-3" />
+                        Your Profile
+                      </button>
+
+                      {user?.type === "artist" && (
+                        <button
+                          onClick={() => {
+                            handleNavigate("/artist-dashboard");
+                            setMenuOpen(false);
+                            setIsUserDropdownOpen(false);
+                          }}
+                          className="flex items-center justify-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        >
+                          <Palette className="w-4 h-4 mr-3" />
+                          Artist Dashboard
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Footer */}
+                    <div className="border-t border-gray-100 pt-2">
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setMenuOpen(false);
+                          setIsUserDropdownOpen(false);
+                        }}
+                        className="flex items-center justify-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-50 transition-colors"
+                      >
+                        <LogOut className="w-4 h-4 mr-3" />
+                        Sign out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col space-y-3 w-full max-w-xs">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="font-semibold w-full"
+                  aria-label="Login"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    navigate("/signin");
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="font-semibold w-full bg-sky-400 hover:bg-sky-400/90"
+                  aria-label="Sign Up"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    navigate("/signup");
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </div>
+            )}
+
+            {/* Icons Section - Always visible below dropdown */}
+            <div className="flex justify-center space-x-6 mt-4 pt-4 border-t border-gray-200 w-full">
               <button
                 aria-label="Favorites"
                 className="text-gray-700 hover:text-red-600 transition-transform duration-300 ease-in-out hover:-translate-y-1.5 flex items-center justify-center"
@@ -542,13 +596,13 @@ const Navbar = () => {
               </button>
               <button
                 aria-label="Language"
-                className="text-gray-700 hover:text-sky-600 transition-transform duration-300 ease-in-out hover:-translate-y-1.5 flex items-center justify-center"
+                className="text-gray-700 hover:text-gray-600 transition-transform duration-300 ease-in-out hover:-translate-y-1.5 flex items-center justify-center"
                 type="button"
               >
                 <Globe size={20} />
               </button>
 
-              {/* Notification Bell for Mobile (with dropdown) */}
+              {/* Notification Bell for Mobile */}
               <div className="relative">
                 <button
                   aria-label="Notifications"
