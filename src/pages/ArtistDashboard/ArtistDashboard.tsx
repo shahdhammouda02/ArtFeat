@@ -28,6 +28,7 @@ import {
   Mic,
   Edit,
   Album,
+  Calendar,
 } from "lucide-react";
 import { countries } from "@/data/countries";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -1196,6 +1197,113 @@ const ArtistDashboard = () => {
                 className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2"
               >
                 Save
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeNav === "Sales Withdrawal" && (
+        <div className="w-full max-w-6xl mt-6 sm:mt-8 bg-white">
+          {/* Earnings Summary */}
+          <div className="mb-5 border p-6 sm:p-8 rounded-lg shadow-md bg-white">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-900 text-center sm:text-left">
+              Earnings Summary
+            </h2>
+
+            <div className="space-y-4">
+              {/* Earnings Items - Stack on mobile, row on desktop */}
+              <div className="flex flex-col sm:flex-row justify-around items-center gap-4 sm:gap-0">
+                <div className="flex flex-col items-center w-full sm:w-auto text-center">
+                  <span className="text-sky-500 font-medium text-sm sm:text-base">
+                    Total Earnings
+                  </span>
+                  <span className="text-lg font-bold text-gray-900 mt-1">
+                    $15,850.00
+                  </span>
+                </div>
+
+                <div className="flex flex-col items-center w-full sm:w-auto text-center">
+                  <span className="text-sky-500 font-medium text-sm sm:text-base text-center">
+                    Available for Withdrawal
+                  </span>
+                  <span className="text-lg font-bold text-gray-900 mt-1">
+                    $5,350.00
+                  </span>
+                </div>
+
+                <div className="flex flex-col items-center w-full sm:w-auto text-center">
+                  <span className="text-sky-500 font-medium text-sm sm:text-base">
+                    Last Withdrawal
+                  </span>
+                  <span className="text-lg font-bold text-gray-900 mt-1">
+                    $1,500.00
+                  </span>
+                </div>
+              </div>
+
+              {/* Date Row - Right Aligned */}
+              <div className="flex justify-center sm:justify-end">
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Calendar size={16} />
+                  2023 11:15
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* New Withdrawal Request */}
+          <div className="border p-6 sm:p-8 rounded-lg shadow-md bg-white">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-900 text-center sm:text-left">
+              New Withdrawal Request
+            </h2>
+
+            <div className="space-y-6">
+              {/* Amount Input */}
+              <div>
+                <Label className="block text-sm font-medium text-gray-700 mb-2 text-center sm:text-left">
+                  Amount to withdraw
+                </Label>
+                <Input
+                  placeholder="Enter amount"
+                  className="w-full border-gray-300 focus:border-sky-500 text-center sm:text-left"
+                />
+              </div>
+
+              {/* Withdrawal Methods */}
+              <div>
+                <Label className="block text-sm font-medium text-gray-700 mb-3 text-center sm:text-left">
+                  Withdrawal Methods
+                </Label>
+                <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4 w-full">
+                  {["Visa", "PayPal", "Crypto"].map((method, index) => (
+                    <Button
+                      key={method}
+                      variant="outline"
+                      className={`
+              py-3 text-base font-medium w-full sm:flex-1
+              ${
+                index === 0
+                  ? "bg-sky-500 text-white hover:bg-sky-600 hover:text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }
+            `}
+                    >
+                      {method}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Note */}
+              <div className="text-sm text-red-500 bg-gray-50 p-4 rounded-lg text-center sm:text-left">
+                Note: Processing totally takes 24.48 business hours to review
+                the withdrawal Request
+              </div>
+
+              {/* Request Button */}
+              <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white py-3 text-base font-medium whitespace-normal break-words min-h-[50px] h-auto">
+                Request Withdrawal Item
               </Button>
             </div>
           </div>
