@@ -1338,26 +1338,15 @@ const ArtistDashboard = () => {
             {/* Tabs: Completed | Pending */}
             <Tabs defaultValue="completed" className="w-full">
               <TabsList className="grid grid-cols-2 w-full mb-6">
-                {/* Completed TAB */}
                 <TabsTrigger
                   value="completed"
-                  className="
-        data-[state=active]:bg-sky-500 
-        data-[state=active]:text-white 
-        bg-white text-black
-      "
+                  className="data-[state=active]:bg-sky-500 data-[state=active]:text-white bg-white text-black"
                 >
                   Completed
                 </TabsTrigger>
-
-                {/* Pending TAB */}
                 <TabsTrigger
                   value="pending"
-                  className="
-        data-[state=active]:bg-sky-500 
-        data-[state=active]:text-white 
-        bg-white text-black
-      "
+                  className="data-[state=active]:bg-sky-500 data-[state=active]:text-white bg-white text-black"
                 >
                   Pending
                 </TabsTrigger>
@@ -1365,8 +1354,9 @@ const ArtistDashboard = () => {
 
               {/* Completed Tab Content */}
               <TabsContent value="completed">
+                {/* Table scroll wrapper for small screens */}
                 <div className="overflow-x-auto">
-                  <Table>
+                  <Table className="min-w-[600px] sm:min-w-full">
                     <TableHeader>
                       <TableRow className="flex justify-around pt-3">
                         <TableHead className="flex-1 text-center">
@@ -1455,6 +1445,7 @@ const ArtistDashboard = () => {
                     </TableBody>
                   </Table>
                 </div>
+
                 <div className="w-full flex justify-start mt-4">
                   <Button variant="outline" className="flex items-center gap-2">
                     View All <ArrowRight className="w-4 h-4" />
@@ -1470,9 +1461,9 @@ const ArtistDashboard = () => {
               </TabsContent>
             </Tabs>
 
-            {/* CHART SECTION — SHADCN CHART */}
-            <div className="mt-10">
-              <Card className="p-6">
+            {/* CHART SECTION*/}
+            <div className="mt-10 overflow-x-auto">
+              <Card className="p-6 min-w-[600px] sm:min-w-full">
                 <div className="flex justify-between items-center mb-6">
                   <CardTitle className="text-lg font-semibold">
                     Sales and Withdrawals Chart
@@ -1490,23 +1481,21 @@ const ArtistDashboard = () => {
                   </Select>
                 </div>
 
-                <div className="flex flex-row space-x-4">
-                  {/* Y-axis */}
-                  <div className="flex flex-col justify-end space-y-3">
-                    {[0, 3000, 6000, 9000, 12000, 15000]
-                      .reverse()
-                      .map((value) => (
-                        <div
-                          key={value}
-                          className="text-sm text-gray-600 h-8 flex items-end"
-                        >
-                          {"$ " + value.toLocaleString()}
-                        </div>
-                      ))}
-                  </div>
+                <div className="overflow-x-auto lg:overflow-x-visible">
+                  <div className="flex flex-row items-end space-x-4 h-48">
+                    {/* Y-axis */}
+                    <div className="flex flex-col justify-between h-full">
+                      {[0, 3000, 6000, 9000, 12000, 15000]
+                        .reverse()
+                        .map((value) => (
+                          <div key={value} className="text-sm text-gray-600">
+                            {"$ " + value.toLocaleString()}
+                          </div>
+                        ))}
+                    </div>
 
-                  <div className="flex-1 flex flex-col">
-                    <div className="flex-1 flex items-end space-x-4 justify-between">
+                    {/* Chart Bars */}
+                    <div className="flex-1 flex items-end space-x-4 h-full">
                       {[
                         { month: "Jan", sales: 12000, withdrawals: 8000 },
                         { month: "Feb", sales: 9000, withdrawals: 6000 },
@@ -1520,22 +1509,22 @@ const ArtistDashboard = () => {
                         return (
                           <div
                             key={data.month}
-                            className="flex flex-col items-center flex-1"
+                            className="flex flex-col items-center flex-1 h-full"
                           >
-                            <div className="flex items-end justify-center space-x-1 h-48 w-full">
-                              {/* Sales Bar (Blue) */}
+                            <div className="flex items-end justify-center space-x-1 h-full w-full">
+                              {/* Sales Bar */}
                               <div
                                 className="w-6 bg-blue-500 rounded-t transition-all duration-300 hover:bg-blue-600 relative group"
                                 style={{
                                   height: `${(data.sales / maxValue) * 100}%`,
                                 }}
                               >
-                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">
                                   Sales: ${data.sales.toLocaleString()}
                                 </div>
                               </div>
 
-                              {/* Withdrawals Bar (Orange) */}
+                              {/* Withdrawals Bar */}
                               <div
                                 className="w-6 bg-orange-500 rounded-t transition-all duration-300 hover:bg-orange-600 relative group"
                                 style={{
@@ -1544,7 +1533,7 @@ const ArtistDashboard = () => {
                                   }%`,
                                 }}
                               >
-                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">
                                   Withdrawals: $
                                   {data.withdrawals.toLocaleString()}
                                 </div>
@@ -1560,18 +1549,20 @@ const ArtistDashboard = () => {
                       })}
                     </div>
                   </div>
-                </div>
 
-                {/* Chart Header - Centered */}
-                <div className="flex justify-center items-center mb-4 mt-4">
-                  <div className="flex gap-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">Sales</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">Withdrawals</span>
+                  {/* Chart Header */}
+                  <div className="flex justify-center items-center mb-4 mt-4">
+                    <div className="flex gap-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <span className="text-sm text-gray-600">Sales</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                        <span className="text-sm text-gray-600">
+                          Withdrawals
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
