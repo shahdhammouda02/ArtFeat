@@ -29,14 +29,35 @@ import {
   Edit,
   Album,
   Calendar,
+  CheckCircle,
+  Coins,
+  CreditCard,
+  Check,
+  ArrowRight,
 } from "lucide-react";
 import { countries } from "@/data/countries";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import image from "@/assets/images/art-gallery.jpeg";
 import artistFollower from "@/assets/images/artistPhoto.jpg";
 import savedArtwork from "@/assets/images/saved.jpg";
 import { Label } from "@/components/ui/label";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableBody,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectValue,
+  SelectItem,
+} from "@/components/ui/select";
 
 const navItems = [
   "Artworks",
@@ -1305,6 +1326,256 @@ const ArtistDashboard = () => {
               <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white py-3 text-base font-medium whitespace-normal break-words min-h-[50px] h-auto">
                 Request Withdrawal Item
               </Button>
+            </div>
+          </div>
+
+          {/* Withdrawal History + Chart Section */}
+          <div className="mt-10 border p-6 sm:p-8 rounded-lg shadow-md bg-white">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-900 text-center sm:text-left">
+              Withdrawal History
+            </h2>
+
+            {/* Tabs: Completed | Pending */}
+            <Tabs defaultValue="completed" className="w-full">
+              <TabsList className="grid grid-cols-2 w-full mb-6">
+                {/* Completed TAB */}
+                <TabsTrigger
+                  value="completed"
+                  className="
+        data-[state=active]:bg-sky-500 
+        data-[state=active]:text-white 
+        bg-white text-black
+      "
+                >
+                  Completed
+                </TabsTrigger>
+
+                {/* Pending TAB */}
+                <TabsTrigger
+                  value="pending"
+                  className="
+        data-[state=active]:bg-sky-500 
+        data-[state=active]:text-white 
+        bg-white text-black
+      "
+                >
+                  Pending
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Completed Tab Content */}
+              <TabsContent value="completed">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="flex justify-around pt-3">
+                        <TableHead className="flex-1 text-center">
+                          Date
+                        </TableHead>
+                        <TableHead className="flex-1 text-center">
+                          Amount
+                        </TableHead>
+                        <TableHead className="flex-1 text-center">
+                          Method
+                        </TableHead>
+                        <TableHead className="flex-1 text-center">
+                          Status
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+
+                    <TableBody>
+                      {[
+                        {
+                          date: "2023-11-15",
+                          amount: "$1,500.00",
+                          method: "Visa/Mastercard",
+                          status: "Completed",
+                        },
+                        {
+                          date: "2023-10-20",
+                          amount: "$800.00",
+                          method: "PayPal",
+                          status: "Completed",
+                        },
+                        {
+                          date: "2023-09-01",
+                          amount: "$2,000.00",
+                          method: "Crypto",
+                          status: "Completed",
+                        },
+                        {
+                          date: "2023-08-10",
+                          amount: "$900.00",
+                          method: "Visa/Mastercard",
+                          status: "Completed",
+                        },
+                        {
+                          date: "2023-07-25",
+                          amount: "$1,000.00",
+                          method: "PayPal",
+                          status: "Completed",
+                        },
+                      ].map((row, i) => (
+                        <TableRow key={i} className="flex justify-around">
+                          <TableCell className="flex-1 text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              <Calendar className="w-4 h-4 text-gray-500" />
+                              {row.date}
+                            </div>
+                          </TableCell>
+                          <TableCell className="flex-1 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                              <DollarSign className="w-4 h-4 text-gray-500" />
+                              {row.amount}
+                            </div>
+                          </TableCell>
+                          <TableCell className="flex-1 text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              {row.method === "PayPal" && (
+                                <Check className="w-4 h-4 text-green-500" />
+                              )}
+                              {row.method === "Visa/Mastercard" && (
+                                <CreditCard className="w-4 h-4 text-blue-500" />
+                              )}
+                              {row.method === "Crypto" && (
+                                <Coins className="w-4 h-4 text-yellow-500" />
+                              )}
+                              {row.method}
+                            </div>
+                          </TableCell>
+                          <TableCell className="flex-1 text-center">
+                            <div className="flex items-center justify-center gap-2 text-green-600 font-medium">
+                              <CheckCircle className="w-4 h-4" />
+                              {row.status}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                <div className="w-full flex justify-start mt-4">
+                  <Button variant="outline" className="flex items-center gap-2">
+                    View All <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </TabsContent>
+
+              {/* Pending Tab Content */}
+              <TabsContent value="pending">
+                <div className="text-center text-gray-500 py-10">
+                  No pending withdrawals
+                </div>
+              </TabsContent>
+            </Tabs>
+
+            {/* CHART SECTION — SHADCN CHART */}
+            <div className="mt-10">
+              <Card className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <CardTitle className="text-lg font-semibold">
+                    Sales and Withdrawals Chart
+                  </CardTitle>
+
+                  {/* Year Filter */}
+                  <Select>
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder="Filter with year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="last7days">Last 7 days</SelectItem>
+                      <SelectItem value="lastmonth">Last month</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex flex-row space-x-4">
+                  {/* Y-axis */}
+                  <div className="flex flex-col justify-end space-y-3">
+                    {[0, 3000, 6000, 9000, 12000, 15000]
+                      .reverse()
+                      .map((value) => (
+                        <div
+                          key={value}
+                          className="text-sm text-gray-600 h-8 flex items-end"
+                        >
+                          {"$ " + value.toLocaleString()}
+                        </div>
+                      ))}
+                  </div>
+
+                  <div className="flex-1 flex flex-col">
+                    <div className="flex-1 flex items-end space-x-4 justify-between">
+                      {[
+                        { month: "Jan", sales: 12000, withdrawals: 8000 },
+                        { month: "Feb", sales: 9000, withdrawals: 6000 },
+                        { month: "Mar", sales: 15000, withdrawals: 11000 },
+                        { month: "Apr", sales: 8000, withdrawals: 4000 },
+                        { month: "May", sales: 13000, withdrawals: 9000 },
+                        { month: "Jun", sales: 11000, withdrawals: 7000 },
+                        { month: "Jul", sales: 14000, withdrawals: 10000 },
+                      ].map((data) => {
+                        const maxValue = 15000;
+                        return (
+                          <div
+                            key={data.month}
+                            className="flex flex-col items-center flex-1"
+                          >
+                            <div className="flex items-end justify-center space-x-1 h-48 w-full">
+                              {/* Sales Bar (Blue) */}
+                              <div
+                                className="w-6 bg-blue-500 rounded-t transition-all duration-300 hover:bg-blue-600 relative group"
+                                style={{
+                                  height: `${(data.sales / maxValue) * 100}%`,
+                                }}
+                              >
+                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                  Sales: ${data.sales.toLocaleString()}
+                                </div>
+                              </div>
+
+                              {/* Withdrawals Bar (Orange) */}
+                              <div
+                                className="w-6 bg-orange-500 rounded-t transition-all duration-300 hover:bg-orange-600 relative group"
+                                style={{
+                                  height: `${
+                                    (data.withdrawals / maxValue) * 100
+                                  }%`,
+                                }}
+                              >
+                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                  Withdrawals: $
+                                  {data.withdrawals.toLocaleString()}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Month Label */}
+                            <div className="mt-2 text-sm text-gray-600 font-medium">
+                              {data.month}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Chart Header - Centered */}
+                <div className="flex justify-center items-center mb-4 mt-4">
+                  <div className="flex gap-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                      <span className="text-sm text-gray-600">Sales</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                      <span className="text-sm text-gray-600">Withdrawals</span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
             </div>
           </div>
         </div>
