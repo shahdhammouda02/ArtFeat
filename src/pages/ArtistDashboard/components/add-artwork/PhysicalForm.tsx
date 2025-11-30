@@ -11,11 +11,19 @@ import { useNavigate } from "react-router-dom";
 interface PhysicalFormProps {
   files: (File | null)[];
   previews: (string | null)[];
-  onFileChange: (index: number, event: React.ChangeEvent<HTMLInputElement>) => void;
+  onFileChange: (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => void;
   onBack: () => void;
 }
 
-const PhysicalForm = ({ files, previews, onFileChange, onBack }: PhysicalFormProps) => {
+const PhysicalForm = ({
+  files,
+  previews,
+  onFileChange,
+  onBack,
+}: PhysicalFormProps) => {
   const { addArtwork } = useArtwork();
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
@@ -37,40 +45,62 @@ const PhysicalForm = ({ files, previews, onFileChange, onBack }: PhysicalFormPro
     setShowPreview(true);
   };
 
-   const handlePublish = () => {
+  // Helper function to convert File to Base64
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handlePublish = async () => {
     if (!files[0]) {
-      alert('Please upload at least one image');
+      alert("Please upload at least one image");
       return;
     }
 
     if (!title || !price) {
-      alert('Please fill in required fields: Title and Price');
+      alert("Please fill in required fields: Title and Price");
       return;
     }
 
-    // Get the main image URL (first uploaded file)
-    const mainImageUrl = previews[0];
+    try {
+      // Convert files to base64 for persistence
+      const base64Images = await Promise.all(
+        files
+          .filter((file) => file !== null)
+          .map((file) => convertFileToBase64(file!))
+      );
 
-    const artworkData = {
-      type: 'physical' as ArtworkType,
-      title,
-      price: parseFloat(price) || 0,
-      image: mainImageUrl || '', // Use the first image as main thumbnail
-      data: {
+      // Get the main image URL (first uploaded file)
+      const mainImageUrl = base64Images[0];
+
+      const artworkData = {
+        type: "physical" as ArtworkType,
         title,
-        price,
-        tags,
-        quantity,
-        description,
-        materials,
-        dimensions: { length, width, depth },
-        weight,
-        images: validPreviews,
-      },
-    };
+        price: parseFloat(price) || 0,
+        image: mainImageUrl || "",
+        data: {
+          title,
+          price,
+          tags,
+          quantity,
+          description,
+          materials,
+          dimensions: { length, width, depth },
+          weight,
+          images: base64Images,
+        },
+      };
 
-    addArtwork(artworkData);
-    navigate('/artist-dashboard');
+      addArtwork(artworkData);
+      navigate("/artist-dashboard");
+    } catch (error) {
+      console.error("Error converting files to base64:", error);
+      alert("Error publishing artwork. Please try again.");
+    }
   };
 
   // Filter out null values and ensure we only have strings
@@ -133,9 +163,7 @@ const PhysicalForm = ({ files, previews, onFileChange, onBack }: PhysicalFormPro
             <div className="space-y-2 sm:space-y-3">
               <div>
                 <Label className="font-medium text-sm">Artwork Title</Label>
-                <p className="text-gray-700 mt-1">
-                  {title || "Not provided"}
-                </p>
+                <p className="text-gray-700 mt-1">{title || "Not provided"}</p>
               </div>
               <div>
                 <Label className="font-medium text-sm">Tags</Label>
@@ -250,9 +278,7 @@ const PhysicalForm = ({ files, previews, onFileChange, onBack }: PhysicalFormPro
       </h1>
 
       <div className="w-full border rounded-xl p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
-        <h2 className="text-lg font-semibold border-b pb-2">
-          Artwork Images
-        </h2>
+        <h2 className="text-lg font-semibold border-b pb-2">Artwork Images</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
           {files.map((file, index) => (
             <Label
@@ -295,9 +321,7 @@ const PhysicalForm = ({ files, previews, onFileChange, onBack }: PhysicalFormPro
       </div>
 
       <div className="w-full border rounded-xl p-4 sm:p-6 flex flex-col gap-3 sm:gap-4">
-        <h2 className="text-lg font-semibold mb-2 sm:mb-4">
-          Artwork Details
-        </h2>
+        <h2 className="text-lg font-semibold mb-2 sm:mb-4">Artwork Details</h2>
 
         <div className="flex flex-col gap-1">
           <Label className="text-sm font-medium">Title</Label>
@@ -442,11 +466,7 @@ const PhysicalForm = ({ files, previews, onFileChange, onBack }: PhysicalFormPro
 
       <div className="w-full flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
         {/* Left: Back Button */}
-        <Button
-          variant="outline"
-          className="sm:mt-0"
-          onClick={onBack}
-        >
+        <Button variant="outline" className="sm:mt-0" onClick={onBack}>
           Back
         </Button>
 

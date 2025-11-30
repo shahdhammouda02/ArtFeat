@@ -57,8 +57,7 @@ const DigitalForm = ({ onBack }: DigitalFormProps) => {
   };
 
   const digitalPreviews = useMemo(
-    () =>
-      digitalFiles.map((file) => (file ? URL.createObjectURL(file) : null)),
+    () => digitalFiles.map((file) => (file ? URL.createObjectURL(file) : null)),
     [digitalFiles]
   );
 
@@ -66,41 +65,63 @@ const DigitalForm = ({ onBack }: DigitalFormProps) => {
     setShowPreview(true);
   };
 
-   const handlePublish = () => {
+  // Helper function to convert File to Base64
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  // Mark this function as async
+  const handlePublish = async () => {
     if (!digitalFiles[0]) {
-      alert('Please upload at least the original artwork');
+      alert("Please upload at least the original artwork");
       return;
     }
 
     if (!title || !price) {
-      alert('Please fill in required fields: Title and Price');
+      alert("Please fill in required fields: Title and Price");
       return;
     }
 
-    // Get the main image URL (first uploaded file)
-    const mainImageUrl = digitalPreviews[0];
+    try {
+      // Convert files to base64 for persistence
+      const base64Images = await Promise.all(
+        digitalFiles
+          .filter((file) => file !== null)
+          .map((file) => convertFileToBase64(file!))
+      );
 
-    const artworkData = {
-      type: 'digital' as ArtworkType,
-      title,
-      price: parseFloat(price) || 0,
-      image: mainImageUrl || '', // Use the first image as main thumbnail
-      data: {
+      // Get the main image URL (first uploaded file)
+      const mainImageUrl = base64Images[0];
+
+      const artworkData = {
+        type: "digital" as ArtworkType,
         title,
-        price,
-        tags,
-        description,
-        additionalNotes,
-        images: validDigitalPreviews,
-        fileType,
-        dimensions,
-      },
-    };
+        price: parseFloat(price) || 0,
+        image: mainImageUrl || "", // Use the first image as main thumbnail
+        data: {
+          title,
+          price,
+          tags,
+          description,
+          additionalNotes,
+          images: base64Images,
+          fileType,
+          dimensions,
+        },
+      };
 
-    addArtwork(artworkData);
-    navigate('/artist-dashboard'); // This will refresh the dashboard
+      addArtwork(artworkData);
+      navigate("/artist-dashboard"); // This will refresh the dashboard
+    } catch (error) {
+      console.error("Error converting files to base64:", error);
+      alert("Error publishing artwork. Please try again.");
+    }
   };
-
 
   // Filter out null values and ensure we only have strings
   const validDigitalPreviews = digitalPreviews.filter(
@@ -152,9 +173,7 @@ const DigitalForm = ({ onBack }: DigitalFormProps) => {
             {/* Additional Images */}
             {digitalArtworkData.images.length > 2 && (
               <div>
-                <h4 className="font-medium text-gray-700 mb-2">
-                  View Artwork
-                </h4>
+                <h4 className="font-medium text-gray-700 mb-2">View Artwork</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   {digitalArtworkData.images.slice(2).map((image, index) => (
                     <img
@@ -175,9 +194,7 @@ const DigitalForm = ({ onBack }: DigitalFormProps) => {
             <div className="space-y-2 sm:space-y-3">
               <div>
                 <Label className="font-medium text-sm">Artwork Title</Label>
-                <p className="text-gray-700 mt-1">
-                  {title || "Not provided"}
-                </p>
+                <p className="text-gray-700 mt-1">{title || "Not provided"}</p>
               </div>
               <div>
                 <Label className="font-medium text-sm">Description</Label>
@@ -299,8 +316,7 @@ const DigitalForm = ({ onBack }: DigitalFormProps) => {
         <div className="flex flex-col gap-2 text-left">
           <h2 className="text-lg font-semibold">Upload Original Artwork</h2>
           <p className="text-sm text-gray-600">
-            Add the primary image for your digital artwork. Max file size:
-            33MB.
+            Add the primary image for your digital artwork. Max file size: 33MB.
           </p>
         </div>
 
@@ -341,9 +357,7 @@ const DigitalForm = ({ onBack }: DigitalFormProps) => {
 
       {/* Upload View Artwork Section */}
       <div className="w-full border rounded-xl p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
-        <h2 className="text-lg font-semibold text-left">
-          Upload View Artwork
-        </h2>
+        <h2 className="text-lg font-semibold text-left">Upload View Artwork</h2>
 
         <Label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 gap-3 cursor-pointer hover:border-sky-500 transition">
           {digitalPreviews[1] ? (
@@ -489,8 +503,7 @@ const DigitalForm = ({ onBack }: DigitalFormProps) => {
         <div className="flex flex-col gap-2 text-left">
           <h2 className="text-lg font-semibold">Additional Notes</h2>
           <p className="text-sm text-gray-600">
-            Any private notes for yourself or specific instructions for
-            buyers.
+            Any private notes for yourself or specific instructions for buyers.
           </p>
         </div>
 
@@ -508,11 +521,7 @@ const DigitalForm = ({ onBack }: DigitalFormProps) => {
 
       <div className="w-full flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
         {/* Left: Back Button */}
-        <Button
-          variant="outline"
-          className="sm:mt-0"
-          onClick={onBack}
-        >
+        <Button variant="outline" className="sm:mt-0" onClick={onBack}>
           Back
         </Button>
 
