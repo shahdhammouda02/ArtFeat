@@ -58,6 +58,7 @@ import {
   SelectValue,
   SelectItem,
 } from "@/components/ui/select";
+import { useArtwork } from "@/hooks/useArtwork";
 
 const navItems = [
   "Artworks",
@@ -69,6 +70,7 @@ const navItems = [
 const artworkSubItems = ["All Artworks", "Physical", "Digital"];
 const collectionSubItems = ["All Collections", "Recent", "Popular"];
 
+// Mock data for when there are no artworks
 const mockArtworks = [
   {
     id: 1,
@@ -179,10 +181,18 @@ const savedCollectionsData = [
   { name: "Classic Renaissance Portraits", count: "8 Artworks" },
   { name: "Contemporary Digital Art", count: "15 Artworks" },
 ];
+interface DisplayArtwork {
+  id: string;
+  title: string;
+  type: string;
+  price: number;
+  image: string;
+}
 
 const ArtistDashboard = () => {
   const { user, isAuthenticated } = Auth();
   const navigate = useNavigate();
+  const { artworks } = useArtwork(); // Get artworks from context
 
   const [activeNav, setActiveNav] = useState("Artworks");
   const [activeSubNav, setActiveSubNav] = useState("All Artworks");
@@ -190,7 +200,6 @@ const ArtistDashboard = () => {
     useState("All Collections");
   const [searchQuery, setSearchQuery] = useState("");
   const [collectionSearchQuery, setCollectionSearchQuery] = useState("");
-  const [artworks, setArtworks] = useState(mockArtworks);
   const [collections, setCollections] = useState(mockCollections);
 
   const [activeFilters, setActiveFilters] = useState({
@@ -200,11 +209,31 @@ const ArtistDashboard = () => {
     collections: false,
   });
 
+  // Convert context artworks to display format
+  const displayArtworks = useMemo((): DisplayArtwork[] => {
+    if (artworks.length > 0) {
+      return artworks.map((artwork) => ({
+        id: artwork.id,
+        title: artwork.title,
+        type: artwork.type === "physical" ? "Physical" : "Digital",
+        price: artwork.price,
+        image: artwork.image || image, // Use uploaded image or fallback
+      }));
+    }
+    return mockArtworks.map((artwork) => ({
+      ...artwork,
+      id: artwork.id.toString(),
+    })); // Fallback to mock data if no artworks
+  }, [artworks]);
+
+  const [filteredArtworks, setFilteredArtworks] =
+    useState<DisplayArtwork[]>(displayArtworks);
+
   const [aboutData, setAboutData] = useState({
     about:
       "A professional copy of the brand, which is typically a product or type where it is not used to create a variety of products. Artists' Art and artistry, such as the traditional arts and a second of independent creative artists' art are the most challenging art experience.",
     year: "2019",
-    totalArtworks: mockArtworks.length, // Dynamic count from artworks
+    totalArtworks: displayArtworks.length, // Dynamic count from artworks
     styles: "Expressionism, classical, Digital, Saturation",
     yearsOfExperience: "10",
   });
@@ -231,8 +260,21 @@ const ArtistDashboard = () => {
     }
   }, [user, isAuthenticated, navigate]);
 
+  // Update artworks when displayArtworks changes
   useEffect(() => {
-    let filtered = mockArtworks;
+    setFilteredArtworks(displayArtworks);
+  }, [displayArtworks]);
+
+  // Update total artworks count when displayArtworks changes
+  useEffect(() => {
+    setAboutData((prev) => ({
+      ...prev,
+      totalArtworks: displayArtworks.length,
+    }));
+  }, [displayArtworks.length]);
+
+  useEffect(() => {
+    let filtered = displayArtworks;
 
     // Filter by type
     if (activeSubNav !== "All Artworks") {
@@ -250,8 +292,8 @@ const ArtistDashboard = () => {
       );
     }
 
-    setArtworks(filtered);
-  }, [activeSubNav, searchQuery]);
+    setFilteredArtworks(filtered);
+  }, [activeSubNav, searchQuery, displayArtworks]);
 
   useEffect(() => {
     let filtered = mockCollections;
@@ -321,7 +363,7 @@ const ArtistDashboard = () => {
   };
 
   // Filter data based on active filters and search
-  const filteredArtworks = useMemo(() => {
+  const filteredFavoritesArtworks = useMemo(() => {
     if (!activeFilters.artworks && !activeFilters.all) return [];
 
     return savedArtworksData.filter(
@@ -662,16 +704,22 @@ const ArtistDashboard = () => {
       {/* Artwork Cards - Carousel when more than 4, Grid when 4 or less */}
       {activeNav === "Artworks" && (
         <div className="w-full max-w-6xl mt-6 sm:mt-8 border p-4 sm:p-7 rounded-lg bg-white shadow-md border-none">
-          {artworks.length === 0 ? (
+          {filteredArtworks.length === 0 ? (
             <div className="text-center py-8 sm:py-12">
               <p className="text-gray-500 text-base sm:text-lg">
                 No artworks found matching your criteria.
               </p>
+              <Button
+                className="mt-4 bg-sky-500 hover:bg-sky-600 text-white"
+                onClick={handleAddArtwork}
+              >
+                <Plus className="mr-2" /> Add Your First Artwork
+              </Button>
             </div>
-          ) : artworks.length <= 4 ? (
+          ) : filteredArtworks.length <= 4 ? (
             // Grid layout for 4 or fewer items
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {artworks.map((artwork) => (
+              {filteredArtworks.map((artwork) => (
                 <Card
                   key={artwork.id}
                   className="overflow-hidden hover:shadow-lg transition-shadow"
@@ -731,7 +779,7 @@ const ArtistDashboard = () => {
                 className="w-full"
               >
                 <CarouselContent>
-                  {artworks.map((artwork) => (
+                  {filteredArtworks.map((artwork) => (
                     <CarouselItem
                       key={artwork.id}
                       className="basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
@@ -967,14 +1015,14 @@ const ArtistDashboard = () => {
           </div>
 
           {/* Saved Artworks Section */}
-          {showArtworks && filteredArtworks.length > 0 && (
+          {showArtworks && filteredFavoritesArtworks.length > 0 && (
             <Card className="mb-6 sm:mb-8">
               <CardContent className="p-4 sm:p-6">
                 <h3 className="text-lg sm:text-xl font-bold mb-4">
                   Saved Artworks
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {filteredArtworks.map((artwork, index) => (
+                  {filteredFavoritesArtworks.map((artwork, index) => (
                     <Card
                       key={index}
                       className="overflow-hidden hover:shadow-lg transition-shadow"
@@ -1071,7 +1119,7 @@ const ArtistDashboard = () => {
 
           {/* No results message */}
           {searchQuery &&
-            filteredArtworks.length === 0 &&
+            filteredFavoritesArtworks.length === 0 &&
             filteredArtists.length === 0 &&
             filteredCollections.length === 0 && (
               <div className="text-center py-6 sm:py-8">

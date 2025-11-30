@@ -4,6 +4,9 @@ import { Minus, Plus, Ruler, Scale, Upload } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useArtwork } from "@/hooks/useArtwork";
+import type { ArtworkType } from "@/types/artwork-types";
+import { useNavigate } from "react-router-dom";
 
 interface PhysicalFormProps {
   files: (File | null)[];
@@ -13,6 +16,8 @@ interface PhysicalFormProps {
 }
 
 const PhysicalForm = ({ files, previews, onFileChange, onBack }: PhysicalFormProps) => {
+  const { addArtwork } = useArtwork();
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [tags, setTags] = useState("");
@@ -30,6 +35,42 @@ const PhysicalForm = ({ files, previews, onFileChange, onBack }: PhysicalFormPro
 
   const handleViewArtwork = () => {
     setShowPreview(true);
+  };
+
+   const handlePublish = () => {
+    if (!files[0]) {
+      alert('Please upload at least one image');
+      return;
+    }
+
+    if (!title || !price) {
+      alert('Please fill in required fields: Title and Price');
+      return;
+    }
+
+    // Get the main image URL (first uploaded file)
+    const mainImageUrl = previews[0];
+
+    const artworkData = {
+      type: 'physical' as ArtworkType,
+      title,
+      price: parseFloat(price) || 0,
+      image: mainImageUrl || '', // Use the first image as main thumbnail
+      data: {
+        title,
+        price,
+        tags,
+        quantity,
+        description,
+        materials,
+        dimensions: { length, width, depth },
+        weight,
+        images: validPreviews,
+      },
+    };
+
+    addArtwork(artworkData);
+    navigate('/artist-dashboard');
   };
 
   // Filter out null values and ensure we only have strings
@@ -190,6 +231,7 @@ const PhysicalForm = ({ files, previews, onFileChange, onBack }: PhysicalFormPro
               <Button
                 variant="default"
                 className="bg-sky-500 text-white hover:bg-sky-600 w-full sm:w-auto"
+                onClick={handlePublish}
               >
                 Publish Artwork
               </Button>
@@ -421,6 +463,7 @@ const PhysicalForm = ({ files, previews, onFileChange, onBack }: PhysicalFormPro
           <Button
             variant="default"
             className="bg-sky-500 text-white hover:bg-sky-600 w-full sm:w-auto"
+            onClick={handlePublish}
           >
             Publish Artwork
           </Button>

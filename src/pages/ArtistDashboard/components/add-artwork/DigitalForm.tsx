@@ -4,12 +4,17 @@ import { Upload, ImagePlus, Check } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
+import { useArtwork } from "@/hooks/useArtwork";
+import type { ArtworkType } from "./types";
 
 interface DigitalFormProps {
   onBack: () => void;
 }
 
 const DigitalForm = ({ onBack }: DigitalFormProps) => {
+  const { addArtwork } = useArtwork();
+  const navigate = useNavigate();
   const [digitalFiles, setDigitalFiles] = useState<(File | null)[]>(
     Array(5).fill(null)
   );
@@ -60,6 +65,42 @@ const DigitalForm = ({ onBack }: DigitalFormProps) => {
   const handleViewArtwork = () => {
     setShowPreview(true);
   };
+
+   const handlePublish = () => {
+    if (!digitalFiles[0]) {
+      alert('Please upload at least the original artwork');
+      return;
+    }
+
+    if (!title || !price) {
+      alert('Please fill in required fields: Title and Price');
+      return;
+    }
+
+    // Get the main image URL (first uploaded file)
+    const mainImageUrl = digitalPreviews[0];
+
+    const artworkData = {
+      type: 'digital' as ArtworkType,
+      title,
+      price: parseFloat(price) || 0,
+      image: mainImageUrl || '', // Use the first image as main thumbnail
+      data: {
+        title,
+        price,
+        tags,
+        description,
+        additionalNotes,
+        images: validDigitalPreviews,
+        fileType,
+        dimensions,
+      },
+    };
+
+    addArtwork(artworkData);
+    navigate('/artist-dashboard'); // This will refresh the dashboard
+  };
+
 
   // Filter out null values and ensure we only have strings
   const validDigitalPreviews = digitalPreviews.filter(
@@ -487,6 +528,7 @@ const DigitalForm = ({ onBack }: DigitalFormProps) => {
           <Button
             variant="default"
             className="bg-sky-500 text-white hover:bg-sky-600 w-full sm:w-auto"
+            onClick={handlePublish}
           >
             Publish Artwork
           </Button>
