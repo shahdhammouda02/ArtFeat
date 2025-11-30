@@ -277,6 +277,7 @@ const DigitalForm = ({ onBack }: DigitalFormProps) => {
               <Button
                 variant="default"
                 className="bg-sky-500 text-white hover:bg-sky-600 w-full sm:w-auto"
+                onClick={handlePublish}
               >
                 Submit Artwork
               </Button>

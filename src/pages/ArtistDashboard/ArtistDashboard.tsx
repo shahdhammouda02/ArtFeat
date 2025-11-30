@@ -71,92 +71,6 @@ const navItems = [
 const artworkSubItems = ["All Artworks", "Physical", "Digital"];
 const collectionSubItems = ["All Collections", "Recent", "Popular"];
 
-// Mock data for when there are no artworks
-const mockArtworks = [
-  {
-    id: 1,
-    title: "Digital Horizon",
-    type: "Digital",
-    price: 99,
-    image: image,
-  },
-  {
-    id: 2,
-    title: "Urban Echoes",
-    type: "Physical",
-    price: 450,
-    image: image,
-  },
-  {
-    id: 3,
-    title: "Abstract Flow",
-    type: "Digital",
-    price: 75,
-    image: image,
-  },
-  {
-    id: 4,
-    title: "Forest Whisper",
-    type: "Physical",
-    price: 280,
-    image: image,
-  },
-  {
-    id: 5,
-    title: "Digital Networks",
-    type: "Digital",
-    price: 120,
-    image: image,
-  },
-  {
-    id: 6,
-    title: "Mountain Dreams",
-    type: "Physical",
-    price: 350,
-    image: image,
-  },
-];
-
-// Mock collections data
-const mockCollections = [
-  {
-    id: 1,
-    title: "Abstract Series",
-    artworkCount: 8,
-    image: image,
-    description:
-      "A collection of abstract digital artworks exploring color and form.",
-  },
-  {
-    id: 2,
-    title: "Urban Landscapes",
-    artworkCount: 12,
-    image: image,
-    description: "Cityscapes and urban environments from around the world.",
-  },
-  {
-    id: 3,
-    title: "Nature Collection",
-    artworkCount: 15,
-    image: image,
-    description: "Inspired by the beauty of natural landscapes and wildlife.",
-  },
-  {
-    id: 4,
-    title: "Digital Dreams",
-    artworkCount: 6,
-    image: image,
-    description: "Futuristic and surreal digital art pieces.",
-  },
-  {
-    id: 5,
-    title: "Minimalist Works",
-    artworkCount: 10,
-    image: image,
-    description:
-      "Simple, clean, and minimalist art focusing on essential elements.",
-  },
-];
 const savedArtworksData = [
   { artist: "Maria Artista", price: "$1,200", image: savedArtwork },
   { artist: "John Painter", price: "$950", image: savedArtwork },
@@ -203,6 +117,8 @@ const ArtistDashboard = () => {
   const { artworks } = useArtwork(); // Get artworks from context
   const { collections } = useCollection(); // Get collections from context
 
+    const [isLoading, setIsLoading] = useState(true);
+
   const [activeNav, setActiveNav] = useState("Artworks");
   const [activeSubNav, setActiveSubNav] = useState("All Artworks");
   const [activeCollectionSubNav, setActiveCollectionSubNav] =
@@ -219,43 +135,30 @@ const ArtistDashboard = () => {
 
   // Convert context artworks to display format
   const displayArtworks = useMemo((): DisplayArtwork[] => {
-    if (artworks.length > 0) {
-      return artworks.map((artwork) => ({
-        id: artwork.id,
-        title: artwork.title,
-        type: artwork.type === "physical" ? "Physical" : "Digital",
-        price: artwork.price,
-        image: artwork.image || image, // Use uploaded image or fallback
-      }));
-    }
-    return mockArtworks.map((artwork) => ({
-      ...artwork,
-      id: artwork.id.toString(),
-    })); // Fallback to mock data if no artworks
+    return artworks.map((artwork) => ({
+      id: artwork.id,
+      title: artwork.title,
+      type: artwork.type === "physical" ? "Physical" : "Digital",
+      price: artwork.price,
+      image: artwork.image || image,
+    }));
   }, [artworks]);
 
-  const [filteredArtworks, setFilteredArtworks] =
-    useState<DisplayArtwork[]>(displayArtworks);
+  const [filteredArtworks, setFilteredArtworks] = useState<DisplayArtwork[]>(displayArtworks);
 
-  // Convert context collections to display format
+
+ // Convert context collections to display format
   const displayCollections = useMemo((): DisplayCollection[] => {
-    if (collections.length > 0) {
-      return collections.map((collection) => ({
-        id: collection.id,
-        title: collection.title,
-        artworkCount: collection.artworkCount,
-        image: collection.coverImage || image, // Use uploaded image or fallback
-        description: collection.description,
-      }));
-    }
-    return mockCollections.map((collection) => ({
-      ...collection,
-      id: collection.id.toString(), // Convert number to string
+    return collections.map((collection) => ({
+      id: collection.id,
+      title: collection.title,
+      artworkCount: collection.artworkCount,
+      image: collection.coverImage || image,
+      description: collection.description
     }));
   }, [collections]);
 
-  const [filteredCollections, setFilteredCollections] =
-    useState<DisplayCollection[]>(displayCollections);
+  const [filteredCollections, setFilteredCollections] = useState<DisplayCollection[]>(displayCollections);
 
   const [aboutData, setAboutData] = useState({
     about:
@@ -297,6 +200,14 @@ const ArtistDashboard = () => {
   useEffect(() => {
     setFilteredCollections(displayCollections);
   }, [displayCollections]);
+
+   // Set loading to false when data is loaded
+  useEffect(() => {
+    // Consider data loaded when we have either artworks/collections or have tried to load them
+    if (artworks !== undefined && collections !== undefined) {
+      setIsLoading(false);
+    }
+  }, [artworks, collections]);
 
   // Update total artworks count when displayArtworks changes
   useEffect(() => {
@@ -432,6 +343,14 @@ const ArtistDashboard = () => {
     return (
       <div className="w-full h-[80vh] flex items-center justify-center text-xl font-semibold">
         Loading profile...
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-[80vh] flex items-center justify-center text-xl font-semibold">
+        Loading your artworks and collections...
       </div>
     );
   }

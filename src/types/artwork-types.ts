@@ -32,7 +32,7 @@ export interface Artwork {
   type: ArtworkType;
   title: string;
   price: number;
-  image: string;
+  image: string | null;
   createdAt: Date;
   data: PhysicalArtworkData | DigitalArtworkData;
 }
