@@ -58,6 +58,8 @@ import {
   SelectValue,
   SelectItem,
 } from "@/components/ui/select";
+import { useArtwork } from "@/hooks/useArtwork";
+import { useCollection } from "@/hooks/useCollection";
 
 const navItems = [
   "Artworks",
@@ -69,91 +71,6 @@ const navItems = [
 const artworkSubItems = ["All Artworks", "Physical", "Digital"];
 const collectionSubItems = ["All Collections", "Recent", "Popular"];
 
-const mockArtworks = [
-  {
-    id: 1,
-    title: "Digital Horizon",
-    type: "Digital",
-    price: 99,
-    image: image,
-  },
-  {
-    id: 2,
-    title: "Urban Echoes",
-    type: "Physical",
-    price: 450,
-    image: image,
-  },
-  {
-    id: 3,
-    title: "Abstract Flow",
-    type: "Digital",
-    price: 75,
-    image: image,
-  },
-  {
-    id: 4,
-    title: "Forest Whisper",
-    type: "Physical",
-    price: 280,
-    image: image,
-  },
-  {
-    id: 5,
-    title: "Digital Networks",
-    type: "Digital",
-    price: 120,
-    image: image,
-  },
-  {
-    id: 6,
-    title: "Mountain Dreams",
-    type: "Physical",
-    price: 350,
-    image: image,
-  },
-];
-
-// Mock collections data
-const mockCollections = [
-  {
-    id: 1,
-    title: "Abstract Series",
-    artworkCount: 8,
-    image: image,
-    description:
-      "A collection of abstract digital artworks exploring color and form.",
-  },
-  {
-    id: 2,
-    title: "Urban Landscapes",
-    artworkCount: 12,
-    image: image,
-    description: "Cityscapes and urban environments from around the world.",
-  },
-  {
-    id: 3,
-    title: "Nature Collection",
-    artworkCount: 15,
-    image: image,
-    description: "Inspired by the beauty of natural landscapes and wildlife.",
-  },
-  {
-    id: 4,
-    title: "Digital Dreams",
-    artworkCount: 6,
-    image: image,
-    description: "Futuristic and surreal digital art pieces.",
-  },
-  {
-    id: 5,
-    title: "Minimalist Works",
-    artworkCount: 10,
-    image: image,
-    description:
-      "Simple, clean, and minimalist art focusing on essential elements.",
-  },
-];
 const savedArtworksData = [
   { artist: "Maria Artista", price: "$1,200", image: savedArtwork },
   { artist: "John Painter", price: "$950", image: savedArtwork },
@@ -179,10 +96,28 @@ const savedCollectionsData = [
   { name: "Classic Renaissance Portraits", count: "8 Artworks" },
   { name: "Contemporary Digital Art", count: "15 Artworks" },
 ];
+interface DisplayArtwork {
+  id: string;
+  title: string;
+  type: string;
+  price: number;
+  image: string;
+}
+interface DisplayCollection {
+  id: string;
+  title: string;
+  artworkCount: number;
+  image: string;
+  description: string;
+}
 
 const ArtistDashboard = () => {
   const { user, isAuthenticated } = Auth();
   const navigate = useNavigate();
+  const { artworks } = useArtwork(); // Get artworks from context
+  const { collections } = useCollection(); // Get collections from context
+
+    const [isLoading, setIsLoading] = useState(true);
 
   const [activeNav, setActiveNav] = useState("Artworks");
   const [activeSubNav, setActiveSubNav] = useState("All Artworks");
@@ -190,8 +125,6 @@ const ArtistDashboard = () => {
     useState("All Collections");
   const [searchQuery, setSearchQuery] = useState("");
   const [collectionSearchQuery, setCollectionSearchQuery] = useState("");
-  const [artworks, setArtworks] = useState(mockArtworks);
-  const [collections, setCollections] = useState(mockCollections);
 
   const [activeFilters, setActiveFilters] = useState({
     all: true,
@@ -200,11 +133,38 @@ const ArtistDashboard = () => {
     collections: false,
   });
 
+  // Convert context artworks to display format
+  const displayArtworks = useMemo((): DisplayArtwork[] => {
+    return artworks.map((artwork) => ({
+      id: artwork.id,
+      title: artwork.title,
+      type: artwork.type === "physical" ? "Physical" : "Digital",
+      price: artwork.price,
+      image: artwork.image || image,
+    }));
+  }, [artworks]);
+
+  const [filteredArtworks, setFilteredArtworks] = useState<DisplayArtwork[]>(displayArtworks);
+
+
+ // Convert context collections to display format
+  const displayCollections = useMemo((): DisplayCollection[] => {
+    return collections.map((collection) => ({
+      id: collection.id,
+      title: collection.title,
+      artworkCount: collection.artworkCount,
+      image: collection.coverImage || image,
+      description: collection.description
+    }));
+  }, [collections]);
+
+  const [filteredCollections, setFilteredCollections] = useState<DisplayCollection[]>(displayCollections);
+
   const [aboutData, setAboutData] = useState({
     about:
       "A professional copy of the brand, which is typically a product or type where it is not used to create a variety of products. Artists' Art and artistry, such as the traditional arts and a second of independent creative artists' art are the most challenging art experience.",
     year: "2019",
-    totalArtworks: mockArtworks.length, // Dynamic count from artworks
+    totalArtworks: displayArtworks.length, // Dynamic count from artworks
     styles: "Expressionism, classical, Digital, Saturation",
     yearsOfExperience: "10",
   });
@@ -231,8 +191,34 @@ const ArtistDashboard = () => {
     }
   }, [user, isAuthenticated, navigate]);
 
+  // Update artworks when displayArtworks changes
   useEffect(() => {
-    let filtered = mockArtworks;
+    setFilteredArtworks(displayArtworks);
+  }, [displayArtworks]);
+
+  // Update collections when displayCollections changes
+  useEffect(() => {
+    setFilteredCollections(displayCollections);
+  }, [displayCollections]);
+
+   // Set loading to false when data is loaded
+  useEffect(() => {
+    // Consider data loaded when we have either artworks/collections or have tried to load them
+    if (artworks !== undefined && collections !== undefined) {
+      setIsLoading(false);
+    }
+  }, [artworks, collections]);
+
+  // Update total artworks count when displayArtworks changes
+  useEffect(() => {
+    setAboutData((prev) => ({
+      ...prev,
+      totalArtworks: displayArtworks.length,
+    }));
+  }, [displayArtworks.length]);
+
+  useEffect(() => {
+    let filtered = displayArtworks;
 
     // Filter by type
     if (activeSubNav !== "All Artworks") {
@@ -250,19 +236,19 @@ const ArtistDashboard = () => {
       );
     }
 
-    setArtworks(filtered);
-  }, [activeSubNav, searchQuery]);
+    setFilteredArtworks(filtered);
+  }, [activeSubNav, searchQuery, displayArtworks]);
 
+  // Update the collections useEffect to use displayCollections
   useEffect(() => {
-    let filtered = mockCollections;
+    let filtered = displayCollections;
 
     // Filter by type
     if (activeCollectionSubNav !== "All Collections") {
-      // Demo filtering:
-      // - "Recent" sorts collections by most recent (higher id first)
-      // - "Popular" returns collections with a higher artworkCount
       if (activeCollectionSubNav === "Recent") {
-        filtered = [...filtered].sort((a, b) => b.id - a.id);
+        filtered = [...filtered].sort(
+          (a, b) => parseInt(b.id) - parseInt(a.id)
+        );
       } else if (activeCollectionSubNav === "Popular") {
         filtered = filtered.filter((c) => c.artworkCount >= 10);
       }
@@ -278,8 +264,8 @@ const ArtistDashboard = () => {
       );
     }
 
-    setCollections(filtered);
-  }, [activeCollectionSubNav, collectionSearchQuery]);
+    setFilteredCollections(filtered);
+  }, [activeCollectionSubNav, collectionSearchQuery, displayCollections]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -321,7 +307,7 @@ const ArtistDashboard = () => {
   };
 
   // Filter data based on active filters and search
-  const filteredArtworks = useMemo(() => {
+  const filteredFavoritesArtworks = useMemo(() => {
     if (!activeFilters.artworks && !activeFilters.all) return [];
 
     return savedArtworksData.filter(
@@ -341,16 +327,6 @@ const ArtistDashboard = () => {
     );
   }, [searchQuery, activeFilters]);
 
-  const filteredCollections = useMemo(() => {
-    if (!activeFilters.collections && !activeFilters.all) return [];
-
-    return savedCollectionsData.filter(
-      (collection) =>
-        collection.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        collection.count.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery, activeFilters]);
-
   // Determine what to show
   const showArtworks = activeFilters.artworks || activeFilters.all;
   const showArtists = activeFilters.artists || activeFilters.all;
@@ -367,6 +343,14 @@ const ArtistDashboard = () => {
     return (
       <div className="w-full h-[80vh] flex items-center justify-center text-xl font-semibold">
         Loading profile...
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-[80vh] flex items-center justify-center text-xl font-semibold">
+        Loading your artworks and collections...
       </div>
     );
   }
@@ -604,7 +588,7 @@ const ArtistDashboard = () => {
                 hover:bg-white hover:text-sky-600
               `}
             >
-              All Collections ({mockCollections.length})
+              All Collections ({displayCollections.length})
             </Button>
           </div>
         )}
@@ -662,16 +646,22 @@ const ArtistDashboard = () => {
       {/* Artwork Cards - Carousel when more than 4, Grid when 4 or less */}
       {activeNav === "Artworks" && (
         <div className="w-full max-w-6xl mt-6 sm:mt-8 border p-4 sm:p-7 rounded-lg bg-white shadow-md border-none">
-          {artworks.length === 0 ? (
+          {filteredArtworks.length === 0 ? (
             <div className="text-center py-8 sm:py-12">
               <p className="text-gray-500 text-base sm:text-lg">
                 No artworks found matching your criteria.
               </p>
+              <Button
+                className="mt-4 bg-sky-500 hover:bg-sky-600 text-white"
+                onClick={handleAddArtwork}
+              >
+                <Plus className="mr-2" /> Add Your First Artwork
+              </Button>
             </div>
-          ) : artworks.length <= 4 ? (
+          ) : filteredArtworks.length <= 4 ? (
             // Grid layout for 4 or fewer items
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {artworks.map((artwork) => (
+              {filteredArtworks.map((artwork) => (
                 <Card
                   key={artwork.id}
                   className="overflow-hidden hover:shadow-lg transition-shadow"
@@ -731,7 +721,7 @@ const ArtistDashboard = () => {
                 className="w-full"
               >
                 <CarouselContent>
-                  {artworks.map((artwork) => (
+                  {filteredArtworks.map((artwork) => (
                     <CarouselItem
                       key={artwork.id}
                       className="basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
@@ -795,16 +785,22 @@ const ArtistDashboard = () => {
       {/* Collection Cards - Carousel when more than 3, Grid when 3 or less */}
       {activeNav === "Collections" && (
         <div className="w-full max-w-6xl mt-10 sm:mt-12 border p-4 sm:p-7 rounded-lg bg-white shadow-md border-none">
-          {collections.length === 0 ? (
+          {filteredCollections.length === 0 ? (
             <div className="text-center py-8 sm:py-12">
               <p className="text-gray-500 text-base sm:text-lg">
                 No collections found matching your criteria.
               </p>
+              <Button
+                className="mt-4 bg-sky-500 hover:bg-sky-600 text-white"
+                onClick={handleAddCollection}
+              >
+                <Plus className="mr-2" /> Create Your First Collection
+              </Button>
             </div>
-          ) : collections.length <= 3 ? (
+          ) : filteredCollections.length <= 3 ? (
             // Grid layout for 3 or fewer items
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {collections.map((collection) => (
+              {filteredCollections.map((collection) => (
                 <Card
                   key={collection.id}
                   className="overflow-hidden hover:shadow-lg transition-shadow"
@@ -852,7 +848,7 @@ const ArtistDashboard = () => {
                 className="w-full"
               >
                 <CarouselContent>
-                  {collections.map((collection) => (
+                  {filteredCollections.map((collection) => (
                     <CarouselItem
                       key={collection.id}
                       className="basis-full sm:basis-1/2 lg:basis-1/3"
@@ -967,14 +963,14 @@ const ArtistDashboard = () => {
           </div>
 
           {/* Saved Artworks Section */}
-          {showArtworks && filteredArtworks.length > 0 && (
+          {showArtworks && filteredFavoritesArtworks.length > 0 && (
             <Card className="mb-6 sm:mb-8">
               <CardContent className="p-4 sm:p-6">
                 <h3 className="text-lg sm:text-xl font-bold mb-4">
                   Saved Artworks
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {filteredArtworks.map((artwork, index) => (
+                  {filteredFavoritesArtworks.map((artwork, index) => (
                     <Card
                       key={index}
                       className="overflow-hidden hover:shadow-lg transition-shadow"
@@ -1056,10 +1052,10 @@ const ArtistDashboard = () => {
                     >
                       <CardContent className="p-3 sm:p-4">
                         <h4 className="font-bold text-base sm:text-lg">
-                          {collection.name}
+                          {collection.title}
                         </h4>
                         <p className="text-gray-600 text-sm sm:text-base mt-1">
-                          {collection.count}
+                          {collection.artworkCount}
                         </p>
                       </CardContent>
                     </Card>
@@ -1071,7 +1067,7 @@ const ArtistDashboard = () => {
 
           {/* No results message */}
           {searchQuery &&
-            filteredArtworks.length === 0 &&
+            filteredFavoritesArtworks.length === 0 &&
             filteredArtists.length === 0 &&
             filteredCollections.length === 0 && (
               <div className="text-center py-6 sm:py-8">

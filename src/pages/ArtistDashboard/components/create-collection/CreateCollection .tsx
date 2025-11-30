@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -6,67 +6,35 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Upload, Edit, Trash2 } from "lucide-react";
 import { Auth } from "@/contexts/AuthContext";
+import { useCollection } from "@/hooks/useCollection";
+import { useArtwork } from "@/hooks/useArtwork";
+import { useNavigate } from "react-router-dom";
 
 const CreateCollection = () => {
   const { user } = Auth();
+  const { addCollection } = useCollection();
+  const { artworks } = useArtwork(); // Get real artworks from context
+  const navigate = useNavigate();
+  
   const [collectionTitle, setCollectionTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedArtworks, setSelectedArtworks] = useState<number[]>([]);
+  const [selectedArtworks, setSelectedArtworks] = useState<string[]>([]); // Changed to string IDs
   const [visibility, setVisibility] = useState<"public" | "private">("public");
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Mock data for artworks with actual image URLs
-  const mockArtworks = [
-    {
-      id: 1,
-      image:
-        "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=150&h=150&fit=crop",
-      title: "Celestial Dance",
-      artist: user?.name,
-      dateAdded: "2023.01.15",
-    },
-    {
-      id: 2,
-      image:
-        "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=150&h=150&fit=crop",
-      title: "Willspaning Woods",
-      artist: user?.name,
-      dateAdded: "2023.02.20",
-    },
-    {
-      id: 3,
-      image:
-        "https://images.unsplash.com/photo-1515405295579-ba7b45403062?w=150&h=150&fit=crop",
-      title: "Noon Metropolis",
-      artist: user?.name,
-      dateAdded: "2023.03.10",
-    },
-    {
-      id: 4,
-      image:
-        "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=150&h=150&fit=crop",
-      title: "Summit Saltitude",
-      artist: user?.name,
-      dateAdded: "2023.04.05",
-    },
-    {
-      id: 5,
-      image:
-        "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=150&h=150&fit=crop",
-      title: "Jungle Jambones",
-      artist: user?.name,
-      dateAdded: "2023.05.22",
-    },
-    {
-      id: 6,
-      image:
-        "https://images.unsplash.com/photo-1515405295579-ba7b45403062?w=150&h=150&fit=crop",
-      title: "Chromatic Symphony",
-      artist: user?.name,
-      dateAdded: "2023.06.18",
-    },
-  ];
+  // Use real artworks from context instead of mock data
+  const availableArtworks = useMemo(() => {
+    return artworks.map((artwork) => ({
+      id: artwork.id, // This is already a string
+      image: artwork.image || "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=150&h=150&fit=crop", // Fallback image
+      title: artwork.title,
+      artist: user?.name || "Unknown Artist",
+      dateAdded: artwork.createdAt 
+        ? new Date(artwork.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.')
+        : new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.'),
+    }));
+  }, [artworks, user?.name]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -85,13 +53,13 @@ const CreateCollection = () => {
 
   const toggleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedArtworks(mockArtworks.map((artwork) => artwork.id));
+      setSelectedArtworks(availableArtworks.map((artwork) => artwork.id));
     } else {
       setSelectedArtworks([]);
     }
   };
 
-  const toggleArtworkSelection = (artworkId: number) => {
+  const toggleArtworkSelection = (artworkId: string) => { // Updated to string
     setSelectedArtworks((prev) =>
       prev.includes(artworkId)
         ? prev.filter((id) => id !== artworkId)
@@ -99,7 +67,34 @@ const CreateCollection = () => {
     );
   };
 
-  const isAllSelected = selectedArtworks.length === mockArtworks.length;
+  const isAllSelected = selectedArtworks.length === availableArtworks.length && availableArtworks.length > 0;
+
+  // Add publish handler for collection
+  const handleCreateCollection = () => {
+    if (!collectionTitle.trim()) {
+      alert("Please enter a collection title");
+      return;
+    }
+
+    if (!description.trim()) {
+      alert("Please enter a collection description");
+      return;
+    }
+
+    const collectionData = {
+      title: collectionTitle,
+      description,
+      coverImage:
+        coverImage ||
+        "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&h=300&fit=crop", // Fallback image
+      visibility,
+      artworkCount: selectedArtworks.length,
+      artworks: selectedArtworks, // Already string IDs
+    };
+
+    addCollection(collectionData);
+    navigate("/artist-dashboard"); // Navigate back to dashboard
+  };
 
   return (
     <div className="min-h-screen bg-white py-4 sm:py-8 px-3 sm:px-6 lg:px-8">
@@ -237,7 +232,10 @@ const CreateCollection = () => {
 
             {/* Create Collection Button */}
             <div>
-              <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white py-3 sm:py-4 text-base sm:text-lg font-medium">
+              <Button
+                className="w-full bg-sky-500 hover:bg-sky-600 text-white py-3 sm:py-4 text-base sm:text-lg font-medium"
+                onClick={handleCreateCollection}
+              >
                 Create Collection
               </Button>
             </div>
@@ -248,110 +246,131 @@ const CreateCollection = () => {
             {/* Section Header */}
             <div className="p-4 sm:p-6 lg:p-8 border-b">
               <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
-                Add Artworks to {collectionTitle || "Digital Horizons"}
+                Add Artworks to {collectionTitle || "New Collection"}
               </h2>
+              {availableArtworks.length === 0 && (
+                <p className="text-sm text-gray-500 mt-2">
+                  No artworks available. Create some artworks first to add them to collections.
+                </p>
+              )}
             </div>
 
-            {/* Table Controls */}
-            <div className="p-3 sm:p-4 lg:p-6 border-b bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 w-full sm:w-auto">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="select-all"
-                    checked={isAllSelected}
-                    onCheckedChange={toggleSelectAll}
-                    className="w-4 h-4 sm:w-5 sm:h-5"
-                  />
-                  <Label
-                    htmlFor="select-all"
-                    className="text-sm sm:text-base font-medium"
-                  >
-                    Select all
-                  </Label>
+            {/* Table Controls - Only show if there are artworks */}
+            {availableArtworks.length > 0 && (
+              <div className="p-3 sm:p-4 lg:p-6 border-b bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 w-full sm:w-auto">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="select-all"
+                      checked={isAllSelected}
+                      onCheckedChange={toggleSelectAll}
+                      className="w-4 h-4 sm:w-5 sm:h-5"
+                    />
+                    <Label
+                      htmlFor="select-all"
+                      className="text-sm sm:text-base font-medium"
+                    >
+                      Select all
+                    </Label>
+                  </div>
+                  <Button className="bg-sky-500 hover:bg-sky-600 text-white text-sm sm:text-base px-4 sm:px-6 py-2 w-full sm:w-auto">
+                    Add Selected ({selectedArtworks.length})
+                  </Button>
                 </div>
-                <Button className="bg-sky-500 hover:bg-sky-600 text-white text-sm sm:text-base px-4 sm:px-6 py-2 w-full sm:w-auto">
-                  Add Selected ({selectedArtworks.length})
-                </Button>
               </div>
-            </div>
+            )}
 
             {/* Artworks Table */}
             <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b bg-gray-50">
-                    <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900 w-12 sm:w-16">
-                      Select
-                    </th>
-                    <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900 w-16 sm:w-24">
-                      Image
-                    </th>
-                    <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900">
-                      Title
-                    </th>
-                    <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900 hidden sm:table-cell">
-                      Artist
-                    </th>
-                    <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900 hidden sm:table-cell">
-                      Date Added
-                    </th>
-                    <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900 w-16 sm:w-24">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {mockArtworks.map((artwork) => (
-                    <tr key={artwork.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-3 sm:py-4 sm:px-6">
-                        <Checkbox
-                          checked={selectedArtworks.includes(artwork.id)}
-                          onCheckedChange={() =>
-                            toggleArtworkSelection(artwork.id)
-                          }
-                          className="w-4 h-4 sm:w-5 sm:h-5"
-                        />
-                      </td>
-                      <td className="py-3 px-3 sm:py-4 sm:px-6">
-                        <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center">
-                          <img
-                            src={artwork.image}
-                            alt={artwork.title}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </td>
-                      <td className="py-3 px-3 sm:py-4 sm:px-6 font-medium text-gray-900 text-sm sm:text-lg">
-                        {artwork.title}
-                      </td>
-                      <td className="py-3 px-3 sm:py-4 sm:px-6 text-gray-600 text-sm sm:text-lg hidden sm:table-cell">
-                        {artwork.artist}
-                      </td>
-                      <td className="py-3 px-3 sm:py-4 sm:px-6 text-gray-600 text-sm sm:text-lg hidden sm:table-cell">
-                        {artwork.dateAdded}
-                      </td>
-                      <td className="py-3 px-3 sm:py-4 sm:px-6">
-                        <div className="flex items-center gap-1 sm:gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 w-6 sm:h-8 sm:w-8 p-0 hover:bg-gray-100"
-                          >
-                            <Edit className="h-3 w-3 sm:h-4 sm:w-4 text-gray-700" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 w-6 sm:h-8 sm:w-8 p-0 hover:bg-red-600 bg-red-500"
-                          >
-                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
-                          </Button>
-                        </div>
-                      </td>
+              {availableArtworks.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 text-base mb-4">
+                    You haven't created any artworks yet.
+                  </p>
+                  <Button 
+                    className="bg-sky-500 hover:bg-sky-600 text-white"
+                    onClick={() => navigate("/artist-dashboard/add-artwork")}
+                  >
+                    Create Your First Artwork
+                  </Button>
+                </div>
+              ) : (
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b bg-gray-50">
+                      <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900 w-12 sm:w-16">
+                        Select
+                      </th>
+                      <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900 w-16 sm:w-24">
+                        Image
+                      </th>
+                      <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900">
+                        Title
+                      </th>
+                      <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900 hidden sm:table-cell">
+                        Artist
+                      </th>
+                      <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900 hidden sm:table-cell">
+                        Date Added
+                      </th>
+                      <th className="text-left py-3 px-3 sm:py-4 sm:px-6 font-semibold text-xs sm:text-base text-gray-900 w-16 sm:w-24">
+                        Actions
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {availableArtworks.map((artwork) => (
+                      <tr key={artwork.id} className="border-b hover:bg-gray-50">
+                        <td className="py-3 px-3 sm:py-4 sm:px-6">
+                          <Checkbox
+                            checked={selectedArtworks.includes(artwork.id)}
+                            onCheckedChange={() =>
+                              toggleArtworkSelection(artwork.id)
+                            }
+                            className="w-4 h-4 sm:w-5 sm:h-5"
+                          />
+                        </td>
+                        <td className="py-3 px-3 sm:py-4 sm:px-6">
+                          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center">
+                            <img
+                              src={artwork.image}
+                              alt={artwork.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        </td>
+                        <td className="py-3 px-3 sm:py-4 sm:px-6 font-medium text-gray-900 text-sm sm:text-lg">
+                          {artwork.title}
+                        </td>
+                        <td className="py-3 px-3 sm:py-4 sm:px-6 text-gray-600 text-sm sm:text-lg hidden sm:table-cell">
+                          {artwork.artist}
+                        </td>
+                        <td className="py-3 px-3 sm:py-4 sm:px-6 text-gray-600 text-sm sm:text-lg hidden sm:table-cell">
+                          {artwork.dateAdded}
+                        </td>
+                        <td className="py-3 px-3 sm:py-4 sm:px-6">
+                          <div className="flex items-center gap-1 sm:gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 sm:h-8 sm:w-8 p-0 hover:bg-gray-100"
+                            >
+                              <Edit className="h-3 w-3 sm:h-4 sm:w-4 text-gray-700" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 sm:h-8 sm:w-8 p-0 hover:bg-red-600 bg-red-500"
+                            >
+                              <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>
