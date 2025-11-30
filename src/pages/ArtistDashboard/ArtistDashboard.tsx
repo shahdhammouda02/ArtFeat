@@ -59,6 +59,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { useArtwork } from "@/hooks/useArtwork";
+import { useCollection } from "@/hooks/useCollection";
 
 const navItems = [
   "Artworks",
@@ -188,11 +189,19 @@ interface DisplayArtwork {
   price: number;
   image: string;
 }
+interface DisplayCollection {
+  id: string;
+  title: string;
+  artworkCount: number;
+  image: string;
+  description: string;
+}
 
 const ArtistDashboard = () => {
   const { user, isAuthenticated } = Auth();
   const navigate = useNavigate();
   const { artworks } = useArtwork(); // Get artworks from context
+  const { collections } = useCollection(); // Get collections from context
 
   const [activeNav, setActiveNav] = useState("Artworks");
   const [activeSubNav, setActiveSubNav] = useState("All Artworks");
@@ -200,7 +209,6 @@ const ArtistDashboard = () => {
     useState("All Collections");
   const [searchQuery, setSearchQuery] = useState("");
   const [collectionSearchQuery, setCollectionSearchQuery] = useState("");
-  const [collections, setCollections] = useState(mockCollections);
 
   const [activeFilters, setActiveFilters] = useState({
     all: true,
@@ -228,6 +236,26 @@ const ArtistDashboard = () => {
 
   const [filteredArtworks, setFilteredArtworks] =
     useState<DisplayArtwork[]>(displayArtworks);
+
+  // Convert context collections to display format
+  const displayCollections = useMemo((): DisplayCollection[] => {
+    if (collections.length > 0) {
+      return collections.map((collection) => ({
+        id: collection.id,
+        title: collection.title,
+        artworkCount: collection.artworkCount,
+        image: collection.coverImage || image, // Use uploaded image or fallback
+        description: collection.description,
+      }));
+    }
+    return mockCollections.map((collection) => ({
+      ...collection,
+      id: collection.id.toString(), // Convert number to string
+    }));
+  }, [collections]);
+
+  const [filteredCollections, setFilteredCollections] =
+    useState<DisplayCollection[]>(displayCollections);
 
   const [aboutData, setAboutData] = useState({
     about:
@@ -265,6 +293,11 @@ const ArtistDashboard = () => {
     setFilteredArtworks(displayArtworks);
   }, [displayArtworks]);
 
+  // Update collections when displayCollections changes
+  useEffect(() => {
+    setFilteredCollections(displayCollections);
+  }, [displayCollections]);
+
   // Update total artworks count when displayArtworks changes
   useEffect(() => {
     setAboutData((prev) => ({
@@ -295,16 +328,16 @@ const ArtistDashboard = () => {
     setFilteredArtworks(filtered);
   }, [activeSubNav, searchQuery, displayArtworks]);
 
+  // Update the collections useEffect to use displayCollections
   useEffect(() => {
-    let filtered = mockCollections;
+    let filtered = displayCollections;
 
     // Filter by type
     if (activeCollectionSubNav !== "All Collections") {
-      // Demo filtering:
-      // - "Recent" sorts collections by most recent (higher id first)
-      // - "Popular" returns collections with a higher artworkCount
       if (activeCollectionSubNav === "Recent") {
-        filtered = [...filtered].sort((a, b) => b.id - a.id);
+        filtered = [...filtered].sort(
+          (a, b) => parseInt(b.id) - parseInt(a.id)
+        );
       } else if (activeCollectionSubNav === "Popular") {
         filtered = filtered.filter((c) => c.artworkCount >= 10);
       }
@@ -320,8 +353,8 @@ const ArtistDashboard = () => {
       );
     }
 
-    setCollections(filtered);
-  }, [activeCollectionSubNav, collectionSearchQuery]);
+    setFilteredCollections(filtered);
+  }, [activeCollectionSubNav, collectionSearchQuery, displayCollections]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -380,16 +413,6 @@ const ArtistDashboard = () => {
       (artist) =>
         artist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         artist.followers.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery, activeFilters]);
-
-  const filteredCollections = useMemo(() => {
-    if (!activeFilters.collections && !activeFilters.all) return [];
-
-    return savedCollectionsData.filter(
-      (collection) =>
-        collection.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        collection.count.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery, activeFilters]);
 
@@ -646,7 +669,7 @@ const ArtistDashboard = () => {
                 hover:bg-white hover:text-sky-600
               `}
             >
-              All Collections ({mockCollections.length})
+              All Collections ({displayCollections.length})
             </Button>
           </div>
         )}
@@ -843,16 +866,22 @@ const ArtistDashboard = () => {
       {/* Collection Cards - Carousel when more than 3, Grid when 3 or less */}
       {activeNav === "Collections" && (
         <div className="w-full max-w-6xl mt-10 sm:mt-12 border p-4 sm:p-7 rounded-lg bg-white shadow-md border-none">
-          {collections.length === 0 ? (
+          {filteredCollections.length === 0 ? (
             <div className="text-center py-8 sm:py-12">
               <p className="text-gray-500 text-base sm:text-lg">
                 No collections found matching your criteria.
               </p>
+              <Button
+                className="mt-4 bg-sky-500 hover:bg-sky-600 text-white"
+                onClick={handleAddCollection}
+              >
+                <Plus className="mr-2" /> Create Your First Collection
+              </Button>
             </div>
-          ) : collections.length <= 3 ? (
+          ) : filteredCollections.length <= 3 ? (
             // Grid layout for 3 or fewer items
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {collections.map((collection) => (
+              {filteredCollections.map((collection) => (
                 <Card
                   key={collection.id}
                   className="overflow-hidden hover:shadow-lg transition-shadow"
@@ -900,7 +929,7 @@ const ArtistDashboard = () => {
                 className="w-full"
               >
                 <CarouselContent>
-                  {collections.map((collection) => (
+                  {filteredCollections.map((collection) => (
                     <CarouselItem
                       key={collection.id}
                       className="basis-full sm:basis-1/2 lg:basis-1/3"
@@ -1104,10 +1133,10 @@ const ArtistDashboard = () => {
                     >
                       <CardContent className="p-3 sm:p-4">
                         <h4 className="font-bold text-base sm:text-lg">
-                          {collection.name}
+                          {collection.title}
                         </h4>
                         <p className="text-gray-600 text-sm sm:text-base mt-1">
-                          {collection.count}
+                          {collection.artworkCount}
                         </p>
                       </CardContent>
                     </Card>

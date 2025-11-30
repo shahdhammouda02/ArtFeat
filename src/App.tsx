@@ -4,6 +4,7 @@ import { SubNav } from "@/components/layouts/SubNav";
 import { Outlet, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ArtworkProvider } from "@/contexts/ArtworkProvider";
+import { CollectionProvider } from "./contexts/CollectionProvider";
 
 const AppContent = () => {
   const location = useLocation();
@@ -25,7 +26,9 @@ const App = () => {
   return (
     <AuthProvider>
       <ArtworkProvider>
+        <CollectionProvider>
       <AppContent />
+        </CollectionProvider>
       </ArtworkProvider>
     </AuthProvider>
   );

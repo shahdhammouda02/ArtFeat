@@ -6,9 +6,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Upload, Edit, Trash2 } from "lucide-react";
 import { Auth } from "@/contexts/AuthContext";
+import { useCollection } from "@/hooks/useCollection";
+import { useNavigate } from "react-router-dom";
 
 const CreateCollection = () => {
   const { user } = Auth();
+  const { addCollection } = useCollection();
+  const navigate = useNavigate();
   const [collectionTitle, setCollectionTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedArtworks, setSelectedArtworks] = useState<number[]>([]);
@@ -100,6 +104,33 @@ const CreateCollection = () => {
   };
 
   const isAllSelected = selectedArtworks.length === mockArtworks.length;
+
+  // Add publish handler for collection
+  const handleCreateCollection = () => {
+    if (!collectionTitle.trim()) {
+      alert("Please enter a collection title");
+      return;
+    }
+
+    if (!description.trim()) {
+      alert("Please enter a collection description");
+      return;
+    }
+
+    const collectionData = {
+      title: collectionTitle,
+      description,
+      coverImage:
+        coverImage ||
+        "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&h=300&fit=crop", // Fallback image
+      visibility,
+      artworkCount: selectedArtworks.length,
+      artworks: selectedArtworks.map((id) => id.toString()), // Convert to string IDs
+    };
+
+    addCollection(collectionData);
+    navigate("/artist-dashboard"); // Navigate back to dashboard
+  };
 
   return (
     <div className="min-h-screen bg-white py-4 sm:py-8 px-3 sm:px-6 lg:px-8">
@@ -237,7 +268,10 @@ const CreateCollection = () => {
 
             {/* Create Collection Button */}
             <div>
-              <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white py-3 sm:py-4 text-base sm:text-lg font-medium">
+              <Button
+              className="w-full bg-sky-500 hover:bg-sky-600 text-white py-3 sm:py-4 text-base sm:text-lg font-medium"
+              onClick={handleCreateCollection}
+              >
                 Create Collection
               </Button>
             </div>
@@ -248,7 +282,7 @@ const CreateCollection = () => {
             {/* Section Header */}
             <div className="p-4 sm:p-6 lg:p-8 border-b">
               <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
-                Add Artworks to {collectionTitle || "Digital Horizons"}
+                Add Artworks to {collectionTitle || "New Collection"}
               </h2>
             </div>
 
