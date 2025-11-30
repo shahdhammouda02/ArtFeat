@@ -1,41 +1,12 @@
 import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Calendar, ChevronDown, ChevronUp, Filter,Search } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { ALL_EVENTS, TYPES } from "@/data/eventsData";
-import type { EventItem } from "@/types/eventTypes";
-
-const TAG_COLORS: Record<string, string> = {
-  Paintings: "bg-pink-200 text-pink-800",
-  "Abstract Art": "bg-purple-200 text-purple-800",
-  Sculpture: "bg-yellow-200 text-yellow-800",
-  Crafts: "bg-orange-200 text-orange-800",
-  Illustration: "bg-blue-200 text-blue-800",
-  "Nature Art": "bg-emerald-200 text-emerald-800",
-  Photography: "bg-orange-200 text-orange-800",
-};
+import { ALL_EVENTS } from "@/data/eventsData";
+import EventsFilter from "./EventsFilter";
+import EventsCards from "./EventsCards";
 
 export default function Section2() {
   const [type, setType] = useState<string>("All Types");
   const [searchTerm, setSearchTerm] = useState("");
   const [visible, setVisible] = useState(6);
-  const navigate = useNavigate();
 
   const filtered = useMemo(() => {
     return ALL_EVENTS.filter((e) => {
@@ -49,16 +20,10 @@ export default function Section2() {
     });
   }, [type, searchTerm]);
 
-  const toShow = filtered.slice(0, visible);
-
-  const handleShowMore = (event: EventItem) => {
-    if (event.status === "Ended" || event.status === "Upcoming") {
-      navigate(`/events/${event.id}`);
-    }
-  };
   return (
     <section id="art-events" className="py-12 sm:py-16 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* العنوان */}
         <div className="text-center mb-8 sm:mb-10">
           <h2 className="text-3xl sm:text-4xl font-bold">Art Events</h2>
           <p className="mt-2 text-md sm:text-md text-gray-600">
@@ -67,181 +32,29 @@ export default function Section2() {
           </p>
         </div>
 
-        {/* Filters */}
-        <div className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4 mb-8 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
-          <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="h-9 px-3 text-xs xs:text-sm w-full max-w-[280px] mx-auto sm:w-36 md:w-44 justify-between"
-                >
-                  <span className="inline-flex items-center gap-1 xs:gap-2">
-                    <Filter size={14} className="xs:size-4" />
-                    {type}
-                  </span>
-                  <ChevronDown size={14} className="xs:size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="start"
-                className="w-[280px] xs:w-36 md:w-44"
-              >
-                {TYPES.map((t) => (
-                  <DropdownMenuItem
-                    key={t}
-                    onClick={() => setType(t)}
-                    className="text-xs xs:text-sm"
-                  >
-                    {t}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Search Input */}
-            <div className="relative w-full max-w-[280px] mx-auto sm:max-w-[200px] md:max-w-[320px] xl:max-w-full">
-              <Search
-                size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 xs:size-4"
-              />
-              <Input
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search by Event Name, Category, or Tag"
-                className="pl-8 xs:pl-9 h-9 text-xs xs:text-sm w-full"
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-2 justify-center sm:justify-end">
-            <Button
-              variant="default"
-              onClick={() => setVisible(6)}
-              className="bg-sky-500 hover:bg-sky-500/90 text-xs xs:text-sm"
-            >
-              Apply Filters
-            </Button>
-            <Button
-              variant="outline"
-              className="text-xs xs:text-sm"
-              onClick={() => {
-                setType("All Types");
-                setSearchTerm("");
-                setVisible(6);
-              }}
-            >
-              Reset Filters
-            </Button>
-          </div>
+        {/* ✅ الفلاتر مع تقليل المسافة */}
+        <div className="mb-2">
+          <EventsFilter
+            type={type}
+            setType={setType}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            resetFilters={() => {
+              setType("All Types");
+              setSearchTerm("");
+              setVisible(6);
+            }}
+            applyFilters={() => setVisible(6)}
+          />
         </div>
 
-        {/* Cards */}
-        <div className={`
-          ${toShow.length === 1 ?
-            'flex justify-center' :
-            'grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-          }
-          ${toShow.length === 2 ? 'lg:justify-items-center lg:grid-cols-2' : ''}
-        `}>
-          {toShow.length === 0 ? (
-            <p className="text-center col-span-full text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-400 via-gray-500 to-gray-600 drop-shadow-sm">
-              No results found.
-            </p>
-          ) : (
-            toShow.map((e) => (
-              <Card
-                key={e.id}
-                className={`overflow-hidden transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1 hover:border-sky-100 ${
-                  toShow.length === 1 ? 'w-full max-w-sm' : ''
-                }`}
-              >
-                <div className="relative group">
-                   <img
-                    src={e.image}
-                    alt={e.title}
-                    className="w-full aspect-[16/8] sm:aspect-[4/2.5] object-cover transition-all duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <span
-                    className={`absolute top-3 right-3 text-white text-xs font-semibold px-2 py-1 rounded-xl ${
-                      e.status === "Upcoming" ? "bg-sky-500" : "bg-red-600"
-                    } transition-colors duration-300 group-hover:bg-opacity-90`}
-                  >
-                    {e.status}
-                  </span>
-                </div>
-
-                <CardHeader className="transition-colors duration-300 group-hover:bg-sky-50/50">
-                  <CardTitle className="group-hover:text-sky-600 transition-colors duration-200">
-                    {e.title}
-                  </CardTitle>
-                  <CardDescription className="flex items-center gap-2">
-                    <Calendar
-                      size={14}
-                      className="group-hover:text-sky-500 transition-colors duration-200"
-                    />
-                    <span className="group-hover:text-gray-700 transition-colors duration-200">
-                      {e.date}
-                    </span>
-                  </CardDescription>
-                </CardHeader>
-
-                <CardContent>
-                  <div className="mb-3 flex flex-wrap gap-2">
-                    {e.tags.map((t, i) => (
-                      <Badge
-                        key={i}
-                        className={` ${
-                          TAG_COLORS[t] || "bg-gray-200 text-gray-700"
-                        }`}
-                      >
-                        {t}
-                      </Badge>
-                    ))}
-                  </div>
-                  <p className="text-sm text-gray-600 leading-relaxed transition-colors duration-200 group-hover:text-gray-700">
-                    {e.excerpt}
-                  </p>
-                </CardContent>
-
-                <CardFooter className="transition-colors duration-300 group-hover:bg-sky-50/30">
-                  <Button
-                    variant="default"
-                    className="block w-full bg-sky-500 hover:bg-sky-600 transition-colors duration-200 shadow-sm group-hover:shadow-md group-hover:bg-sky-600"
-                    onClick={() => handleShowMore(e)}
-                  >
-                    {e.status === "Ended" ? "Show More" : "Show More"}
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))
-          )}
-        </div>
-
-        {/* Load More */}
-        <div className="mt-12 text-center flex flex-wrap justify-center gap-4">
-          {visible > 6 && (
-            <Button
-              variant="outline"
-              className="h-12 px-8 text-base inline-flex items-center gap-2 justify-center border-sky-500 text-sky-600 hover:bg-sky-50 hover:text-sky-700"
-              onClick={() => setVisible(6)}
-            >
-              View Less
-              <ChevronUp size={20} />
-            </Button>
-          )}
-
-          {visible < filtered.length && (
-            <Button
-              variant="outline"
-              className="h-12 px-8 text-base inline-flex items-center gap-2 justify-center border-sky-500 text-sky-600 hover:bg-sky-50 hover:text-sky-700"
-              onClick={() => setVisible((v) => v + 6)}
-            >
-              Load More Events
-              <ChevronDown size={20} />
-            </Button>
-          )}
+        {/* ✅ بطاقات الأحداث مع margin-top سالب لتقريبها للفلاتر */}
+        <div className="-mt-4">
+          <EventsCards
+            events={filtered}
+            visible={visible}
+            setVisible={setVisible}
+          />
         </div>
       </div>
     </section>
