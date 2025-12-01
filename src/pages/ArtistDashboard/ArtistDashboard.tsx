@@ -180,6 +180,10 @@ const ArtistDashboard = () => {
     navigate("create-collection");
   };
 
+  const handleEditProfile = () => {
+    navigate("edit-profile");
+  };
+
   useEffect(() => {
     if (user && isAuthenticated !== undefined) {
       // only navigate after user data is loaded
@@ -422,6 +426,7 @@ const ArtistDashboard = () => {
           <Button
             variant="outline"
             className="w-full sm:flex-1 text-sm sm:text-base py-2 h-auto"
+            onClick={handleEditProfile}
           >
             <Edit className="w-4 h-4 sm:w-5 sm:h-5" />
             Edit Profile

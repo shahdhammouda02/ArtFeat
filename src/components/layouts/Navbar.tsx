@@ -141,7 +141,7 @@ const UserDropdown = ({ user, onLogout, onNavigate }: UserDropdownProps) => {
           {/* Menu Items */}
           <div className="py-2">
             <button
-              onClick={() => handleItemClick("/profile")}
+              onClick={() => handleItemClick("/artist-dashboard/edit-profile")}
               className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
             >
               <User className="w-4 h-4 mr-3" />

@@ -17,6 +17,7 @@ import Details from "@/pages/Details/Details";
 import ArtistDashboard from "@/pages/ArtistDashboard/ArtistDashboard";
 import AddArtwork from "@/pages/ArtistDashboard/components/add-artwork/AddArtwork";
 import CreateCollection from "@/pages/ArtistDashboard/components/create-collection/CreateCollection ";
+import EditProfile from "@/pages/ArtistDashboard/components/edit-profile/EditProfile";
 
 
 export const routes: RouteObject[] = [
@@ -40,6 +41,7 @@ export const routes: RouteObject[] = [
       { path: "artist-dashboard", element: <ArtistDashboard /> },
       { path: "artist-dashboard/add-artwork", element: <AddArtwork /> },
       { path: "artist-dashboard/create-collection", element: <CreateCollection /> },
+      {path: "artist-dashboard/edit-profile", element: <EditProfile />},
 
    { path: "support-artist", element: <SupportArtist /> },
       { path: "artists", element: <Artists /> },
