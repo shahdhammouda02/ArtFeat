@@ -34,6 +34,12 @@ import {
   CreditCard,
   Check,
   ArrowRight,
+  Eye,
+  Clock,
+  Gavel,
+  TrendingUp,
+  Users as Bidders,
+  Trash,
 } from "lucide-react";
 import { countries } from "@/data/countries";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
@@ -60,6 +66,7 @@ import {
 } from "@/components/ui/select";
 import { useArtwork } from "@/hooks/useArtwork";
 import { useCollection } from "@/hooks/useCollection";
+import { useAuction } from "@/hooks/useAuctions";
 
 const navItems = [
   "Artworks",
@@ -67,6 +74,7 @@ const navItems = [
   "Favorites",
   "About",
   "Sales Withdrawal",
+  "Auctions",
 ];
 const artworkSubItems = ["All Artworks", "Physical", "Digital"];
 const collectionSubItems = ["All Collections", "Recent", "Popular"];
@@ -116,8 +124,16 @@ const ArtistDashboard = () => {
   const navigate = useNavigate();
   const { artworks } = useArtwork(); // Get artworks from context
   const { collections } = useCollection(); // Get collections from context
+  const { auctions: userAuctions, isLoading: auctionsLoading } = useAuction();
+  const [activeAuctionTab, setActiveAuctionTab] = useState<
+    "active" | "ended" | "all"
+  >("active");
 
-    const [isLoading, setIsLoading] = useState(true);
+  const isArtworkInAuction = (artworkId: string): boolean => {
+    return userAuctions.some((auction) => auction.artworkId === artworkId);
+  };
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const [activeNav, setActiveNav] = useState("Artworks");
   const [activeSubNav, setActiveSubNav] = useState("All Artworks");
@@ -144,21 +160,22 @@ const ArtistDashboard = () => {
     }));
   }, [artworks]);
 
-  const [filteredArtworks, setFilteredArtworks] = useState<DisplayArtwork[]>(displayArtworks);
+  const [filteredArtworks, setFilteredArtworks] =
+    useState<DisplayArtwork[]>(displayArtworks);
 
-
- // Convert context collections to display format
+  // Convert context collections to display format
   const displayCollections = useMemo((): DisplayCollection[] => {
     return collections.map((collection) => ({
       id: collection.id,
       title: collection.title,
       artworkCount: collection.artworkCount,
       image: collection.coverImage || image,
-      description: collection.description
+      description: collection.description,
     }));
   }, [collections]);
 
-  const [filteredCollections, setFilteredCollections] = useState<DisplayCollection[]>(displayCollections);
+  const [filteredCollections, setFilteredCollections] =
+    useState<DisplayCollection[]>(displayCollections);
 
   const [aboutData, setAboutData] = useState({
     about:
@@ -184,6 +201,14 @@ const ArtistDashboard = () => {
     navigate("edit-profile");
   };
 
+  const handleAddToAuction = (artworkId: string) => {
+    if (isArtworkInAuction(artworkId)) {
+      alert("This artwork is already in an auction!");
+      return;
+    }
+    navigate("add-to-auction", { state: { artworkId } });
+  };
+
   useEffect(() => {
     if (user && isAuthenticated !== undefined) {
       // only navigate after user data is loaded
@@ -205,7 +230,7 @@ const ArtistDashboard = () => {
     setFilteredCollections(displayCollections);
   }, [displayCollections]);
 
-   // Set loading to false when data is loaded
+  // Set loading to false when data is loaded
   useEffect(() => {
     // Consider data loaded when we have either artworks/collections or have tried to load them
     if (artworks !== undefined && collections !== undefined) {
@@ -435,7 +460,7 @@ const ArtistDashboard = () => {
       </div>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mt-4 sm:mt-6 max-w-6xl w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mt-4 sm:mt-6 max-w-6xl w-full">
         <div className="bg-white shadow-md p-3 sm:p-4 rounded-lg">
           <div className="flex items-center justify-between">
             <p className="text-xs sm:text-md text-sky-500 font-medium">
@@ -484,6 +509,31 @@ const ArtistDashboard = () => {
             <DollarSign size={20} className="sm:w-6 sm:h-6 text-gray-700" />
           </div>
           <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2">$143</p>
+        </div>
+
+        {/* Add Auction Stats */}
+        {/* <div className="bg-white shadow-md p-3 sm:p-4 rounded-lg">
+    <div className="flex items-center justify-between">
+      <p className="text-xs sm:text-md text-sky-500 font-medium">
+        Active Auctions
+      </p>
+      <Gavel size={20} className="sm:w-6 sm:h-6 text-gray-700" />
+    </div>
+    <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2">
+      {userAuctions.filter(a => a.status === 'active').length}
+    </p>
+  </div> */}
+
+        <div className="bg-white shadow-md p-3 sm:p-4 rounded-lg">
+          <div className="flex items-center justify-between">
+            <p className="text-xs sm:text-md text-sky-500 font-medium">
+              Total Auctions
+            </p>
+            <TrendingUp size={20} className="sm:w-6 sm:h-6 text-gray-700" />
+          </div>
+          <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2">
+            {userAuctions.length}
+          </p>
         </div>
       </div>
       {/* Navigation Buttons Section */}
@@ -704,12 +754,31 @@ const ArtistDashboard = () => {
                       ${artwork.price}
                     </p>
                   </CardContent>
-                  <CardFooter className="p-3 sm:p-4 pt-0">
+                  <CardFooter className="p-3 sm:p-4 pt-0 flex flex-col gap-3">
                     <Button
                       variant="outline"
-                      className="w-full text-sm sm:text-base py-2"
+                      className="w-full text-sm sm:text-base py-2 flex items-center gap-2"
                     >
+                      <Eye className="h-4 w-4" />
                       View Details
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className={`w-full text-sm sm:text-base py-2 flex items-center gap-2 `}
+                      onClick={handleAddToAuction.bind(null, artwork.id)}
+                      disabled={isArtworkInAuction(artwork.id)}
+                    >
+                      {isArtworkInAuction(artwork.id) ? (
+                        <>
+                          <Check className="h-4 w-4" />
+                          Added to Auction
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="h-4 w-4" />
+                          Add to Auction
+                        </>
+                      )}
                     </Button>
                   </CardFooter>
                 </Card>
@@ -1570,6 +1639,146 @@ const ArtistDashboard = () => {
               </Card>
             </div>
           </div>
+        </div>
+      )}
+
+      {activeNav === "Auctions" && (
+        <div className="w-full max-w-6xl mt-6 sm:mt-8">
+          {auctionsLoading ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">Loading auctions...</p>
+            </div>
+          ) : userAuctions.length === 0 ? (
+            <div className="text-center py-12 border rounded-lg bg-white shadow-md">
+              <Gavel className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                No Auctions Yet
+              </h3>
+              <p className="text-gray-600 mb-6">
+                You haven't created any auctions yet.
+              </p>
+              <Button
+                className="bg-sky-500 hover:bg-sky-600 text-white"
+                onClick={() => navigate("/artist-dashboard")}
+              >
+                <Plus className="mr-2" /> Add Artwork to Auction
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Tabs for Auction Status */}
+              <div className="flex space-x-2 border-b">
+                <button
+                  className={`px-4 py-2 font-medium ${
+                    activeAuctionTab === "active"
+                      ? "text-sky-500 border-b-2 border-sky-500"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setActiveAuctionTab("active")}
+                >
+                  Active (
+                  {userAuctions.filter((a) => a.status === "active").length})
+                </button>
+                <button
+                  className={`px-4 py-2 font-medium ${
+                    activeAuctionTab === "ended"
+                      ? "text-sky-500 border-b-2 border-sky-500"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setActiveAuctionTab("ended")}
+                >
+                  Ended (
+                  {userAuctions.filter((a) => a.status === "ended").length})
+                </button>
+              </div>
+
+              {/* Auctions Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {userAuctions
+                  .filter((auction) => {
+                    if (activeAuctionTab === "active")
+                      return auction.status === "active";
+                    if (activeAuctionTab === "ended")
+                      return auction.status === "ended";
+                    return true;
+                  })
+                  .map((auction) => (
+                    <Card
+                      key={auction.id}
+                      className="overflow-hidden hover:shadow-lg transition-shadow"
+                    >
+                      <div className="relative">
+                        <img
+                          src={auction.artworkImage}
+                          alt={auction.artworkTitle}
+                          className="w-full h-48 object-cover"
+                        />
+                        <Badge
+                          className={`absolute top-2 right-2 ${
+                            auction.status === "active"
+                              ? "bg-green-500"
+                              : auction.status === "ended"
+                              ? "bg-red-500"
+                              : "bg-yellow-500"
+                          }`}
+                        >
+                          {auction.status === "active" ? "Live" : "Ended"}
+                        </Badge>
+                      </div>
+
+                      <CardContent className="p-4">
+                        <h3 className="font-bold text-lg mb-2">
+                          {auction.artworkTitle}
+                        </h3>
+
+                        <div className="space-y-2 mb-4">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-600">
+                              Starting Price:
+                            </span>
+                            <span className="font-bold">
+                              ${auction.startingPrice.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-600">Current Bid:</span>
+                            <span className="font-bold text-green-600">
+                              ${auction.currentPrice.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-600">Duration:</span>
+                            <span>{auction.duration} days</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between text-sm text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <Clock size={14} />
+                            <span>Ends: {auction.endDate}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Bidders size={14} />
+                            <span>{auction.bids.length} bids</span>
+                          </div>
+                        </div>
+                      </CardContent>
+
+                      <CardFooter className="p-4 pt-0 flex gap-2">
+                        <Button variant="outline" className="flex-1">
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Details
+                        </Button>
+                        <Button variant="destructive" className="flex-1">
+                          <Trash className="h-4 w-4 mr-2" />
+                          Delete Auction
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

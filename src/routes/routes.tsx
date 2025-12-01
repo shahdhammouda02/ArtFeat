@@ -18,6 +18,7 @@ import ArtistDashboard from "@/pages/ArtistDashboard/ArtistDashboard";
 import AddArtwork from "@/pages/ArtistDashboard/components/add-artwork/AddArtwork";
 import CreateCollection from "@/pages/ArtistDashboard/components/create-collection/CreateCollection ";
 import EditProfile from "@/pages/ArtistDashboard/components/edit-profile/EditProfile";
+import AddToAuction from "@/pages/ArtistDashboard/components/add-to-auction/AddToAuction";
 
 
 export const routes: RouteObject[] = [
@@ -42,6 +43,7 @@ export const routes: RouteObject[] = [
       { path: "artist-dashboard/add-artwork", element: <AddArtwork /> },
       { path: "artist-dashboard/create-collection", element: <CreateCollection /> },
       {path: "artist-dashboard/edit-profile", element: <EditProfile />},
+      {path: "artist-dashboard/add-to-auction", element: <AddToAuction />},
 
    { path: "support-artist", element: <SupportArtist /> },
       { path: "artists", element: <Artists /> },
