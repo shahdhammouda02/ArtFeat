@@ -19,6 +19,7 @@ import AddArtwork from "@/pages/ArtistDashboard/components/add-artwork/AddArtwor
 import CreateCollection from "@/pages/ArtistDashboard/components/create-collection/CreateCollection ";
 import Gallery from "@/pages/Gallery/Gallery";
 import EditProfile from "@/pages/ArtistDashboard/components/edit-profile/EditProfile";
+import WhoWeAre from "@/pages/WhoWeAre/WhoWeAre";
 
 
 export const routes: RouteObject[] = [
@@ -50,7 +51,12 @@ export const routes: RouteObject[] = [
       { path: "all-artworks", element: <Artworks /> },
       { path: "artworks/:id", element: <Details /> },
       { path: "photography", element: <Photography /> },
+        { path: "printmaking", element: <Photography /> },
+          { path: "abstract-art", element: <Photography /> },
+            { path: "paintings", element: <Photography /> },
       { path: "gallery", element: <Gallery /> },
+      { path: "who-we-are", element: <WhoWeAre /> },
+
 
     ],
   },
