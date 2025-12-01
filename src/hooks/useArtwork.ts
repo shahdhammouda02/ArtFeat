@@ -7,5 +7,11 @@ export const useArtwork = (): ArtworkContextType => {
   if (context === undefined) {
     throw new Error('useArtwork must be used within an ArtworkProvider');
   }
-  return context;
+  return{
+    artworks: context.artworks,
+    addArtwork: context.addArtwork,
+    updateArtwork: context.updateArtwork,
+    deleteArtwork: context.deleteArtwork,
+    setArtworks: context.setArtworks
+  };
 };

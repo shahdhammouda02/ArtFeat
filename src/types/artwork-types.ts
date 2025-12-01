@@ -40,4 +40,7 @@ export interface Artwork {
 export interface ArtworkContextType {
   artworks: Artwork[];
   addArtwork: (artwork: Omit<Artwork, 'id' | 'createdAt'>) => void;
+updateArtwork: (id: string, updatedData: Partial<Artwork>) => void;
+  deleteArtwork: (id: string) => void;
+  setArtworks: React.Dispatch<React.SetStateAction<Artwork[]>>;
 }

@@ -31,7 +31,6 @@ export const ArtworkProvider: React.FC<ArtworkProviderProps> = ({ children }) =>
         console.log('Successfully loaded artworks:', artworksWithDates.length);
       } catch (error) {
         console.error('Error loading artworks from localStorage:', error);
-        // If there's an error, start with empty array
         setArtworks([]);
       }
     } else {
@@ -60,9 +59,26 @@ export const ArtworkProvider: React.FC<ArtworkProviderProps> = ({ children }) =>
     setArtworks(prev => [newArtwork, ...prev]);
   };
 
+  const updateArtwork = (id: string, updatedData: Partial<Artwork>) => {
+    console.log('Updating artwork:', id, updatedData);
+    setArtworks(prevArtworks =>
+      prevArtworks.map(artwork =>
+        artwork.id === id ? { ...artwork, ...updatedData } : artwork
+      )
+    );
+  };
+
+  const deleteArtwork = (id: string) => {
+    console.log('Deleting artwork:', id);
+    setArtworks(prevArtworks => prevArtworks.filter(artwork => artwork.id !== id));
+  };
+
   const contextValue: ArtworkContextType = {
     artworks,
     addArtwork,
+    updateArtwork,
+    deleteArtwork,
+    setArtworks,
   };
 
   return (
