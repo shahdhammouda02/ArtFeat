@@ -12,6 +12,7 @@ interface AuthContextType extends AuthState {
   signUp: (credentials: SignUpCredentials) => Promise<void>;
   artistSignUp: (credentials: ArtistSignUpCredentials) => Promise<void>;
   logout: () => void;
+  updateUserProfile: (updatedData: Partial<StoredUser>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -138,9 +139,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("currentUser");
   };
 
+  
+  const updateUserProfile = (updatedData: Partial<StoredUser>) => {
+  if (!authState.user) return;
+
+  const updatedUser = { ...authState.user, ...updatedData };
+  
+  setAuthState(prev => ({
+    ...prev,
+    user: updatedUser
+  }));
+
+  localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+
+  const users: StoredUser[] = JSON.parse(localStorage.getItem("users") || "[]");
+  const updatedUsers = users.map((u: StoredUser) => 
+    u.id === updatedUser.id ? { ...u, ...updatedData } : u
+  );
+  
+  localStorage.setItem("users", JSON.stringify(updatedUsers));
+};
+
   return (
     <AuthContext.Provider
-      value={{ ...authState, login, signUp, artistSignUp, logout }}
+      value={{ ...authState, login, signUp, artistSignUp, logout, updateUserProfile }}
     >
       {children}
     </AuthContext.Provider>
