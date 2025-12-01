@@ -758,6 +758,11 @@ const ArtistDashboard = () => {
                     <Button
                       variant="outline"
                       className="w-full text-sm sm:text-base py-2 flex items-center gap-2"
+                      onClick={() =>
+                        navigate(
+                          `/artist-dashboard/artwork-details/${artwork.id}`
+                        )
+                      }
                     >
                       <Eye className="h-4 w-4" />
                       View Details
@@ -785,7 +790,6 @@ const ArtistDashboard = () => {
               ))}
             </div>
           ) : (
-            // Carousel layout for more than 4 items using shadcn Carousel
             <div className="relative">
               <Carousel
                 opts={{

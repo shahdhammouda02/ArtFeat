@@ -1,5 +1,4 @@
 import type { RouteObject } from "react-router-dom";
-// import { Navigate } from "react-router-dom";
 import App from "@/App";
 import Home from "@/pages/Home/Home";
 import Events from "@/pages/Events/Events";
@@ -19,6 +18,7 @@ import AddArtwork from "@/pages/ArtistDashboard/components/add-artwork/AddArtwor
 import CreateCollection from "@/pages/ArtistDashboard/components/create-collection/CreateCollection ";
 import EditProfile from "@/pages/ArtistDashboard/components/edit-profile/EditProfile";
 import AddToAuction from "@/pages/ArtistDashboard/components/add-to-auction/AddToAuction";
+import ArtworkDetailsPage from "@/pages/ArtistDashboard/components/artwork-details/ArtworkDetailsPage";
 
 
 export const routes: RouteObject[] = [
@@ -26,7 +26,6 @@ export const routes: RouteObject[] = [
     path: "/",
     element: <App />,
     children: [
-      // { index: true, element: <Navigate to="/auctions" replace /> },
        { index: true, element: <Home /> },
       { path: "events", element: <Events /> },
       { path: "events/:id", element: <EventRouter /> },
@@ -44,6 +43,7 @@ export const routes: RouteObject[] = [
       { path: "artist-dashboard/create-collection", element: <CreateCollection /> },
       {path: "artist-dashboard/edit-profile", element: <EditProfile />},
       {path: "artist-dashboard/add-to-auction", element: <AddToAuction />},
+      {path: "artist-dashboard/artwork-details/:id", element: <ArtworkDetailsPage />},
 
    { path: "support-artist", element: <SupportArtist /> },
       { path: "artists", element: <Artists /> },
