@@ -2,8 +2,13 @@ import { ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
 import { ARTWORKS } from "@/data/artworks";
 import type { Artwork } from "@/types/artworks";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
-/** بطاقة عرض العمل */
+interface ArtworksGridProps {
+  compact?: boolean; // لو true معناها للـ Home
+}
+
 function Card({ item }: { item: Artwork }) {
   const navigate = useNavigate();
   const tagColor =
@@ -11,6 +16,8 @@ function Card({ item }: { item: Artwork }) {
       ? "bg-amber-500"
       : item.tag === "Photography"
       ? "bg-sky-500"
+      : item.tag === "Painting"
+      ? "bg-purple-600"
       : "bg-indigo-600";
 
   const openDetails = () => navigate(`/artworks/${item.id}`);
@@ -21,7 +28,11 @@ function Card({ item }: { item: Artwork }) {
       className="text-left rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden max-w-[330px] mx-auto cursor-pointer"
     >
       <div className="relative aspect-[4/3]">
-        <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
+        <img
+          src={item.image}
+          alt={item.title}
+          className="h-full w-full object-cover"
+        />
         <span
           className={`absolute left-3 top-3 px-3 py-1 text-xs font-medium text-white rounded-full ${tagColor}`}
         >
@@ -30,7 +41,9 @@ function Card({ item }: { item: Artwork }) {
       </div>
 
       <div className="p-4">
-        <p className="text-sky-600 text-sm font-medium hover:underline">{item.title}</p>
+        <p className="text-sky-600 text-sm font-medium hover:underline">
+          {item.title}
+        </p>
         <p className="text-slate-600 text-sm mt-1">
           by <span className="font-medium">{item.author}</span>
         </p>
@@ -51,56 +64,99 @@ function Card({ item }: { item: Artwork }) {
   );
 }
 
-/** شبكة عرض الأعمال */
-export default function ArtworksGrid() {
-  return (
-    <div className="flex-1 pr-6">
-      <div className="mb-8 text-left">
-        <h3 className="text-slate-700 text-lg font-medium mb-1">
-          {ARTWORKS.length} Artworks
-        </h3>
-      </div>
+export default function ArtworksGrid({ compact = false }: ArtworksGridProps) {
+  const navigate = useNavigate();
 
-      <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
-        {ARTWORKS.slice(0, 6).map((art) => (
+  // ✅ منطق عرض الصفحات للـ Artwork page فقط
+  const ITEMS_PER_PAGE = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(ARTWORKS.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedArtworks = ARTWORKS.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
+
+  // ✅ الأعمال اللي راح تظهر (لو compact نعرض 3 فقط)
+  const artworksToShow = compact ? ARTWORKS.slice(0, 3) : paginatedArtworks;
+
+  return (
+    <section className="bg-white py-24">
+      {/* ✅ العنوان */}
+      {!compact && (
+        <div className="mb-8 text-center">
+          <h2 className="text-4xl font-bold text-gray-900">All Artworks</h2>
+          <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+            Explore our curated collection of art pieces from talented artists.
+          </p>
+        </div>
+      )}
+
+      {/* ✅ الشبكة نفسها */}
+      <div className="grid gap-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
+        {artworksToShow.map((art) => (
           <Card key={art.id} item={art} />
         ))}
       </div>
 
-      <div className="mt-6 flex items-center justify-between flex-wrap gap-3">
-        <p className="text-sm text-sky-600 font-medium">
-          Show 1 to {ARTWORKS.length} of {ARTWORKS.length} results
-        </p>
-
-        <div className="flex items-center gap-1">
-          <button className="p-2 rounded-md hover:bg-slate-100" title="Prev">
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-
-          {[1, 2, 3, 4, 0, 10, 11].map((n, i) =>
-            n === 0 ? (
-              <span key={`dots-${i}`} className="px-2 text-slate-400 select-none">
-                …
-              </span>
-            ) : (
-              <button
-                key={`page-${n}`}
-                className={`h-8 w-8 rounded-md text-sm ${
-                  n === 2
-                    ? "bg-sky-500 text-white"
-                    : "text-slate-700 hover:bg-slate-100"
-                }`}
-              >
-                {n}
-              </button>
-            )
-          )}
-
-          <button className="p-2 rounded-md hover:bg-slate-100" title="Next">
-            <ChevronRight className="h-5 w-5" />
-          </button>
+      {/* ✅ القسم الخاص بالـ Home فقط */}
+      {compact && (
+        <div className="py-10 text-center">
+          <Button
+            onClick={() => navigate("/all-artworks")}
+            className="bg-sky-500 hover:bg-sky-600 text-white px-8 py-3 rounded-md font-medium transition"
+          >
+            View All Artworks
+          </Button>
         </div>
-      </div>
-    </div>
+      )}
+
+      {/* ✅ القسم الخاص بصفحة All Artworks فقط */}
+      {!compact && (
+        <>
+          <div className="mt-12 flex items-center justify-between flex-wrap gap-3">
+            <p className="text-sm text-sky-600 font-medium">
+              Showing {startIndex + 1}–
+              {Math.min(startIndex + ITEMS_PER_PAGE, ARTWORKS.length)} of{" "}
+              {ARTWORKS.length} results
+            </p>
+
+            <div className="flex items-center gap-1">
+              <button
+                className="p-2 rounded-md hover:bg-slate-100 disabled:opacity-40"
+                title="Prev"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => p - 1)}
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`h-8 w-8 rounded-md text-sm ${
+                    currentPage === i + 1
+                      ? "bg-sky-500 text-white"
+                      : "text-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                className="p-2 rounded-md hover:bg-slate-100 disabled:opacity-40"
+                title="Next"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => p + 1)}
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </section>
   );
 }

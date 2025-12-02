@@ -19,7 +19,7 @@ const PartnersSection: React.FC = () => {
   ];
 
   return (
-    <section className="bg-white py-20 px-6 md:px-16">
+    <section className="bg-white py-20 px-6 md:px-16 overflow-hidden">
       <div className="max-w-6xl mx-auto text-center">
         {/* العنوان */}
         <h3 className="text-sm uppercase tracking-widest text-blue-600 font-semibold mb-3">
@@ -32,17 +32,20 @@ const PartnersSection: React.FC = () => {
           Proudly partnering with visionary companies to bring art to the world.
         </p>
 
-        {/* الأيقونات */}
-        <div className="flex flex-wrap justify-center items-center gap-14 md:gap-20">
-          {partners.map((partner, index) => (
-            <div
-              key={index}
-              className="text-[#111111] hover:text-[#555555] transition-all duration-300 transform hover:scale-105 cursor-pointer"
-            >
-              {React.cloneElement(partner.icon, { size: 55 })}
-              <span className="sr-only">{partner.name}</span>
-            </div>
-          ))}
+        {/* ✅ الأيقونات المتحركة */}
+        <div className="relative w-full overflow-hidden">
+          {/* السطر المتحرك */}
+          <div className="flex whitespace-nowrap animate-scroll-right-to-left">
+            {[...partners, ...partners].map((partner, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 mx-10 text-[#111111] hover:text-[#555555] transition-all duration-300 transform hover:scale-110 cursor-pointer"
+              >
+                {React.cloneElement(partner.icon, { size: 55 })}
+                <span className="sr-only">{partner.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

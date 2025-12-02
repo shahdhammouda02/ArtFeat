@@ -10,8 +10,8 @@ export default function Home() {
   return (
     <div>
     <Hero/>
-    <EventsCards/>
-    <ArtworksGrid />
+    <EventsCards compact />
+    <ArtworksGrid compact/>
     <FeaturedArtist/>
     <TeamSection/>
   <PartnersSection/>
