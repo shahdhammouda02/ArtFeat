@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-/** مكوّن القسم القابل للطي */
 function CollapsibleSection({
   title,
   defaultOpen = true,
@@ -41,62 +40,70 @@ function CollapsibleSection({
   );
 }
 
-/** الفلاتر الجانبية */
-export default function FilterSidebar() {
+/** ✅ الفلاتر الجانبية */
+export default function FilterSidebar({
+  filters,
+  setFilters,
+}: {
+  filters: { artists: string[]; categories: string[] };
+  setFilters: React.Dispatch<
+    React.SetStateAction<{ artists: string[]; categories: string[] }>
+  >;
+}) {
+  const artists = ["A.R. Penick", "Alex Katz", "Alison Jackson", "Bernard Venet", "Bryan Adams"];
+  const categories = ["Painting", "Sculpture", "Photography", "Print", "Video Media"];
+
+  const toggleFilter = (type: "artists" | "categories", value: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      [type]: prev[type].includes(value)
+        ? prev[type].filter((v) => v !== value)
+        : [...prev[type], value],
+    }));
+  };
+
   return (
-    <aside className="w-full lg:w-64 shrink-0 border border-slate-200 rounded-xl p-4 bg-slate-100">
+    <aside className="w-full shrink-0 p-4 bg-slate-50">
       <h3 className="text-lg font-semibold mb-2">Filters</h3>
 
-      {/* 🔹 Artist */}
+      {/* 🎨 Artist */}
       <CollapsibleSection title="Artist" defaultOpen>
         <ul className="space-y-2 text-sm">
-          {[
-            "A.R. Penick",
-            "Alex Katz",
-            "Alison Jackson",
-            "Bernard Venet",
-            "Bryan Adams",
-          ].map((artist) => (
+          {artists.map((artist) => (
             <li key={artist} className="flex items-center gap-2">
-              <input type="checkbox" className="h-4 w-4 rounded border-slate-300" />
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-slate-300"
+                checked={filters.artists.includes(artist)}
+                onChange={() => toggleFilter("artists", artist)}
+              />
               <span>{artist}</span>
             </li>
           ))}
         </ul>
-        <button className="text-sky-600 text-xs mt-2">Show More (3 items)</button>
       </CollapsibleSection>
 
-      {/* 🔹 Category */}
-      <CollapsibleSection title="Category" className="mt-2" defaultOpen>
+      {/* 🖌 Category */}
+      <CollapsibleSection title="Category" defaultOpen className="mt-2">
         <ul className="space-y-2 text-sm">
-          {["Painting", "Sculpture", "Photography", "Print", "Video Media"].map(
-            (cat) => (
-              <li key={cat} className="flex items-center gap-2">
-                <input type="checkbox" className="h-4 w-4 rounded border-slate-300" />
-                <span>{cat}</span>
-              </li>
-            )
-          )}
+          {categories.map((cat) => (
+            <li key={cat} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-slate-300"
+                checked={filters.categories.includes(cat)}
+                onChange={() => toggleFilter("categories", cat)}
+              />
+              <span>{cat}</span>
+            </li>
+          ))}
         </ul>
       </CollapsibleSection>
 
-      {/* 🔹 Price */}
-      <CollapsibleSection title="Price" className="mt-2" defaultOpen>
-        <div className="flex items-center gap-3">
-          <input
-            placeholder="Min"
-            className="w-1/2 rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-sky-500"
-          />
-          <span className="text-slate-400">—</span>
-          <input
-            placeholder="Max"
-            className="w-1/2 rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-sky-500"
-          />
-        </div>
-        <p className="text-xs text-sky-600 mt-2 font-medium">e.g., 500-2000</p>
-      </CollapsibleSection>
-
-      <button className="mt-14 w-full rounded-md bg-sky-500 px-4 py-2 text-white text-sm hover:bg-sky-600">
+      <button
+        onClick={() => setFilters({ artists: [], categories: [] })}
+        className="mt-14 w-full rounded-md bg-sky-500 px-4 py-2 text-white text-sm hover:bg-sky-600"
+      >
         Clear All
       </button>
     </aside>
