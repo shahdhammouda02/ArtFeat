@@ -844,6 +844,11 @@ const ArtistDashboard = () => {
                           <Button
                             variant="outline"
                             className="w-full text-sm sm:text-base py-2"
+                            onClick={() =>
+                              navigate(
+                                `/artist-dashboard/artwork-details/${artwork.id}`
+                              )
+                            }
                           >
                             View Details
                           </Button>
@@ -1671,7 +1676,7 @@ const ArtistDashboard = () => {
           ) : (
             <div className="space-y-6">
               {/* Tabs for Auction Status */}
-              <div className="flex space-x-2 border-b">
+              <div className="flex flex-wrap gap-2 border-b">
                 <button
                   className={`px-4 py-2 font-medium ${
                     activeAuctionTab === "active"
@@ -1697,7 +1702,7 @@ const ArtistDashboard = () => {
               </div>
 
               {/* Auctions Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {userAuctions
                   .filter((auction) => {
                     if (activeAuctionTab === "active")
@@ -1768,8 +1773,16 @@ const ArtistDashboard = () => {
                         </div>
                       </CardContent>
 
-                      <CardFooter className="p-4 pt-0 flex gap-2">
-                        <Button variant="outline" className="flex-1">
+                      <CardFooter className="p-4 pt-0 flex flex-col sm:flex-row gap-2">
+                        <Button
+                          variant="outline"
+                          className="flex-1"
+                          onClick={() =>
+                            navigate(
+                              `/artist-dashboard/artwork-details/${auction.artworkId}`
+                            )
+                          }
+                        >
                           <Eye className="h-4 w-4 mr-2" />
                           View Details
                         </Button>
