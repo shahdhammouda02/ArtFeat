@@ -41,10 +41,10 @@ const Hero = () => {
   );
 
   return (
-    <Carousel plugins={[autoplay.current]} className="w-full h-[600px]">
+    <Carousel plugins={[autoplay.current]} className="w-full h-[90vh]">
       <CarouselContent>
         {slides.map((slide, index) => (
-          <CarouselItem key={index} className="relative w-full h-[600px]">
+          <CarouselItem key={index} className="relative w-full h-[90vh]">
             <img
               src={slide.image}
               alt={slide.text}

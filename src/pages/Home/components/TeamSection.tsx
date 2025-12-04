@@ -1,92 +1,55 @@
 import React from "react";
+import { TEAM_MEMBERS } from "@/data/team";
+import type { TeamMember } from "@/types/team";
 
 const TeamSection: React.FC = () => {
-  const team = [
-    {
-      name: "David Chen",
-      role: "Lead Engineer | Full-Stack Development Expert",
-      description:
-        "Full-stack expert specializing in scalable architectures and cutting-edge web technologies that power modern applications.",
-      image:
-        "https://images.unsplash.com/photo-1603415526960-f7e0328d11b8?q=80&w=400&auto=format&fit=crop",
-      linkedin: "https://linkedin.com/in/davidchen",
-    },
-    {
-      name: "Elena Rodriguez",
-      role: "Marketing Director | Growth & Campaign Specialist",
-      description:
-        "Strategic marketer with a track record of launching successful campaigns that drive growth and maximize brand visibility.",
-      image:
-        "https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=400&auto=format&fit=crop",
-      linkedin: "https://linkedin.com/in/elenarodriguez",
-    },
-    {
-      name: "James Wilson",
-      role: "Product Manager | User Experience Advocate",
-      description:
-        "User-focused product leader dedicated to creating intuitive solutions that delight customers and solve real problems.",
-      image:
-        "https://images.unsplash.com/photo-1603415526960-f7e0328d11b8?q=80&w=400&auto=format&fit=crop",
-      linkedin: "https://linkedin.com/in/jameswilson",
-    },
-    {
-      name: "Amy Nguyen",
-      role: "Data Scientist | Analytics Specialist",
-      description:
-        "Analytics expert transforming complex data into actionable insights for business success and smarter decision-making.",
-      image:
-        "https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=400&auto=format&fit=crop",
-      linkedin: "https://linkedin.com/in/amynguyen",
-    },
-  ];
-
   return (
     <section className="bg-[#F8FBFE] py-20 px-6 md:px-16">
       <div className="max-w-7xl mx-auto text-center">
-        {/* العنوان */}
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
-          Meet Our Team
+        {/* ✅ العنوان بنفس ستايل الأقسام السابقة */}
+        <h2 className="text-4xl md:text-5xl font-extrabold inline-block relative mb-3">
+          <span className="relative z-10">Meet Our Team</span>
+          <span className="absolute left-0 bottom-1 w-full h-[40%] bg-sky-200 z-0"></span>
         </h2>
         <p className="text-gray-500 mb-12">
           Talented individuals united by a shared passion for innovation and
           excellence.
         </p>
 
-        {/* الكروت */}
+        {/* ✅ بطاقات الفريق */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-          {team.map((member, index) => (
+          {TEAM_MEMBERS.map((member: TeamMember, index: number) => (
             <div
               key={index}
-              className="bg-white rounded-2xl shadow-sm p-8 pt-8 flex flex-col items-center text-center hover:shadow-lg transition duration-300"
+              className="bg-white rounded-2xl shadow-sm p-8 flex flex-col justify-between items-center text-center hover:shadow-lg transition duration-300 h-[450px]"
             >
-              {/* الصورة */}
-              <img
-                src={member.image}
-                alt={member.name}
-                className="w-28 h-28 rounded-full object-cover mb-5 border-4 border-white shadow-md"
-              />
+              {/* القسم العلوي */}
+              <div className="flex flex-col items-center">
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  className="w-28 h-28 rounded-full object-cover mb-5 border-4 border-white shadow-md"
+                />
 
-              {/* الاسم */}
-              <h3 className="text-xl font-bold text-gray-900 mb-1">
-                {member.name}
-              </h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-1 line-clamp-1">
+                  {member.name}
+                </h3>
 
-              {/* الدور */}
-              <p className="text-[#00A8E8] text-sm font-semibold mb-4">
-                {member.role}
-              </p>
+                <p className="text-[#00A8E8] text-sm font-semibold mb-4 line-clamp-2">
+                  {member.role}
+                </p>
 
-              {/* الوصف */}
-              <p className="text-gray-600 text-sm leading-relaxed mb-6 h-[100px]">
-                {member.description}
-              </p>
+                <p className="text-gray-600 text-sm leading-relaxed line-clamp-4">
+                  {member.description}
+                </p>
+              </div>
 
               {/* أيقونة LinkedIn */}
               <a
                 href={member.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#00A8E8] hover:text-[#00A8E8] transition"
+                className="text-[#00A8E8] hover:text-[#0077b5] transition mt-6"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

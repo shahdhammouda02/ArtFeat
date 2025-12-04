@@ -127,7 +127,20 @@ export default function ArtworksGrid({
 
   return (
     <section className="bg-white py-16 px-8">
-      {/* ✅ العنوان + عدد اللوحات + أزرار العرض */}
+      {/* ✅ العنوان الخاص بالصفحة الرئيسية فقط */}
+      {compact && (
+        <div className="text-center mb-10">
+          <h2 className="text-3xl sm:text-4xl font-extrabold inline-block relative">
+            <span className="relative z-10">Featured Artworks</span>
+            <span className="absolute left-0 bottom-1 w-full h-[40%] bg-sky-200 z-0"></span>
+          </h2>
+          <p className="mt-3 text-md text-gray-600">
+            Explore a curated collection of stunning pieces by talented artists.
+          </p>
+        </div>
+      )}
+
+      {/* ✅ العنوان + عدد اللوحات + أزرار العرض (لصفحة All Artworks فقط) */}
       {!compact && (
         <div className="mb-8 flex items-center justify-between flex-wrap gap-3">
           <div>
@@ -178,7 +191,7 @@ export default function ArtworksGrid({
         ))}
       </div>
 
-      {/* ✅ الزر الخاص بقسم الهوم */}
+      {/* ✅ الزر الخاص بقسم الصفحة الرئيسية */}
       {compact && (
         <div className="py-10 text-center">
           <Button

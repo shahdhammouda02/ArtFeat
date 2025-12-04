@@ -53,12 +53,22 @@ const EventsCards: React.FC<EventsCardsProps> = ({
     <section className="py-12 sm:py-16 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* ✅ العنوان يبقى دائمًا */}
-        <div className="text-center mb-8 sm:mb-10">
-          <h2 className="text-3xl sm:text-4xl font-bold">Art Events</h2>
-          <p className="mt-2 text-md text-gray-600">
-            Discover current and upcoming exhibitions, workshops, and art fairs.
-          </p>
-        </div>
+<div className="text-center mb-8 sm:mb-10">
+  {compact && (
+    <>
+      <h2 className="text-3xl sm:text-4xl font-extrabold inline-block relative">
+        <span className="relative z-10">Art Events</span>
+        <span className="absolute left-0 bottom-1 w-full h-[40%] bg-sky-200 z-0"></span>
+      </h2>
+      <p className="mt-3 text-md text-gray-600">
+        Discover current and upcoming exhibitions, workshops, and art fairs.
+      </p>
+    </>
+  )}
+</div>
+
+
+
 
         {/* ✅ شبكة الكروت */}
         <div
