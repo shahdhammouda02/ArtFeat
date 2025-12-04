@@ -12,6 +12,10 @@ import {
   X,
 } from "lucide-react";
 import type { Artwork } from "@/types/artworks";
+import { Auth } from "@/contexts/AuthContext";
+import { useCart } from "@/hooks/useCart";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 type PhysicalDetailsProps = {
   artwork: Artwork;
@@ -20,15 +24,38 @@ type PhysicalDetailsProps = {
 const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
   const [liked, setLiked] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated } = Auth();
+  const { addItem, isInCart } = useCart();
 
-  // ✅ مصفوفة تشمل الصورة الرئيسية + الفرعيات للتنقل بالأسهم
   const allImages = [artwork.image, ...(artwork.images ?? [])];
   const [selectedImage, setSelectedImage] = useState(allImages[0]);
 
-  // ✅ تحديث الصورة عند تغيير العمل
   useEffect(() => {
     setSelectedImage(artwork.image);
   }, [artwork]);
+
+  const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      navigate("/signin", { state: { from: `/artworks/${artwork.id}` } });
+      return;
+    }
+
+    if (isInCart(artwork.id)) {
+      navigate("/cart");
+      return;
+    }
+
+    addItem({
+      id: artwork.id,
+      title: artwork.title,
+      price: artwork.price,
+      image: artwork.image,
+      type: artwork.type,
+    });
+  };
+
+  const isItemInCart = isInCart(artwork.id);
 
   return (
     <main className="bg-white py-10">
@@ -57,7 +84,6 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
               ))}
             </div>
 
-            {/* ✅ الصورة الرئيسية */}
             <div className="relative flex-1 rounded-xl overflow-hidden border border-gray-200">
               <img
                 src={selectedImage}
@@ -68,7 +94,6 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
                 Art Feat
               </div>
 
-              {/* ❤️ أيقونة القلب */}
               <button
                 onClick={() => setLiked(!liked)}
                 className="absolute top-3 right-3 bg-transparent text-white hover:scale-110 transition-all duration-300"
@@ -84,7 +109,6 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
                 />
               </button>
 
-              {/* ◀️ السهم السابق */}
               <button
                 onClick={() => {
                   const currentIndex = allImages.indexOf(selectedImage);
@@ -103,11 +127,14 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
                   stroke="white"
                   strokeWidth="2"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
 
-              {/* ▶️ السهم التالي */}
               <button
                 onClick={() => {
                   const currentIndex = allImages.indexOf(selectedImage);
@@ -125,11 +152,14 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
                   stroke="white"
                   strokeWidth="2"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
 
-              {/* 🔍 أيقونة التكبير */}
               <button
                 onClick={() => setIsZoomed(true)}
                 className="absolute bottom-3 right-3 bg-transparent border border-white text-white p-2 rounded-full shadow transition hover:bg-white/10"
@@ -153,9 +183,10 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
             </div>
           </div>
 
-          {/* 🔹 التفاصيل النصية */}
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-1">{artwork.title}</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-1">
+              {artwork.title}
+            </h1>
             <p className="text-gray-600 mb-4">
               By{" "}
               <span className="text-sky-600 font-medium">{artwork.author}</span>
@@ -180,13 +211,29 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
             </div>
 
             <div className="mt-6">
-              <button className="w-1/4 flex justify-center items-center gap-2 border border-sky-500 text-sky-600 hover:bg-sky-50 transition rounded-md py-2.5 font-medium text-sm">
-                <ShoppingCart className="w-4 h-4" />
-                Add to Cart
-              </button>
+              <Button
+                onClick={handleAddToCart}
+                variant="outline"
+                className={`w-1/4 flex justify-center items-center gap-2 border ${
+                  isItemInCart
+                    ? "border-green-500 text-green-600 hover:bg-green-50"
+                    : "border-sky-500 text-sky-600 hover:bg-sky-50"
+                } transition rounded-md py-2.5 font-medium text-sm`}
+              >
+                {isItemInCart ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4" />
+                    View in Cart
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-4 h-4" />
+                    Add to Cart
+                  </>
+                )}
+              </Button>
             </div>
 
-            {/* تفاصيل العمل */}
             <details open className="pt-5">
               <summary className="flex items-center gap-2 cursor-pointer font-semibold text-gray-900 text-base">
                 Item Details
@@ -194,7 +241,9 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
               </summary>
 
               <div className="mt-3 space-y-4 text-sm text-gray-700 leading-relaxed">
-                <h4 className="font-semibold text-sky-600 text-sm">Highlights</h4>
+                <h4 className="font-semibold text-sky-600 text-sm">
+                  Highlights
+                </h4>
 
                 <ul className="space-y-3">
                   <li className="flex items-start gap-2">
@@ -209,7 +258,9 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
 
                   <li className="flex items-start gap-2">
                     <Package className="w-4 h-4 text-black mt-[2px]" />
-                    <span>Materials: wool felt, needle felted, jute thread</span>
+                    <span>
+                      Materials: wool felt, needle felted, jute thread
+                    </span>
                   </li>
 
                   <li className="flex items-start gap-2">
@@ -218,16 +269,20 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
                       <p className="font-medium text-gray-900">Size:</p>
                       <div className="grid grid-cols-2 gap-x-4 text-xs text-gray-600 pl-6">
                         <span>
-                          Width: {artwork.size?.width?.value} {artwork.size?.width?.unit}
+                          Width: {artwork.size?.width?.value}{" "}
+                          {artwork.size?.width?.unit}
                         </span>
                         <span>
-                          Height: {artwork.size?.height?.value} {artwork.size?.height?.unit}
+                          Height: {artwork.size?.height?.value}{" "}
+                          {artwork.size?.height?.unit}
                         </span>
                         <span>
-                          Depth: {artwork.size?.depth?.value} {artwork.size?.depth?.unit}
+                          Depth: {artwork.size?.depth?.value}{" "}
+                          {artwork.size?.depth?.unit}
                         </span>
                         <span>
-                          Length: {artwork.size?.length?.value} {artwork.size?.length?.unit}
+                          Length: {artwork.size?.length?.value}{" "}
+                          {artwork.size?.length?.unit}
                         </span>
                       </div>
                     </div>
@@ -241,7 +296,6 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
               </div>
             </details>
 
-            {/* قسم الشحن */}
             <details open className="pt-5 mt-4">
               <summary className="flex items-center gap-2 cursor-pointer font-semibold text-gray-900 text-base">
                 Shipping
@@ -283,7 +337,11 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
                   </label>
 
                   <label className="flex items-center gap-2 pl-6 cursor-pointer">
-                    <input type="radio" name="ship" className="accent-sky-500" />
+                    <input
+                      type="radio"
+                      name="ship"
+                      className="accent-sky-500"
+                    />
                     <span>DHL Express – $25 (2–3 days)</span>
                   </label>
                 </div>
@@ -298,7 +356,6 @@ const PhysicalDetails: React.FC<PhysicalDetailsProps> = ({ artwork }) => {
         </section>
       </div>
 
-      {/* ✅ نافذة التكبير */}
       {isZoomed && (
         <div
           onClick={() => setIsZoomed(false)}

@@ -21,6 +21,7 @@ import EditProfile from "@/pages/ArtistDashboard/components/edit-profile/EditPro
 import AddToAuction from "@/pages/ArtistDashboard/components/add-to-auction/AddToAuction";
 import ArtworkDetailsPage from "@/pages/ArtistDashboard/components/artwork-details/ArtworkDetailsPage";
 import WhoWeAre from "@/pages/WhoWeAre/WhoWeAre";
+import CartPage from "@/pages/CartPage";
 
 
 export const routes: RouteObject[] = [
@@ -59,7 +60,7 @@ export const routes: RouteObject[] = [
       { path: "gallery", element: <Gallery /> },
       { path: "who-we-are", element: <WhoWeAre /> },
 
-
+      {path: "/cart" , element: <CartPage />}
     ],
   },
 ];

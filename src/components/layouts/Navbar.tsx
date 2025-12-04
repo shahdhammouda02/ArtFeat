@@ -21,6 +21,7 @@ import {
 import logo from "@/assets/images/logo.jpeg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Auth } from "@/contexts/AuthContext";
+import { useCart } from "@/hooks/useCart";
 
 const navItems = [
   "Gallery",
@@ -183,6 +184,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = Auth();
+  const { itemCount } = useCart();
 
   useEffect(() => {
     const count = parseInt(localStorage.getItem("notificationCount") || "0");
@@ -330,10 +332,16 @@ const Navbar = () => {
           </button>
           <button
             aria-label="Cart"
-            className="text-gray-700 hover:text-sky-600 flex items-center justify-center hover:-translate-y-1 transition-transform duration-300 ease-in-out"
+            className="text-gray-700 hover:text-sky-600 flex items-center justify-center hover:-translate-y-1 transition-transform duration-300 ease-in-out relative"
             type="button"
+            onClick={() => navigate("/cart")}
           >
             <ShoppingCart size={22} />
+            {itemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {itemCount}
+              </span>
+            )}
           </button>
           <button
             aria-label="Language"
@@ -589,10 +597,19 @@ const Navbar = () => {
               </button>
               <button
                 aria-label="Cart"
-                className="text-gray-700 hover:text-sky-600 transition-transform duration-300 ease-in-out hover:-translate-y-1.5 flex items-center justify-center"
+                className="text-gray-700 hover:text-sky-600 flex items-center justify-center hover:-translate-y-1.5 transition-transform duration-300 ease-in-out relative"
                 type="button"
+                onClick={() => {
+                  navigate("/cart");
+                  setMenuOpen(false);
+                }}
               >
-                <ShoppingCart size={20} />
+                <ShoppingCart size={22} />
+                {itemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {itemCount}
+                  </span>
+                )}
               </button>
               <button
                 aria-label="Language"

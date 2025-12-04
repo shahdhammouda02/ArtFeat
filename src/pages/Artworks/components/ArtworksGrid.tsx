@@ -4,15 +4,18 @@ import {
   ChevronRight,
   LayoutGrid,
   List,
+  Check,
 } from "lucide-react";
 import { ARTWORKS } from "@/data/artworks";
 import type { Artwork } from "@/types/artworks";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Auth } from "@/contexts/AuthContext";
+import { useCart } from "@/hooks/useCart";
 
 interface ArtworksGridProps {
-  compact?: boolean; // للصفحة الرئيسية (Home)
+  compact?: boolean;
   filters?: {
     artists: string[];
     categories: string[];
@@ -28,6 +31,9 @@ function Card({
   view: "grid" | "list";
 }) {
   const navigate = useNavigate();
+   const { isAuthenticated } = Auth();
+  const { addItem, isInCart } = useCart();
+
   const tagColor =
     item.tag === "Sculpture"
       ? "bg-amber-500"
@@ -38,6 +44,26 @@ function Card({
       : "bg-indigo-600";
 
   const openDetails = () => navigate(`/artworks/${item.id}`);
+
+    const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    
+    if (!isAuthenticated) {
+      navigate("/signin", { state: { from: location.pathname } });
+      return;
+    }
+    
+    addItem({
+      id: item.id,
+      title: item.title,
+      price: item.price,
+      image: item.image,
+      type: item.tag
+    });
+  };
+
+  const isItemInCart = isInCart(item.id);
 
   return (
     <div
@@ -80,14 +106,25 @@ function Card({
           } flex items-center justify-between`}
         >
           <div className="text-slate-900 font-semibold">${item.price}</div>
-          <button
+           <Button
             type="button"
-            title="Add to cart"
-            className="rounded-full p-2 hover:bg-sky-100 text-sky-500 transition"
-            onClick={(e) => e.stopPropagation()}
+            title={isItemInCart ? "Already in cart" : "Add to cart"}
+            variant="ghost"
+            size="sm"
+            onClick={handleAddToCart}
+            className={`h-8 w-8 p-0 rounded-full ${
+              isItemInCart
+                ? "bg-green-100 text-green-600 hover:bg-green-200"
+                : "hover:bg-sky-100 text-sky-500"
+            }`}
+            disabled={isItemInCart}
           >
-            <ShoppingCart className="h-5 w-5" />
-          </button>
+            {isItemInCart ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              <ShoppingCart className="h-4 w-4" />
+            )}
+          </Button>
         </div>
       </div>
     </div>

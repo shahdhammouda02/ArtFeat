@@ -8,20 +8,25 @@ import {
   Image as ImageIcon,
   Heart,
   X,
+  CheckCircle2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { Artwork } from "@/types/artworks";
 import { ARTWORKS } from "@/data/artworks";
+import { Auth } from "@/contexts/AuthContext";
+import { useCart } from "@/hooks/useCart";
+import { Button } from "@/components/ui/button";
 
 const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
   const [liked, setLiked] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated } = Auth();
+  const { addItem, isInCart } = useCart();
 
   const allImages = [artwork.image, ...(artwork.images ?? [])];
   const [selectedImage, setSelectedImage] = useState(allImages[0]);
 
-  // ✅ عند تغيير العمل يتم تحديث الصورة الأساسية
   useEffect(() => {
     setSelectedImage(artwork.image);
   }, [artwork]);
@@ -30,14 +35,33 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
     (item) => item.type === artwork.type && item.id !== artwork.id
   );
 
+   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      navigate("/signin", { state: { from: `/artworks/${artwork.id}` } });
+      return;
+    }
+    
+    if (isInCart(artwork.id)) {
+      navigate("/cart");
+      return;
+    }
+    
+    addItem({
+      id: artwork.id,
+      title: artwork.title,
+      price: artwork.price,
+      image: artwork.image,
+      type: artwork.type
+    });
+  };
+
+  const isItemInCart = isInCart(artwork.id);
+
   return (
     <main className="bg-white py-10">
       <div className="max-w-7xl mx-auto px-4">
-        {/* ================== القسم الرئيسي ================== */}
         <section className="grid grid-cols-1 lg:grid-cols-[480px,1fr] gap-12 items-start">
-          {/* 🔹 الصور */}
           <div className="flex gap-4">
-            {/* ✅ الصور المصغّرة (فقط الفرعيات) */}
             <div className="flex flex-col gap-3">
               {artwork.images?.map((img, i) => (
                 <button
@@ -58,7 +82,6 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
               ))}
             </div>
 
-            {/* ✅ الصورة الكبيرة */}
             <div className="flex-1 relative">
               <img
                 src={selectedImage}
@@ -69,7 +92,6 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
                 Art Feat
               </div>
 
-              {/* ❤️ أيقونة القلب */}
               <button
                 onClick={() => setLiked(!liked)}
                 className="absolute top-3 right-3 bg-transparent hover:scale-110 transition-all duration-300"
@@ -85,7 +107,6 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
                 />
               </button>
 
-              {/* ◀️ السهم السابق */}
               <button
                 onClick={() => {
                   const currentIndex = allImages.indexOf(selectedImage);
@@ -108,7 +129,6 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
                 </svg>
               </button>
 
-              {/* ▶️ السهم التالي */}
               <button
                 onClick={() => {
                   const currentIndex = allImages.indexOf(selectedImage);
@@ -130,7 +150,6 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
                 </svg>
               </button>
 
-              {/* 🔍 أيقونة التكبير */}
               <button
                 onClick={() => setIsZoomed(true)}
                 className="absolute bottom-3 right-3 bg-transparent border border-white text-white p-2 rounded-full shadow transition hover:bg-white/10"
@@ -154,7 +173,6 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
             </div>
           </div>
 
-          {/* 🔹 تفاصيل النص */}
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-1">{artwork.title}</h1>
             <p className="text-gray-600 mb-4">By {artwork.author}</p>
@@ -175,14 +193,30 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
               </span>
             </div>
 
-            <div className="mt-6">
-              <button className="w-1/4 flex justify-center items-center gap-2 border border-sky-500 text-sky-600 hover:bg-sky-50 transition rounded-md py-2.5 font-medium text-sm">
-                <ShoppingCart className="w-4 h-4" />
-                Add to Cart
-              </button>
+             <div className="mt-6">
+              <Button
+                onClick={handleAddToCart}
+                variant="outline"
+                className={`w-1/4 flex justify-center items-center gap-2 border ${
+                  isItemInCart
+                    ? "border-green-500 text-green-600 hover:bg-green-50"
+                    : "border-sky-500 text-sky-600 hover:bg-sky-50"
+                } transition rounded-md py-2.5 font-medium text-sm`}
+              >
+                {isItemInCart ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4" />
+                    View in Cart
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-4 h-4" />
+                    Add to Cart
+                  </>
+                )}
+              </Button>
             </div>
 
-            {/* التفاصيل */}
             <div className="mt-6 border-0 pt-2">
               <details open className="space-y-4">
                 <summary className="flex items-center gap-2 cursor-pointer font-semibold text-gray-900 text-base">
@@ -284,8 +318,21 @@ const DigitalDetails: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
                         <span className="text-gray-500 ml-1">(4.8)</span>
                       </div>
                     </div>
-                    <button
-                      onClick={(e) => e.stopPropagation()}
+                   <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!isAuthenticated) {
+                          navigate("/signin");
+                          return;
+                        }
+                        addItem({
+                          id: item.id,
+                          title: item.title,
+                          price: item.price,
+                          image: item.image,
+                          type: item.type
+                        });
+                      }}
                       className="p-2 rounded-full hover:bg-sky-100 text-sky-500 transition"
                       title="Add to cart"
                     >
